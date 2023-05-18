@@ -28,12 +28,12 @@
 
 ### 高级篇
 
-- [MySQL环境准备](/docs/mysql/高级篇/0.0 CentOS环境准备.md)
-- [MySQL安装包下载](/docs/mysql/高级篇/0.01 下载MySQL安装包.md)
-- [MySQL服务卸载](/docs/mysql/高级篇/1.1 Linux下卸载MySQL服务.md)
-- [MySQL服务安装](/docs/mysql/高级篇/1.2 Linux下安装MySQL服务.md)
-- [MySQL字符集](/docs/mysql/高级篇/1.3 MySQL字符集操作.md)
-- [MySQL数据目录](/docs/mysql/高级篇/2 MySQL的数据目录.md)
+- [MySQL环境准备](/docs/mysql/高级篇/0.0.CentOS环境准备.md)
+- [MySQL安装包下载](/docs/mysql/高级篇/0.01.下载MySQL安装包.md)
+- [MySQL服务卸载](/docs/mysql/高级篇/1.1.Linux下卸载MySQL服务.md)
+- [MySQL服务安装](/docs/mysql/高级篇/1.2.Linux下安装MySQL服务.md)
+- [MySQL字符集](/docs/mysql/高级篇/1.3.MySQL字符集操作.md)
+- [MySQL数据目录](/docs/mysql/高级篇/2.MySQL的数据目录.md)
 
 ## :arrow_down_small:  项目实战
 
