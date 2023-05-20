@@ -9,6 +9,7 @@
 - [Linux搭建Nginx环境](/docs/linux/5.1.nginx安装和使用.md)
 - [Linux配置Nginx启动命令](/docs/linux/5.2.nginx配置命令启动.md)
 - [Linnx搭建FastDFS环境](/docs/linux/6.fastdfs安装和使用.md)
+- [Linux中set命令使用](/docs/linux/7.linux中set命令.md)
 
 ## :palm_tree:  Spring技术
 
