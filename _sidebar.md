@@ -7,6 +7,7 @@
 - [Vagrant配置](/docs/linux/3.vagrant-configure.md)
 - [Nginx介绍](/docs/linux/4.nginx介绍.md)
 - [Linux搭建Nginx环境](/docs/linux/5.nginx安装和使用.md)
+- [Linnx搭建FastDFS环境](/docs/linux/6.fastdfs安装和使用.md)
 
 ## :palm_tree:  Spring技术
 
