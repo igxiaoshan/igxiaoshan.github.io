@@ -74,6 +74,7 @@
 - [Docker命令](/docs/docker/2.0docker命令.md)
 - [Docker镜像分层原理和镜像commit](/docs/docker/3.0docker镜像分层和commit.md)
 - [Docker镜像发布(阿里云/私服)](/docs/docker/4.0docker镜像发布.md)
+- [Docker容器数据卷](/docs/docker/5.0docker容器数据卷.md)
 
 
 
