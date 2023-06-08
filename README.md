@@ -63,6 +63,7 @@
 - [MySQL服务安装](/docs/mysql/高级篇/1.2.Linux下安装MySQL服务.md)
 - [MySQL字符集](/docs/mysql/高级篇/1.3.MySQL字符集操作.md)
 - [MySQL数据目录](/docs/mysql/高级篇/2.MySQL的数据目录.md)
+- [MySQL用户和权限管理](/docs/mysql/高级篇/3.MySQL用户与权限管理.md)
 
 ## :artificial_satellite:  Cloud服务
 
