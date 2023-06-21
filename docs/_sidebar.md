@@ -83,3 +83,6 @@
 - [Docker部署简单服务(reids,mysql,nginx...)](/docs/docker/6.0docker部署简单服务.md)
 
 ### 进阶篇
+
+- [Docker部署redis集群](/docs/docker/8.0docker部署redis集群.md)
+
