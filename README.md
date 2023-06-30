@@ -87,3 +87,6 @@
 
 - [Docker部署redis集群](/docs/docker/8.0docker部署redis集群.md)
 
+- [Dockerfile使用](/docs/docker/9.docker解析Dockerfile.md)
+- [Dockerfile部署微服务](/docs/docker/10.docker发布服务通过Dockerfile部署.md)
+
