@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/2023/10/28/11.docker网络/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="官网：码头工人运行参考 |码头工人文档 (docker.com)   docker网络介绍 docker未启动时，默认网络情况  12345678docker 未启动时,不包含docker0的虚拟网络lo: 本地网络(localhost)virbr0: 在CentOS7的安装过程中,如果有选择相关虚拟化的服务安装系统后,启动网卡时会发现有一个以网桥连接的私网地址的virbr0网卡(virbr0网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker网络">
+<meta property="og:url" content="https://igxiaoshan.github.io/2023/10/28/11.docker%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="官网：码头工人运行参考 |码头工人文档 (docker.com)   docker网络介绍 docker未启动时，默认网络情况  12345678docker 未启动时,不包含docker0的虚拟网络lo: 本地网络(localhost)virbr0: 在CentOS7的安装过程中,如果有选择相关虚拟化的服务安装系统后,启动网卡时会发现有一个以网桥连接的私网地址的virbr0网卡(virbr0网">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://igxiaoshan.github.io/%5Cimages%5Cdocker%5Cdocker%E6%9C%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E5%86%85%E9%83%A8%E8%AF%A6%E6%83%8501.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%8501.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%85-%E6%A6%82%E8%A6%81%E7%89%8801.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E4%BA%92%E9%80%9A%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B02.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-host%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B02.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B03.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-none%E6%A1%88%E4%BE%8B01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-container%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-container%E6%A1%88%E4%BE%8B01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta property="article:published_time" content="2023-10-28T10:35:15.311Z">
+<meta property="article:modified_time" content="2023-10-19T08:45:44.276Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://igxiaoshan.github.io/%5Cimages%5Cdocker%5Cdocker%E6%9C%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Docker网络 -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/","language":"zh-CN"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":null},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">Docker网络</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-10-28 18:35:15</span>
+        <span class="mobile">2023-10-28 18:35:15</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-10-19 16:45:44</span>
+            <span class="mobile">2023-10-19 16:45:44</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Docker/">Docker</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <blockquote>
+<p><code>官网</code>：<a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/run/" >码头工人运行参考 |码头工人文档 (docker.com) <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<h2 id="docker网络介绍"><a href="#docker网络介绍" class="headerlink" title="docker网络介绍"></a>docker网络介绍</h2><ul>
+<li><p><code>docker未启动时，默认网络情况</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/%5Cimages%5Cdocker%5Cdocker%E6%9C%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png"
+                     
+                ></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker 未启动时,不包含docker0的虚拟网络</span><br><span class="line"></span><br><span class="line">lo: 本地网络(localhost)</span><br><span class="line"></span><br><span class="line">virbr0: 在CentOS7的安装过程中,如果有选择相关虚拟化的服务安装系统后,启动网卡时会发现有一个以网桥连接的私网地址的virbr0网卡(virbr0网卡:它还有一个固定的默认IP地址 192.168.122.1 ),是做虚拟机网桥使用的,其作用是为连接其上的虚拟网卡提供NAT访问外网的功能</span><br><span class="line"></span><br><span class="line">#: 在Linux安装,勾选安装系统时候附带了libvirt服务才会生成的一个东西,如果不需要可以直接将libvirt服务卸载; yum remove libvirt-libs.x86_64</span><br></pre></td></tr></table></figure></div>
+
+</li>
+<li><p><code>docker启动后，网络情况</code></p>
+<p>  <img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png"
+                     
+                ></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker 启动后,会产生一个名为 docker0 的虚拟网桥</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h2 id="docker网络命令"><a href="#docker网络命令" class="headerlink" title="docker网络命令"></a>docker网络命令</h2><ul>
+<li><p>全部命令</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@CentOS7_001 zyd]<span class="comment"># docker network --help</span></span><br><span class="line"></span><br><span class="line">Usage:  docker network COMMAND</span><br><span class="line"></span><br><span class="line">Manage networks</span><br><span class="line"></span><br><span class="line">Commands:</span><br><span class="line">  connect     Connect a container to a network</span><br><span class="line">  create      Create a network</span><br><span class="line">  disconnect  Disconnect a container from a network</span><br><span class="line">  inspect     Display detailed information on one or more networks</span><br><span class="line">  <span class="built_in">ls</span>          List networks</span><br><span class="line">  prune       Remove all unused networks</span><br><span class="line">  <span class="built_in">rm</span>          Remove one or more networks</span><br><span class="line"></span><br><span class="line">Run <span class="string">&#x27;docker network COMMAND --help&#x27;</span> <span class="keyword">for</span> more information on a <span class="built_in">command</span>.</span><br><span class="line">[root@CentOS7_001 zyd]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+</li>
+<li><p>查看<code>docker</code>网络模式</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## 查看docker网络模式命令</span></span><br><span class="line"></span><br><span class="line">docker network <span class="built_in">ls</span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>查看<code>docker</code>网络源数据</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 命令结构</span></span><br><span class="line">docker network inspect [OPTIONS] NETWORK [NETWORK...]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@CentOS7_001 zyd]<span class="comment"># docker network inspect bridge</span></span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;bridge&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Id&quot;</span>: <span class="string">&quot;f5a026bc1a0286e3d6d8a5704cf25a60f7cd16e893a9d58f0b3b39a8d350aa28&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Created&quot;</span>: <span class="string">&quot;2023-07-03T09:44:52.274931144+08:00&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Scope&quot;</span>: <span class="string">&quot;local&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Driver&quot;</span>: <span class="string">&quot;bridge&quot;</span>,</span><br><span class="line">        <span class="string">&quot;EnableIPv6&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;IPAM&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;Driver&quot;</span>: <span class="string">&quot;default&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Options&quot;</span>: null,</span><br><span class="line">            <span class="string">&quot;Config&quot;</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="string">&quot;Subnet&quot;</span>: <span class="string">&quot;172.17.0.0/16&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Gateway&quot;</span>: <span class="string">&quot;172.17.0.1&quot;</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;Internal&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;Attachable&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;Ingress&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;ConfigFrom&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;Network&quot;</span>: <span class="string">&quot;&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;ConfigOnly&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;Containers&quot;</span>: &#123;&#125;,</span><br><span class="line">        <span class="string">&quot;Options&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;com.docker.network.bridge.default_bridge&quot;</span>: <span class="string">&quot;true&quot;</span>,</span><br><span class="line">            <span class="string">&quot;com.docker.network.bridge.enable_icc&quot;</span>: <span class="string">&quot;true&quot;</span>,</span><br><span class="line">            <span class="string">&quot;com.docker.network.bridge.enable_ip_masquerade&quot;</span>: <span class="string">&quot;true&quot;</span>,</span><br><span class="line">            <span class="string">&quot;com.docker.network.bridge.host_binding_ipv4&quot;</span>: <span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">            <span class="string">&quot;com.docker.network.bridge.name&quot;</span>: <span class="string">&quot;docker0&quot;</span>,</span><br><span class="line">            <span class="string">&quot;com.docker.network.driver.mtu&quot;</span>: <span class="string">&quot;1500&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;Labels&quot;</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>创建<code>docker</code>网络</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 命令结构</span></span><br><span class="line">docker network create [OPTIONS] NETWORK</span><br><span class="line"></span><br><span class="line">docker network create my_network</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>删除<code>docker</code>网络</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 命令结构</span></span><br><span class="line">docker network <span class="built_in">rm</span> NETWORK [NETWORK...]</span><br><span class="line"></span><br><span class="line">docker network <span class="built_in">rm</span> my_network</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h2 id="docker网络作用"><a href="#docker网络作用" class="headerlink" title="docker网络作用"></a>docker网络作用</h2><blockquote>
+<p>容器间的互联和通信以及端口映射</p>
+<p>容器IP变动的时候可以通过服务名直接网络通信而不受到影响</p>
+</blockquote>
+<h2 id="docker网络模式"><a href="#docker网络模式" class="headerlink" title="docker网络模式"></a>docker网络模式</h2><h3 id="网络模式介绍"><a href="#网络模式介绍" class="headerlink" title="网络模式介绍"></a><strong>网络模式介绍</strong></h3><table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Description</th>
+<th>使用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>none</strong></td>
+<td>No networking in the container. <code>容器有独立的 Network namespaces ,但并没有对其进行任何网络设置,如分配  veth pair 和网桥连接, IP等</code></td>
+<td>–network none</td>
+</tr>
+<tr>
+<td><strong>bridge</strong> (default)</td>
+<td>Connect the container to the bridge via veth interfaces. <code>为每一个容器分配、设置IP等,并将容器连接到一个 &#39;docker0&#39; 虚拟网桥,默认为该模式</code></td>
+<td>–network bridge<br />默认使用docker0</td>
+</tr>
+<tr>
+<td><strong>host</strong></td>
+<td>Use the host’s network stack inside the container. <code>容器将不会虚拟出自己的网卡,配置自己的IP等,而是使用宿主机的IP和端口</code></td>
+<td>–network host</td>
+</tr>
+<tr>
+<td><strong>container</strong>:&lt;name|id&gt;</td>
+<td>Use the network stack of another container, specified via its <em>name</em> or <em>id</em>. <code>新创建的容器不会创建自己的网卡和配置自己的IP,而是和一个指定的容器共享IP、端口范围等</code></td>
+<td>–network container:NAME或容器ID指定</td>
+</tr>
+<tr>
+<td><strong>NETWORK</strong></td>
+<td>Connects the container to a user created network (using <code>docker network create</code> command) <code>将容器连接到用户创建的网络（使用命令）</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="容器实例内默认网络IP生产规则"><a href="#容器实例内默认网络IP生产规则" class="headerlink" title="容器实例内默认网络IP生产规则"></a>容器实例内默认网络IP生产规则</h3><p><strong>案例</strong></p>
+<ul>
+<li><p>成功创建两个<code>ubuntu</code>容器<code>u1</code>和<code>u2</code></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE     COMMAND       CREATED              STATUS         PORTS     NAMES</span><br><span class="line">dd1fcd31d420   ubuntu    <span class="string">&quot;/bin/bash&quot;</span>   About a minute ago   Up 5 seconds             u2</span><br><span class="line">1dbdb42b4518   ubuntu    <span class="string">&quot;/bin/bash&quot;</span>   8 minutes ago        Up 3 minutes             u1</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>查看<code>u1</code>和<code>u2</code>内部network实例</p>
+<blockquote>
+<p>u1</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker inspect u1 |tail -n 20</span></span><br><span class="line">            <span class="string">&quot;Networks&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;bridge&quot;</span>: &#123;</span><br><span class="line">                    <span class="string">&quot;IPAMConfig&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Links&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Aliases&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;NetworkID&quot;</span>: <span class="string">&quot;f5a026bc1a0286e3d6d8a5704cf25a60f7cd16e893a9d58f0b3b39a8d350aa28&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;EndpointID&quot;</span>: <span class="string">&quot;ae82e5b9bc2c3b2d6d35fed23f836b712e1dc7a7f53ff6750279b9ea8273400a&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Gateway&quot;</span>: <span class="string">&quot;172.17.0.1&quot;</span>, <span class="comment"># 固定网关,不会变化</span></span><br><span class="line">                    <span class="string">&quot;IPAddress&quot;</span>: <span class="string">&quot;172.17.0.2&quot;</span>, <span class="comment"># 容器ip</span></span><br><span class="line">                    <span class="string">&quot;IPPrefixLen&quot;</span>: 16,</span><br><span class="line">                    <span class="string">&quot;IPv6Gateway&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6Address&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6PrefixLen&quot;</span>: 0,</span><br><span class="line">                    <span class="string">&quot;MacAddress&quot;</span>: <span class="string">&quot;02:42:ac:11:00:02&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;DriverOpts&quot;</span>: null</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>u2</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker inspect u2 |tail -n 20</span></span><br><span class="line">            <span class="string">&quot;Networks&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;bridge&quot;</span>: &#123;</span><br><span class="line">                    <span class="string">&quot;IPAMConfig&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Links&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Aliases&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;NetworkID&quot;</span>: <span class="string">&quot;f5a026bc1a0286e3d6d8a5704cf25a60f7cd16e893a9d58f0b3b39a8d350aa28&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;EndpointID&quot;</span>: <span class="string">&quot;072a0543108455076d68be272cd03d395ae8be6a7fde1dcac461e86416f61a50&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Gateway&quot;</span>: <span class="string">&quot;172.17.0.1&quot;</span>, <span class="comment"># 固定网关</span></span><br><span class="line">                    <span class="string">&quot;IPAddress&quot;</span>: <span class="string">&quot;172.17.0.3&quot;</span>, <span class="comment"># 容器ip</span></span><br><span class="line">                    <span class="string">&quot;IPPrefixLen&quot;</span>: 16,</span><br><span class="line">                    <span class="string">&quot;IPv6Gateway&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6Address&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6PrefixLen&quot;</span>: 0,</span><br><span class="line">                    <span class="string">&quot;MacAddress&quot;</span>: <span class="string">&quot;02:42:ac:11:00:03&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;DriverOpts&quot;</span>: null</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>通过查看<code>u1</code>和<code>u2</code>容器实例对比，固定网关IP为<code>172.17.0.1</code>，容器IP自动递增</p>
+</blockquote>
+</li>
+<li><p>测试,关闭<code>u2</code>,启动容器<code>u3</code>查看内部实例</p>
+<blockquote>
+<p>关闭<code>u2</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker stop u2</span></span><br><span class="line">u2</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>启动<code>u3</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker run -it --name u3 ubuntu /bin/bash</span></span><br><span class="line">root@97b2e870414a:/<span class="comment"># [root@CentOS7_001 ~]#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE     COMMAND       CREATED          STATUS         PORTS     NAMES</span><br><span class="line">97b2e870414a   ubuntu    <span class="string">&quot;/bin/bash&quot;</span>   10 seconds ago   Up 9 seconds             u3</span><br><span class="line">1dbdb42b4518   ubuntu    <span class="string">&quot;/bin/bash&quot;</span>   15 minutes ago   Up 9 minutes             u1</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>查看<code>u3</code>容器实例</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker inspect u3 |tail -n 20</span></span><br><span class="line">            <span class="string">&quot;Networks&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;bridge&quot;</span>: &#123;</span><br><span class="line">                    <span class="string">&quot;IPAMConfig&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Links&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Aliases&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;NetworkID&quot;</span>: <span class="string">&quot;f5a026bc1a0286e3d6d8a5704cf25a60f7cd16e893a9d58f0b3b39a8d350aa28&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;EndpointID&quot;</span>: <span class="string">&quot;a4c555dec467f15fc947eee14cfde60c4e4ea7e82dfbd7d48c4f538ceeb71ea2&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Gateway&quot;</span>: <span class="string">&quot;172.17.0.1&quot;</span>, <span class="comment"># 固定网关</span></span><br><span class="line">                    <span class="string">&quot;IPAddress&quot;</span>: <span class="string">&quot;172.17.0.3&quot;</span>, <span class="comment"># 容器ip</span></span><br><span class="line">                    <span class="string">&quot;IPPrefixLen&quot;</span>: 16,</span><br><span class="line">                    <span class="string">&quot;IPv6Gateway&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6Address&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6PrefixLen&quot;</span>: 0,</span><br><span class="line">                    <span class="string">&quot;MacAddress&quot;</span>: <span class="string">&quot;02:42:ac:11:00:03&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;DriverOpts&quot;</span>: null</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a><strong>结论</strong></h4><blockquote>
+<p>docker 内部的容器IP是会发生变化的</p>
+</blockquote>
+<h3 id="网络模式案例说明"><a href="#网络模式案例说明" class="headerlink" title="网络模式案例说明"></a>网络模式案例说明</h3><h4 id="bridge"><a href="#bridge" class="headerlink" title="bridge"></a><strong>bridge</strong></h4><blockquote>
+<p>docker服务默认会创建一个<code>docker0</code>网桥（其上有一个docker0内部接口），该网桥网络的名称为docker0，它在内核层连通了其他的物理或虚拟网卡，这就将所有容器和本地主机都放到同一物理网络。docker默认指定了docker0接口的IP地址和子网掩码，让主机和容器之间可以通过网桥相互通信</p>
+</blockquote>
+<ul>
+<li><p>查看 <code>bridge</code> 网络详细信息</p>
+<blockquote>
+<p>详细说明</p>
+</blockquote>
+<p>  <img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E5%86%85%E9%83%A8%E8%AF%A6%E6%83%8501.jpg"
+                     
+                ></p>
+<p>  <img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%8501.jpg"
+                     
+                ></p>
+<blockquote>
+<p>详情版</p>
+</blockquote>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%85-%E6%A6%82%E8%A6%81%E7%89%8801.jpg"
+                     
+                ></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1.Docker使用Linux桥接,在宿主机虚拟一个Docker容器网桥(docker0)，Docker启动一个容器时会根据Docker网桥的网段分配给容器一个ip地址，称为Container-IP，同时Docker网络是每个容器的默认网关。因为在同一宿主机内的容器都接入同一个网桥，这样容器之间就能通过容器的Container-IP通信。</span><br><span class="line"></span><br><span class="line">2.docker run 的时候，没有指定network的话默认使用的网桥模式就是bridge，使用的就是docker0.在宿主机ifconfig，就能看到docker0和自己create的network的 eht0，eht1，eht2...代表网卡一，网卡二，网卡三...，lo代表127.0.0.1,即localhost，inet addr 用来表示网卡的IP地址。</span><br><span class="line"></span><br><span class="line">3.网桥docker0创建一对对等虚拟设备接口，一个叫veth，另一个叫eht0，成对匹配。</span><br><span class="line">	3.1.整个宿主机的网桥模式都是docker0，类似一个交换机有一堆接口，每个接口都叫veth，在本地主机和容器内分别创建一个虚拟接口，并让他们彼此联通（这样一对接口叫veth pair）；</span><br><span class="line">	3.2.每个容器实例内部也有一块网卡，每个接口都叫eth0；</span><br><span class="line">	3.3.docker0上面的每个veth匹配某个容器实例内部的eth0，两两配对，一一匹配</span><br><span class="line">	</span><br><span class="line">通过上述，讲宿主机上的所有容器都连接到这个内部网络上，两个容器在同一个网络下，会从这个网关下各自拿到分配的IP，此时两个容器的网络是互通的。</span><br><span class="line"></span><br><span class="line">详细看下图</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E4%BA%92%E9%80%9A%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg"
+                     
+                ></p>
+<p><strong>实例</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 启动两个容器</span></span><br><span class="line"></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker run -d -p 8081:8080 --name tomcat81 billygoo/tomcat8-jdk8</span></span><br><span class="line">faa368fd7fc21a3e98cea3bf281d0698ac041a0fbdc7e2563c93132a36db3242</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker run -d -p 8082:8080 --name tomcat82 billygoo/tomcat8-jdk8</span></span><br><span class="line">bbf99486996455ad7b50b4d8cde3ed1af6c66b50ff43a01c696c6137cbc67132</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE                   COMMAND             CREATED          STATUS          PORTS                                       NAMES</span><br><span class="line">bbf994869964   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   7 seconds ago    Up 4 seconds    0.0.0.0:8082-&gt;8080/tcp, :::8082-&gt;8080/tcp   tomcat82</span><br><span class="line">faa368fd7fc2   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   16 seconds ago   Up 13 seconds   0.0.0.0:8081-&gt;8080/tcp, :::8081-&gt;8080/tcp   tomcat81</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 查看此时网络状况</span></span><br><span class="line"></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># ip addr | tail -n 8</span></span><br><span class="line">10: vethf976c54@if9: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master docker0 state UP group default</span><br><span class="line">    <span class="built_in">link</span>/ether 22:45:d0:e1:9c:0b brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet6 fe80::2045:d0ff:fee1:9c0b/64 scope <span class="built_in">link</span></span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">12: vethd6d8297@if11: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master docker0 state UP group default</span><br><span class="line">    <span class="built_in">link</span>/ether ca:cb:0f:fb:c9:ba brd ff:ff:ff:ff:ff:ff link-netnsid 1</span><br><span class="line">    inet6 fe80::c8cb:fff:fefb:c9ba/64 scope <span class="built_in">link</span></span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 进入容器中,查看两个容器内部网络</span></span><br><span class="line"><span class="comment">#### tomcat81</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker exec -it tomcat81 /bin/bash</span></span><br><span class="line">root@faa368fd7fc2:/usr/local/tomcat<span class="comment"># ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">9: eth0@if10: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">root@faa368fd7fc2:/usr/local/tomcat<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### tomcat82</span></span><br><span class="line"></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker exec -it tomcat82 /bin/bash</span></span><br><span class="line">root@bbf994869964:/usr/local/tomcat<span class="comment"># ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">11: eth0@if12: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:ac:11:00:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet 172.17.0.3/16 brd 172.17.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">root@bbf994869964:/usr/local/tomcat<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#### 图示如下</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>bridge网络案例</strong><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B01.jpg"
+                     
+                ><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B02.jpg"
+                     
+                ></p>
+<h4 id="host"><a href="#host" class="headerlink" title="host"></a><strong>host</strong></h4><blockquote>
+<p>直接使用宿主机的IP与外界进行通信，不再需要额外进行NAT转换</p>
+</blockquote>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">容器将不会获得一个独立的Network Namespace，而是和宿主机公用一个Network Namespace。容器将不会虚拟出自己的网卡而是使用宿主机的IP和端口</span><br><span class="line"></span><br><span class="line">如下图</span><br></pre></td></tr></table></figure></div>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-host%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg"
+                     
+                ></p>
+<p><strong>实例</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 启动一个容器,使用host模式</span></span><br><span class="line"></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker run -d -p 8083:8080 --net=host --name tomcat83 billygoo/tomcat8-jdk8</span></span><br><span class="line">WARNING: Published ports are discarded when using host network mode</span><br><span class="line">cba24b7557befd5e8243780ce13ba2052aa26d703849580d557eee732fbf0642</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE                   COMMAND             CREATED         STATUS         PORTS                                       NAMES</span><br><span class="line">cba24b7557be   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   3 seconds ago   Up 2 seconds                                               tomcat83</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># </span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### WARNING: Published ports are discarded when using host network mode</span></span><br><span class="line"><span class="comment">#### 问题:</span></span><br><span class="line"><span class="comment">#### docker启动时遇到warning警告</span></span><br><span class="line"><span class="comment">#### 原因:</span></span><br><span class="line"><span class="comment">#### docker启动时,指定 --net=host 或者 -net=host,如果还指定了 -p 映射端口,这个时候就会有此警告;并且通过 -p 设置的参数将不会起到任何作用,端口号会以主机端口号为主,重复时则递增</span></span><br><span class="line"><span class="comment">#### 解决:</span></span><br><span class="line"><span class="comment">#### 解决的办法就是使用docker的其他网络模式,例如 -net=bridge 这样可以解决问题;或者直接无视</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 避免 warning 警告产生</span></span><br><span class="line"><span class="comment">#### 删除之前的tomcat83容器后重试</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker run -d --net=host --name tomcat84  billygoo/tomcat8-jdk8</span></span><br><span class="line">d1fb6721b30145f01a78676aded8c200043a4479ebbfd494e631a53319789e57</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE                   COMMAND             CREATED         STATUS         PORTS                                       NAMES</span><br><span class="line">d1fb6721b301   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   4 seconds ago   Up 2 seconds                                               tomcat84</span><br><span class="line">bbf994869964   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   6 hours ago     Up 6 hours     0.0.0.0:8082-&gt;8080/tcp, :::8082-&gt;8080/tcp   tomcat82</span><br><span class="line">faa368fd7fc2   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   6 hours ago     Up 6 hours     0.0.0.0:8081-&gt;8080/tcp, :::8081-&gt;8080/tcp   tomcat81</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">###########################################################</span></span><br><span class="line"><span class="comment">### 对比与bridge模式的区别</span></span><br><span class="line"></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE                   COMMAND             CREATED         STATUS         PORTS                                       NAMES</span><br><span class="line">d1fb6721b301   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   4 seconds ago   Up 2 seconds                                               tomcat84</span><br><span class="line">bbf994869964   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   6 hours ago     Up 6 hours     0.0.0.0:8082-&gt;8080/tcp, :::8082-&gt;8080/tcp   tomcat82</span><br><span class="line">faa368fd7fc2   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   6 hours ago     Up 6 hours     0.0.0.0:8081-&gt;8080/tcp, :::8081-&gt;8080/tcp   tomcat81</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker stop bbf994869964 faa368fd7fc2</span></span><br><span class="line">bbf994869964</span><br><span class="line">faa368fd7fc2</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/ether 52:54:00:4d:77:d3 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 10.0.2.15/24 brd 10.0.2.255 scope global noprefixroute dynamic eth0</span><br><span class="line">       valid_lft 63070sec preferred_lft 63070sec</span><br><span class="line">    inet6 fe80::5054:ff:fe4d:77d3/64 scope <span class="built_in">link</span></span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3: eth1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/ether 08:00:27:ac:f9:6b brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.33.101/24 brd 192.168.33.255 scope global noprefixroute eth1</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::a00:27ff:feac:f96b/64 scope <span class="built_in">link</span></span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">4: docker0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:d5:77:0a:48 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::42:d5ff:fe77:a48/64 scope <span class="built_in">link</span></span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 进入到容器内部</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker exec -it tomcat84 /bin/bash</span></span><br><span class="line">root@CentOs7_001:/usr/local/tomcat<span class="comment"># ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/ether 52:54:00:4d:77:d3 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 10.0.2.15/24 brd 10.0.2.255 scope global noprefixroute dynamic eth0</span><br><span class="line">       valid_lft 63033sec preferred_lft 63033sec</span><br><span class="line">    inet6 fe80::5054:ff:fe4d:77d3/64 scope <span class="built_in">link</span></span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3: eth1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/ether 08:00:27:ac:f9:6b brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.33.101/24 brd 192.168.33.255 scope global noprefixroute eth1</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::a00:27ff:feac:f96b/64 scope <span class="built_in">link</span></span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">4: docker0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:d5:77:0a:48 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::42:d5ff:fe77:a48/64 scope <span class="built_in">link</span></span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">root@CentOs7_001:/usr/local/tomcat<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 查看容器内部网络情况</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker inspect tomcat84 | tail -n 20</span></span><br><span class="line">            <span class="string">&quot;Networks&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;host&quot;</span>: &#123;</span><br><span class="line">                    <span class="string">&quot;IPAMConfig&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Links&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Aliases&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;NetworkID&quot;</span>: <span class="string">&quot;71cbdee3627d592c4b7b4609b17241677f519c59222ba6709968b60fd0cade1f&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;EndpointID&quot;</span>: <span class="string">&quot;444f8d7347dea030bf77256fa19dc195eda5c0f2407b2da8633465a6384b9d18&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Gateway&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;IPAddress&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;IPPrefixLen&quot;</span>: 0,</span><br><span class="line">                    <span class="string">&quot;IPv6Gateway&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6Address&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6PrefixLen&quot;</span>: 0,</span><br><span class="line">                    <span class="string">&quot;MacAddress&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;DriverOpts&quot;</span>: null</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>host网络案例</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B01.jpg"
+                     
+                ><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B02.jpg"
+                     
+                ><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B03.jpg"
+                     
+                ></p>
+<blockquote>
+<p>在使用host网络模式时,不需要设置 -p 的端口映射,如何访问容器?</p>
+<p>http:宿主机IP:8080&#x2F;</p>
+<p>可以直接使用<code>IP+默认端口号</code>,可以访问成功;因为此时容器的IP借用主机的,所以容器共享宿主机网络IP;这样的好处就是外部主机和容器可以直接通信</p>
+</blockquote>
+<h4 id="none"><a href="#none" class="headerlink" title="none"></a><strong>none</strong></h4><blockquote>
+<p>在none模式下，并不为Docker容器进行网络配置</p>
+<p>也就是说，这个Docker容器没有网卡、IP、路由等信息；只有一个lo需要我们自己为Docker容器添加网卡、配置IP等</p>
+</blockquote>
+<p><strong>禁用网络功能，只有lo表识（就是127.0.0.1表示本地回环）</strong></p>
+<p><strong>案例</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 启动一个容器,使用none模式</span></span><br><span class="line"></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker run -d --net=none --name tomcat85 billygoo/tomcat8-jdk8</span></span><br><span class="line">5bea8ea317d59d7723f0ec6bc4baaabee459c81cde607056160e5bfe7a44e04c</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE                   COMMAND             CREATED          STATUS          PORTS     NAMES</span><br><span class="line">5bea8ea317d5   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   12 seconds ago   Up 11 seconds             tomcat85</span><br><span class="line">d1fb6721b301   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>   18 minutes ago   Up 18 minutes             tomcat84</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### 容器内部网络情况</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker inspect tomcat85 |tail -n 20</span></span><br><span class="line">            <span class="string">&quot;Networks&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;none&quot;</span>: &#123;</span><br><span class="line">                    <span class="string">&quot;IPAMConfig&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Links&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Aliases&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;NetworkID&quot;</span>: <span class="string">&quot;020e19a8bdbe1fc5e7513f84fce8f6e2f2ce40bd3d3e7bce6de637bdcceec218&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;EndpointID&quot;</span>: <span class="string">&quot;a90b5635332b784a5e756aac6d4c007c1237dad5877940aeef4cfacd6834c44f&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Gateway&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;IPAddress&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;IPPrefixLen&quot;</span>: 0,</span><br><span class="line">                    <span class="string">&quot;IPv6Gateway&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6Address&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6PrefixLen&quot;</span>: 0,</span><br><span class="line">                    <span class="string">&quot;MacAddress&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;DriverOpts&quot;</span>: null</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### 容器实例内部网络情况</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker exec -it tomcat85 /bin/bash</span></span><br><span class="line">root@5bea8ea317d5:/usr/local/tomcat<span class="comment"># ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">root@5bea8ea317d5:/usr/local/tomcat<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>none网络案例</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-none%E6%A1%88%E4%BE%8B01.jpg"
+                     
+                ></p>
+<h4 id="container"><a href="#container" class="headerlink" title="container"></a><strong>container</strong></h4><blockquote>
+<p>container网络模式</p>
+<p>新建的容器和已经存在的一个容器共享一个网络ip配置而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的IP，而是和一个指定的容器共享IP，端口范围等。同样，两个容器除了网络方面，其他的如文件系统，进程列表等还是隔离的。</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-container%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg"
+                     
+                ></p>
+<p><strong>演示案例</strong></p>
+<blockquote>
+<p>由于tomcat会公用同一个ip和同一个端口,导致端口冲突,不适合使用tomcat演示;</p>
+<p>换个镜像演示</p>
+</blockquote>
+<blockquote>
+<p>Alpine Linux是一款独立的,非商业的通用的Linux发行版,专为追求安全性,简单性和资源效率的用户而设计.因为它小,简单而且安全;所以作为基础镜像是非常好的一个选择.</p>
+</blockquote>
+<p><strong>案例</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 启动两个alpine容器</span></span><br><span class="line"><span class="comment">### alpine1</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker run -it --name alpine1 alpine /bin/sh</span></span><br><span class="line">/ <span class="comment"># ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">9: eth0@if10: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue state UP</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">/ <span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### alpine2</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker run -it --network container:alpine1 --name alpine2 alpine /bin/sh</span></span><br><span class="line">/ <span class="comment"># ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">9: eth0@if10: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue state UP</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">/ <span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>网络案例</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-container%E6%A1%88%E4%BE%8B01.jpg"
+                     
+                ></p>
+<blockquote>
+<p>由于此时 alpine2依赖 alpine1的网络；如果此时关闭 alpine1;在观察alpine2</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 演示案例,关闭alpine1服务;观察alpine2容器网络</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE     COMMAND     CREATED          STATUS          PORTS     NAMES</span><br><span class="line">230b90dfcb66   alpine    <span class="string">&quot;/bin/sh&quot;</span>   10 minutes ago   Up 10 minutes             alpine2</span><br><span class="line">a8a00f4e12c3   alpine    <span class="string">&quot;/bin/sh&quot;</span>   12 minutes ago   Up 11 minutes             alpine1</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker stop alpine1</span></span><br><span class="line">alpine1</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE     COMMAND     CREATED          STATUS          PORTS     NAMES</span><br><span class="line">230b90dfcb66   alpine    <span class="string">&quot;/bin/sh&quot;</span>   10 minutes ago   Up 10 minutes             alpine2</span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOs7_001 ~]<span class="comment"># docker exec -it alpine2 /bin/sh</span></span><br><span class="line">/ <span class="comment"># ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">/ <span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 随着alpine1关闭;alpine2网络通道也关闭了,只剩下lo模式</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="自定义网络"><a href="#自定义网络" class="headerlink" title="自定义网络"></a><strong>自定义网络</strong></h4><ul>
+<li><strong>docker link 介绍</strong></li>
+</ul>
+<blockquote>
+<p>容器互联</p>
+<p>– link 可以通过容器名互相通信,容器间共享环境变量</p>
+<p>– link 主要用来解决两个容器通过ip地址连接时<code>容器ip地址</code>会变的问题</p>
+</blockquote>
+<p><strong>–link案例</strong></p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 先创建启动mysql容器</span></span><br><span class="line">docker run -dti --name db --restart=always -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=blog mysql:5.7</span><br><span class="line"><span class="comment"># -dti：指定容器运行在交互模式下，并将其连接到终端</span></span><br><span class="line"><span class="comment"># --name db：为容器指定名称 db，以便后续操作直接使用容器名</span></span><br><span class="line"><span class="comment"># --restart=always：指定容器在退出后总是自动重启</span></span><br><span class="line"><span class="comment"># -e MYSQL_ROOT_PASSWORD=root：设置mysql的root用户密码为root</span></span><br><span class="line"><span class="comment"># -e MYSQL_DATABASE=blog：创建一个名为blog的数据库</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 创建启动源容器wordpress</span></span><br><span class="line"><span class="comment">### 使用--link</span></span><br><span class="line"><span class="comment">### docker run -dti --name 容器名 --restart=always -v 本地目录:容器内目录 -p 本地端口:容器端口 --link 数据库容器名:数据库容器别名 wordpress镜</span></span><br><span class="line">docker run -dti --name blog --restart=always -v /mydata/web:/var/www/html -p 8089:80 --<span class="built_in">link</span> db:mysql wordpress</span><br><span class="line"><span class="comment"># -dti：指定容器运行在交互模式下，并将其连接到终端</span></span><br><span class="line"><span class="comment"># --name blog：为容器指定名称 blog，以便直接使用容器名</span></span><br><span class="line"><span class="comment"># --restart=always：指定容器在退出后总是自动重启</span></span><br><span class="line"><span class="comment"># -v /mydata/web:/var/www/html：将宿主机上 /mydata/web 目录映射到容器中的 /var/www/html 目录，实现数据持久化</span></span><br><span class="line"><span class="comment"># -p 8089:80：将容器内部的80端口映射到宿主机上的8089端口，以便外部网络可以访问容器中的网站</span></span><br><span class="line"><span class="comment"># --link db:mysql：将容器与另一个名为 db 的容器连接起来，并设置别民为 mysql，以便在后续操作中引用该容器</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>验证:</strong> <strong>连通性验证</strong></p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 启动的容器host</span></span><br><span class="line"></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE          COMMAND                   CREATED          STATUS          PORTS                                       NAMES</span><br><span class="line">c48b8c6bc4d2   wordpress      <span class="string">&quot;docker-entrypoint.s…&quot;</span>   12 minutes ago   Up 12 minutes   0.0.0.0:8089-&gt;80/tcp, :::8089-&gt;80/tcp       blog</span><br><span class="line">580cf83c51ab   mysql:5.7      <span class="string">&quot;docker-entrypoint.s…&quot;</span>   36 minutes ago   Up 36 minutes   3306/tcp, 33060/tcp                         db</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it db cat /etc/hosts</span></span><br><span class="line">127.0.0.1       localhost</span><br><span class="line">::1     localhost ip6-localhost ip6-loopback</span><br><span class="line">fe00::0 ip6-localnet</span><br><span class="line">ff00::0 ip6-mcastprefix</span><br><span class="line">ff02::1 ip6-allnodes</span><br><span class="line">ff02::2 ip6-allrouters</span><br><span class="line">172.17.0.2      580cf83c51ab</span><br><span class="line"></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it blog cat /etc/hosts</span></span><br><span class="line">127.0.0.1       localhost</span><br><span class="line">::1     localhost ip6-localhost ip6-loopback</span><br><span class="line">fe00::0 ip6-localnet</span><br><span class="line">ff00::0 ip6-mcastprefix</span><br><span class="line">ff02::1 ip6-allnodes</span><br><span class="line">ff02::2 ip6-allrouters</span><br><span class="line">172.17.0.2      mysql 580cf83c51ab db</span><br><span class="line">172.17.0.3      c48b8c6bc4d2</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>自定义网络案例</strong></p>
+<ul>
+<li>使用自定义网络之前</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 启动两个tomcat容器</span></span><br><span class="line">docker run -dti --name tomcat1 -p 8081:8080 billygoo/tomcat8-jdk8</span><br><span class="line">docker run -dti --name tomcat2 -p 8082:8080 billygoo/tomcat8-jdk8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 运行结果</span></span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE                   COMMAND                   CREATED          STATUS          PORTS                                       NAMES</span><br><span class="line">0708901345c3   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>         2 seconds ago    Up 1 second     0.0.0.0:8082-&gt;8080/tcp, :::8082-&gt;8080/tcp   tomcat2</span><br><span class="line">7988714376ad   billygoo/tomcat8-jdk8   <span class="string">&quot;catalina.sh run&quot;</span>         27 minutes ago   Up 27 minutes   0.0.0.0:8081-&gt;8080/tcp, :::8081-&gt;8080/tcp   tomcat1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看网络情况</span></span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment"># docker exec -it tomcat1 ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2935: eth0@if2936: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment"># docker exec -it tomcat2 ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3217: eth0@if3218: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:ac:11:00:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet 172.17.0.3/16 brd 172.17.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 测试ip互通</span></span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment"># docker exec -it tomcat1 ping 172.17.0.3</span></span><br><span class="line">PING 172.17.0.3 (172.17.0.3) 56(84) bytes of data.</span><br><span class="line">64 bytes from 172.17.0.3: icmp_seq=1 ttl=64 time=0.064 ms</span><br><span class="line">64 bytes from 172.17.0.3: icmp_seq=2 ttl=64 time=0.052 ms</span><br><span class="line">64 bytes from 172.17.0.3: icmp_seq=3 ttl=64 time=0.054 ms</span><br><span class="line">64 bytes from 172.17.0.3: icmp_seq=4 ttl=64 time=0.056 ms</span><br><span class="line">--- 172.17.0.3 ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 3000ms</span><br><span class="line">rtt min/avg/max/mdev = 0.052/0.056/0.064/0.008 ms</span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment"># docker exec -it tomcat2 ping 172.17.0.2</span></span><br><span class="line">PING 172.17.0.2 (172.17.0.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from 172.17.0.2: icmp_seq=1 ttl=64 time=0.057 ms</span><br><span class="line">64 bytes from 172.17.0.2: icmp_seq=2 ttl=64 time=0.050 ms</span><br><span class="line">64 bytes from 172.17.0.2: icmp_seq=3 ttl=64 time=0.069 ms</span><br><span class="line">64 bytes from 172.17.0.2: icmp_seq=4 ttl=64 time=0.055 ms</span><br><span class="line">--- 172.17.0.2 ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 3001ms</span><br><span class="line">rtt min/avg/max/mdev = 0.050/0.057/0.069/0.011 ms</span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 测试容器名互通</span></span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment"># docker exec -it tomcat2 ping tomcat1</span></span><br><span class="line">ping: tomcat1: Name or service not known</span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment"># docker exec -it tomcat1 ping tomcat2</span></span><br><span class="line">ping: tomcat2: Name or service not known</span><br><span class="line">[root@CentOS7_001 zyd-tag]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<ul>
+<li>使用自定义网络</li>
+</ul>
+<blockquote>
+<p>自定义桥接网卡：自定义网络默认使用的是桥接网络<code>brideg</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 新建自定义网络</span></span><br><span class="line">docker network create test_my_network</span><br><span class="line"><span class="comment">## 新建两个容器,使用自定义的网络</span></span><br><span class="line">docker run -dti --name tomcat1 -p 8083:8080 --net test_my_network billygoo/tomcat8-jdk8</span><br><span class="line">docker run -dti --name tomcat2 -p 8084:8080 --net test_my_network billygoo/tomcat8-jdk8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it tomcat1 ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3312: eth0@if3313: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:ac:13:00:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet 172.19.0.3/16 brd 172.19.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it tomcat2 ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    <span class="built_in">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3310: eth0@if3311: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    <span class="built_in">link</span>/ether 02:42:ac:13:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet 172.19.0.2/16 brd 172.19.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">       </span><br><span class="line"><span class="comment">## 测试容器名互通</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it tomcat1 ping tomcat2</span></span><br><span class="line">PING tomcat2 (172.19.0.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from tomcat2.test_my_network (172.19.0.2): icmp_seq=1 ttl=64 time=0.063 ms</span><br><span class="line">64 bytes from tomcat2.test_my_network (172.19.0.2): icmp_seq=2 ttl=64 time=0.054 ms</span><br><span class="line">64 bytes from tomcat2.test_my_network (172.19.0.2): icmp_seq=3 ttl=64 time=0.050 ms</span><br><span class="line">--- tomcat2 ping statistics ---</span><br><span class="line">3 packets transmitted, 3 received, 0% packet loss, time 2000ms</span><br><span class="line">rtt min/avg/max/mdev = 0.050/0.055/0.063/0.010 ms</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it tomcat2 ping tomcat1</span></span><br><span class="line">PING tomcat1 (172.19.0.3) 56(84) bytes of data.</span><br><span class="line">64 bytes from tomcat1.test_my_network (172.19.0.3): icmp_seq=1 ttl=64 time=0.043 ms</span><br><span class="line">64 bytes from tomcat1.test_my_network (172.19.0.3): icmp_seq=2 ttl=64 time=0.061 ms</span><br><span class="line">64 bytes from tomcat1.test_my_network (172.19.0.3): icmp_seq=3 ttl=64 time=0.074 ms</span><br><span class="line">64 bytes from tomcat1.test_my_network (172.19.0.3): icmp_seq=4 ttl=64 time=0.054 ms</span><br><span class="line">--- tomcat1 ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 2999ms</span><br><span class="line">rtt min/avg/max/mdev = 0.043/0.058/0.074/0.011 ms</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看容器使用网络</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker inspect tomcat1 |tail -n 22</span></span><br><span class="line">            <span class="string">&quot;Networks&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;test_my_network&quot;</span>: &#123;</span><br><span class="line">                    <span class="string">&quot;IPAMConfig&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Links&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Aliases&quot;</span>: [</span><br><span class="line">                        <span class="string">&quot;2023330c8bc7&quot;</span></span><br><span class="line">                    ],</span><br><span class="line">                    <span class="string">&quot;NetworkID&quot;</span>: <span class="string">&quot;55af0827e416760bb36df2cf73ee4807651d08ed11f45bf2daf6564da13d2db2&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;EndpointID&quot;</span>: <span class="string">&quot;cfaf00328fde61b11da0faeddde7faf4d3cd84a6f57546a44875123d6c924efe&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Gateway&quot;</span>: <span class="string">&quot;172.19.0.1&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;IPAddress&quot;</span>: <span class="string">&quot;172.19.0.3&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;IPPrefixLen&quot;</span>: 16,</span><br><span class="line">                    <span class="string">&quot;IPv6Gateway&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6Address&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6PrefixLen&quot;</span>: 0,</span><br><span class="line">                    <span class="string">&quot;MacAddress&quot;</span>: <span class="string">&quot;02:42:ac:13:00:03&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;DriverOpts&quot;</span>: null</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker inspect tomcat2 |tail -n 22</span></span><br><span class="line">            <span class="string">&quot;Networks&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;test_my_network&quot;</span>: &#123;</span><br><span class="line">                    <span class="string">&quot;IPAMConfig&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Links&quot;</span>: null,</span><br><span class="line">                    <span class="string">&quot;Aliases&quot;</span>: [</span><br><span class="line">                        <span class="string">&quot;ac0155a6a48f&quot;</span></span><br><span class="line">                    ],</span><br><span class="line">                    <span class="string">&quot;NetworkID&quot;</span>: <span class="string">&quot;55af0827e416760bb36df2cf73ee4807651d08ed11f45bf2daf6564da13d2db2&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;EndpointID&quot;</span>: <span class="string">&quot;ac26e9de09d09315133ccd034bc07af3b1091be78cdfe04cccc5d7acf52f465b&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Gateway&quot;</span>: <span class="string">&quot;172.19.0.1&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;IPAddress&quot;</span>: <span class="string">&quot;172.19.0.2&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;IPPrefixLen&quot;</span>: 16,</span><br><span class="line">                    <span class="string">&quot;IPv6Gateway&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6Address&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;GlobalIPv6PrefixLen&quot;</span>: 0,</span><br><span class="line">                    <span class="string">&quot;MacAddress&quot;</span>: <span class="string">&quot;02:42:ac:13:00:02&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;DriverOpts&quot;</span>: null</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>结论</strong></p>
+<blockquote>
+<p>自定义网络本身就维护好了主机名和ip的对应关系（ip和域名都名能通）</p>
+</blockquote>
+<p><strong><code>贴一个架构图</code></strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/docker/docker%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png"
+                     
+                ></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>标题:</strong> Docker网络</li>
+        <li><strong>作者:</strong> igxiaoshan</li>
+        <li><strong>创建于
+                :</strong> 2023-10-28 18:35:15</li>
+        
+            <li>
+                <strong>更新于
+                    :</strong> 2023-10-19 16:45:44
+            </li>
+        
+        <li>
+            <strong>链接:</strong> https://igxiaoshan.github.io/2023/10/28/11.docker网络/
+        </li>
+        <li>
+            <strong>
+                版权声明:
+            </strong>
+            
+            本文章采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a> 进行许可。
+            
+
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Docker/">#Docker</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2023/10/28/12.docker-compose%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Docker-compose容器编排</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/2023/10/28/11.1docker%E5%AE%B9%E5%99%A8%E6%B2%A1%E6%9C%89%E7%9B%B8%E5%BA%94%E5%91%BD%E4%BB%A4/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">解决容器启动，内部无法使用`ip addr`和`ping`命令</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;评论
+    </div>
+    
+
+        
+            
+ 
+    <div id="waline"></div>
+    <script type="module"  data-swup-reload-script>
+        import { init } from '/js/libs/waline.mjs';
+
+        function loadWaline() {
+            init({
+                el: '#waline',
+                serverURL: 'https://example.example.com',
+                lang: 'zh-CN',
+                dark: 'body[class~="dark-mode"]',
+                requiredMeta: ['nick','mail'], // cannot customize by theme config, change it yourself
+            });
+        }
+
+        if ('true') {
+            const loadWalineTimeout = setTimeout(() => {
+                loadWaline();
+                clearTimeout(loadWalineTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadWaline);
+        }
+        
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">Docker网络</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E7%BD%91%E7%BB%9C%E4%BB%8B%E7%BB%8D"><span class="nav-text">docker网络介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4"><span class="nav-text">docker网络命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E7%BD%91%E7%BB%9C%E4%BD%9C%E7%94%A8"><span class="nav-text">docker网络作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F"><span class="nav-text">docker网络模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%E4%BB%8B%E7%BB%8D"><span class="nav-text">网络模式介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%AE%9E%E4%BE%8B%E5%86%85%E9%BB%98%E8%AE%A4%E7%BD%91%E7%BB%9CIP%E7%94%9F%E4%BA%A7%E8%A7%84%E5%88%99"><span class="nav-text">容器实例内默认网络IP生产规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%E6%A1%88%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="nav-text">网络模式案例说明</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>
