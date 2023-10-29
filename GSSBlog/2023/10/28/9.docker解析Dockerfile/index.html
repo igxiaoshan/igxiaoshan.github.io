@@ -13,7 +13,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://igxiaoshan.github.io/2023/10/28/9.docker解析dockerfile/"/>
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/10/28/9.docker解析dockerfile/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -21,25 +21,25 @@
         <meta name="description" content="Dockerfile用来构建docker镜像的文本文件,是有一条条构建镜像所需的指令和参数构成的脚本.   架构图    官网  https:&#x2F;&#x2F;docs.docker.com&#x2F;engine&#x2F;reference&#x2F;builder&#x2F;     Dockerfile基础知识  每条保留字指令都必须为大写字母且后面要跟随至少一个参数 指令从上到下,顺序执行 #表示注释 每条指令都会创建一个新的镜像层并对镜">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Dockerfile解析">
-<meta property="og:url" content="https://igxiaoshan.github.io/2023/10/28/9.docker%E8%A7%A3%E6%9E%90Dockerfile/index.html">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/10/28/9.docker%E8%A7%A3%E6%9E%90Dockerfile/index.html">
 <meta property="og:site_name" content="igxiaoshan&#39;s Blog">
 <meta property="og:description" content="Dockerfile用来构建docker镜像的文本文件,是有一条条构建镜像所需的指令和参数构成的脚本.   架构图    官网  https:&#x2F;&#x2F;docs.docker.com&#x2F;engine&#x2F;reference&#x2F;builder&#x2F;     Dockerfile基础知识  每条保留字指令都必须为大写字母且后面要跟随至少一个参数 指令从上到下,顺序执行 #表示注释 每条指令都会创建一个新的镜像层并对镜">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E4%BD%93%E7%B3%BB%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9B%BE.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E4%BD%93%E7%B3%BB%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9B%BE.png">
 <meta property="article:published_time" content="2023-10-28T10:35:15.308Z">
 <meta property="article:modified_time" content="2023-10-19T08:46:52.922Z">
 <meta property="article:author" content="igxiaoshan">
 <meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://igxiaoshan.github.io/images/docker/docker%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta name="twitter:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
     
     
     <!--- Icon Part-->
-    <link rel="icon" type="image/png" href="/images/logo.png" sizes="192x192">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png">
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
     <meta name="theme-color" content="#A31F34">
-    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
     <!--- Page Info-->
     
     <title>
@@ -49,23 +49,23 @@
         igxiaoshan&#39;s Blog
     </title>
     
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
 
 
     
         
-<link rel="stylesheet" href="/assets/build/styles.css">
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
 
     
 
     
-<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
 
     
-<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
 
     
-<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
 
     <!--- Font Part-->
     
@@ -76,7 +76,7 @@
     <!--- Inject Part-->
     
     <script id="hexo-configurations">
-    window.config = {"hostname":"igxiaoshan.github.io","root":"/","language":"zh-CN"};
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN"};
     window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":null},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
     window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
     window.data = {"masonry":false};
@@ -84,16 +84,16 @@
     
     <!--- Fontawesome Part-->
     
-<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
 
     
-<link rel="stylesheet" href="/fontawesome/brands.min.css">
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
 
     
-<link rel="stylesheet" href="/fontawesome/solid.min.css">
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
 
     
-<link rel="stylesheet" href="/fontawesome/regular.min.css">
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
 
     
     
@@ -128,11 +128,11 @@
     <div class="navbar-content">
         <div class="left">
             
-                <a class="logo-image" href="/">
-                    <img src="/images/logo.png">
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
                 </a>
             
-            <a class="logo-title" href="/">
+            <a class="logo-title" href="/GSSBlog/">
                 
                 igxiaoshan&#39;s Blog
                 
@@ -148,7 +148,7 @@
                             <li class="navbar-item">
                                 <!-- Menu -->
                                 <a class="" 
-                                    href="/"  >
+                                    href="/GSSBlog/"  >
                                     
                                         
                                             <i class="fa-regular fa-house"></i>
@@ -164,7 +164,7 @@
                             <li class="navbar-item">
                                 <!-- Menu -->
                                 <a class="" 
-                                    href="/archives"  >
+                                    href="/GSSBlog/archives"  >
                                     
                                         
                                             <i class="fa-regular fa-archive"></i>
@@ -180,7 +180,7 @@
                             <li class="navbar-item">
                                 <!-- Menu -->
                                 <a class="" 
-                                    href="/tags"  >
+                                    href="/GSSBlog/tags"  >
                                     
                                         
                                             <i class="fa-regular fa-tags"></i>
@@ -196,7 +196,7 @@
                             <li class="navbar-item">
                                 <!-- Menu -->
                                 <a class="" 
-                                    href="/categories"  >
+                                    href="/GSSBlog/categories"  >
                                     
                                         
                                             <i class="fa-regular fa-folder"></i>
@@ -228,7 +228,7 @@
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
                         <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/"  >
+                        href="/GSSBlog/"  >
                              
                                 
                                     <i class="fa-regular fa-house"></i>
@@ -243,7 +243,7 @@
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
                         <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/archives"  >
+                        href="/GSSBlog/archives"  >
                              
                                 
                                     <i class="fa-regular fa-archive"></i>
@@ -258,7 +258,7 @@
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
                         <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/tags"  >
+                        href="/GSSBlog/tags"  >
                              
                                 
                                     <i class="fa-regular fa-tags"></i>
@@ -273,7 +273,7 @@
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
                         <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/categories"  >
+                        href="/GSSBlog/categories"  >
                              
                                 
                                     <i class="fa-regular fa-folder"></i>
@@ -317,7 +317,7 @@
         
             <div class="article-header flex flex-row gap-2 items-center">
                 <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
-                    <img src="/images/avatar.jpg">
+                    <img src="/GSSBlog/images/avatar.jpg">
                 </div>
                 <div class="info flex flex-col justify-between">
                     <div class="author flex items-center">
@@ -352,7 +352,7 @@
                     
                         
                         <li>
-                            <a href="/categories/Docker/">Docker</a>&nbsp;
+                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
                         </li>
                     
                     
@@ -366,7 +366,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/Docker/">Docker</a>&nbsp;
+                        <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
                     </li>
                 
             </ul>
@@ -401,7 +401,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E6%9E%B6%E6%9E%84%E5%9B%BE.png"
+                     data-src="/GSSBlog/images/docker/docker%E6%9E%B6%E6%9E%84%E5%9B%BE.png"
                      
                 ></p>
 <ul>
@@ -439,7 +439,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E4%BD%93%E7%B3%BB%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9B%BE.png"
+                     data-src="/GSSBlog/images/docker/docker%E4%BD%93%E7%B3%BB%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9B%BE.png"
                      
                 ></p>
 <blockquote>
@@ -578,7 +578,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/Docker/">#Docker</a>&nbsp;
+                        <a href="/GSSBlog/tags/Docker/">#Docker</a>&nbsp;
                     </li>
                 
             </ul>
@@ -592,7 +592,7 @@
                     <div class="article-prev">
                         <a class="prev"
                         rel="prev"
-                        href="/2023/10/28/8.1docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88%E9%99%84%E5%BD%951/"
+                        href="/GSSBlog/2023/10/28/8.1docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88%E9%99%84%E5%BD%951/"
                         >
                             <span class="left arrow-icon flex justify-center items-center">
                                 <i class="fa-solid fa-chevron-left"></i>
@@ -608,7 +608,7 @@
                     <div class="article-next">
                         <a class="next"
                         rel="next"
-                        href="/2023/10/28/8.0docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4/"
+                        href="/GSSBlog/2023/10/28/8.0docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4/"
                         >
                             <span class="title flex justify-center items-center">
                                 <span class="post-nav-title-item">Docker部署redis集群</span>
@@ -638,7 +638,7 @@
  
     <div id="waline"></div>
     <script type="module"  data-swup-reload-script>
-        import { init } from '/js/libs/waline.mjs';
+        import { init } from '/GSSBlog/js/libs/waline.mjs';
 
         function loadWaline() {
             init({
@@ -705,7 +705,7 @@
               <span>2022</span>
               -
             
-            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">igxiaoshan</a>
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
         </div>
         
             <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
@@ -813,17 +813,17 @@
 
 
     
-<script src="/js/libs/Swup.min.js"></script>
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
 
-<script src="/js/libs/SwupSlideTheme.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
 
-<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
 
-<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
 
-<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
 
-<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
 
 <script>
     const swup = new Swup({
@@ -850,32 +850,32 @@
 
 
 
-<script src="/js/tools/imageViewer.js" type="module"></script>
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
 
-<script src="/js/utils.js" type="module"></script>
+<script src="/GSSBlog/js/utils.js" type="module"></script>
 
-<script src="/js/main.js" type="module"></script>
+<script src="/GSSBlog/js/main.js" type="module"></script>
 
-<script src="/js/layouts/navbarShrink.js" type="module"></script>
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
 
-<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
 
-<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
 
-<script src="/js/layouts/categoryList.js" type="module"></script>
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
 
-
-
-
-
-    
-<script src="/js/tools/codeBlock.js" type="module"></script>
 
 
 
 
     
-<script src="/js/layouts/lazyload.js" type="module"></script>
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
 
 
 
@@ -883,10 +883,10 @@
 
 
   
-<script src="/js/libs/Typed.min.js"></script>
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
 
   
-<script src="/js/plugins/typed.js" type="module"></script>
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
 
 
 
@@ -897,14 +897,14 @@
 <div class="post-scripts" data-swup-reload-script>
     
         
-<script src="/js/libs/anime.min.js"></script>
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
 
         
-<script src="/js/tools/tocToggle.js" type="module"></script>
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
 
-<script src="/js/layouts/toc.js" type="module"></script>
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
 
-<script src="/js/plugins/tabs.js" type="module"></script>
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
 
     
 </div>

@@ -13,7 +13,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://igxiaoshan.github.io/2023/10/28/11.docker网络/"/>
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/10/28/11.docker网络/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -21,39 +21,39 @@
         <meta name="description" content="官网：码头工人运行参考 |码头工人文档 (docker.com)   docker网络介绍 docker未启动时，默认网络情况  12345678docker 未启动时,不包含docker0的虚拟网络lo: 本地网络(localhost)virbr0: 在CentOS7的安装过程中,如果有选择相关虚拟化的服务安装系统后,启动网卡时会发现有一个以网桥连接的私网地址的virbr0网卡(virbr0网">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker网络">
-<meta property="og:url" content="https://igxiaoshan.github.io/2023/10/28/11.docker%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/10/28/11.docker%E7%BD%91%E7%BB%9C/index.html">
 <meta property="og:site_name" content="igxiaoshan&#39;s Blog">
 <meta property="og:description" content="官网：码头工人运行参考 |码头工人文档 (docker.com)   docker网络介绍 docker未启动时，默认网络情况  12345678docker 未启动时,不包含docker0的虚拟网络lo: 本地网络(localhost)virbr0: 在CentOS7的安装过程中,如果有选择相关虚拟化的服务安装系统后,启动网卡时会发现有一个以网桥连接的私网地址的virbr0网卡(virbr0网">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://igxiaoshan.github.io/%5Cimages%5Cdocker%5Cdocker%E6%9C%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E5%86%85%E9%83%A8%E8%AF%A6%E6%83%8501.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%8501.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%85-%E6%A6%82%E8%A6%81%E7%89%8801.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E4%BA%92%E9%80%9A%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B01.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B02.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-host%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B01.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B02.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B03.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-none%E6%A1%88%E4%BE%8B01.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-container%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E7%BD%91%E7%BB%9C-container%E6%A1%88%E4%BE%8B01.jpg">
-<meta property="og:image" content="https://igxiaoshan.github.io/images/docker/docker%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/%5Cimages%5Cdocker%5Cdocker%E6%9C%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E5%86%85%E9%83%A8%E8%AF%A6%E6%83%8501.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%8501.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%85-%E6%A6%82%E8%A6%81%E7%89%8801.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E4%BA%92%E9%80%9A%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B02.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-host%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B02.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B03.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-none%E6%A1%88%E4%BE%8B01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-container%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-container%E6%A1%88%E4%BE%8B01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/docker%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
 <meta property="article:published_time" content="2023-10-28T10:35:15.311Z">
 <meta property="article:modified_time" content="2023-10-19T08:45:44.276Z">
 <meta property="article:author" content="igxiaoshan">
 <meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://igxiaoshan.github.io/%5Cimages%5Cdocker%5Cdocker%E6%9C%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png">
+<meta name="twitter:image" content="https://igxiaoshan.github.io/GSSBlog/%5Cimages%5Cdocker%5Cdocker%E6%9C%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png">
     
     
     <!--- Icon Part-->
-    <link rel="icon" type="image/png" href="/images/logo.png" sizes="192x192">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png">
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
     <meta name="theme-color" content="#A31F34">
-    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
     <!--- Page Info-->
     
     <title>
@@ -63,23 +63,23 @@
         igxiaoshan&#39;s Blog
     </title>
     
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
 
 
     
         
-<link rel="stylesheet" href="/assets/build/styles.css">
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
 
     
 
     
-<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
 
     
-<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
 
     
-<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
 
     <!--- Font Part-->
     
@@ -90,7 +90,7 @@
     <!--- Inject Part-->
     
     <script id="hexo-configurations">
-    window.config = {"hostname":"igxiaoshan.github.io","root":"/","language":"zh-CN"};
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN"};
     window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":null},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
     window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
     window.data = {"masonry":false};
@@ -98,16 +98,16 @@
     
     <!--- Fontawesome Part-->
     
-<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
 
     
-<link rel="stylesheet" href="/fontawesome/brands.min.css">
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
 
     
-<link rel="stylesheet" href="/fontawesome/solid.min.css">
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
 
     
-<link rel="stylesheet" href="/fontawesome/regular.min.css">
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
 
     
     
@@ -142,11 +142,11 @@
     <div class="navbar-content">
         <div class="left">
             
-                <a class="logo-image" href="/">
-                    <img src="/images/logo.png">
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
                 </a>
             
-            <a class="logo-title" href="/">
+            <a class="logo-title" href="/GSSBlog/">
                 
                 igxiaoshan&#39;s Blog
                 
@@ -162,7 +162,7 @@
                             <li class="navbar-item">
                                 <!-- Menu -->
                                 <a class="" 
-                                    href="/"  >
+                                    href="/GSSBlog/"  >
                                     
                                         
                                             <i class="fa-regular fa-house"></i>
@@ -178,7 +178,7 @@
                             <li class="navbar-item">
                                 <!-- Menu -->
                                 <a class="" 
-                                    href="/archives"  >
+                                    href="/GSSBlog/archives"  >
                                     
                                         
                                             <i class="fa-regular fa-archive"></i>
@@ -194,7 +194,7 @@
                             <li class="navbar-item">
                                 <!-- Menu -->
                                 <a class="" 
-                                    href="/tags"  >
+                                    href="/GSSBlog/tags"  >
                                     
                                         
                                             <i class="fa-regular fa-tags"></i>
@@ -210,7 +210,7 @@
                             <li class="navbar-item">
                                 <!-- Menu -->
                                 <a class="" 
-                                    href="/categories"  >
+                                    href="/GSSBlog/categories"  >
                                     
                                         
                                             <i class="fa-regular fa-folder"></i>
@@ -242,7 +242,7 @@
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
                         <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/"  >
+                        href="/GSSBlog/"  >
                              
                                 
                                     <i class="fa-regular fa-house"></i>
@@ -257,7 +257,7 @@
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
                         <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/archives"  >
+                        href="/GSSBlog/archives"  >
                              
                                 
                                     <i class="fa-regular fa-archive"></i>
@@ -272,7 +272,7 @@
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
                         <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/tags"  >
+                        href="/GSSBlog/tags"  >
                              
                                 
                                     <i class="fa-regular fa-tags"></i>
@@ -287,7 +287,7 @@
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
                         <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/categories"  >
+                        href="/GSSBlog/categories"  >
                              
                                 
                                     <i class="fa-regular fa-folder"></i>
@@ -331,7 +331,7 @@
         
             <div class="article-header flex flex-row gap-2 items-center">
                 <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
-                    <img src="/images/avatar.jpg">
+                    <img src="/GSSBlog/images/avatar.jpg">
                 </div>
                 <div class="info flex flex-col justify-between">
                     <div class="author flex items-center">
@@ -366,7 +366,7 @@
                     
                         
                         <li>
-                            <a href="/categories/Docker/">Docker</a>&nbsp;
+                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
                         </li>
                     
                     
@@ -380,7 +380,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/Docker/">Docker</a>&nbsp;
+                        <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
                     </li>
                 
             </ul>
@@ -414,7 +414,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/%5Cimages%5Cdocker%5Cdocker%E6%9C%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png"
+                     data-src="/GSSBlog/%5Cimages%5Cdocker%5Cdocker%E6%9C%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png"
                      
                 ></p>
 <div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker 未启动时,不包含docker0的虚拟网络</span><br><span class="line"></span><br><span class="line">lo: 本地网络(localhost)</span><br><span class="line"></span><br><span class="line">virbr0: 在CentOS7的安装过程中,如果有选择相关虚拟化的服务安装系统后,启动网卡时会发现有一个以网桥连接的私网地址的virbr0网卡(virbr0网卡:它还有一个固定的默认IP地址 192.168.122.1 ),是做虚拟机网桥使用的,其作用是为连接其上的虚拟网卡提供NAT访问外网的功能</span><br><span class="line"></span><br><span class="line">#: 在Linux安装,勾选安装系统时候附带了libvirt服务才会生成的一个东西,如果不需要可以直接将libvirt服务卸载; yum remove libvirt-libs.x86_64</span><br></pre></td></tr></table></figure></div>
@@ -424,7 +424,7 @@
 <p>  <img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png"
+                     data-src="/GSSBlog/images/docker/docker%E5%90%AF%E5%8A%A8%E6%97%B6%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%8101.png"
                      
                 ></p>
 <div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker 启动后,会产生一个名为 docker0 的虚拟网桥</span><br></pre></td></tr></table></figure></div></li>
@@ -534,13 +534,13 @@
 <p>  <img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E5%86%85%E9%83%A8%E8%AF%A6%E6%83%8501.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E5%86%85%E9%83%A8%E8%AF%A6%E6%83%8501.jpg"
                      
                 ></p>
 <p>  <img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%8501.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%8501.jpg"
                      
                 ></p>
 <blockquote>
@@ -551,7 +551,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%85-%E6%A6%82%E8%A6%81%E7%89%8801.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%85-%E6%A6%82%E8%A6%81%E7%89%8801.jpg"
                      
                 ></p>
 <div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1.Docker使用Linux桥接,在宿主机虚拟一个Docker容器网桥(docker0)，Docker启动一个容器时会根据Docker网桥的网段分配给容器一个ip地址，称为Container-IP，同时Docker网络是每个容器的默认网关。因为在同一宿主机内的容器都接入同一个网桥，这样容器之间就能通过容器的Container-IP通信。</span><br><span class="line"></span><br><span class="line">2.docker run 的时候，没有指定network的话默认使用的网桥模式就是bridge，使用的就是docker0.在宿主机ifconfig，就能看到docker0和自己create的network的 eht0，eht1，eht2...代表网卡一，网卡二，网卡三...，lo代表127.0.0.1,即localhost，inet addr 用来表示网卡的IP地址。</span><br><span class="line"></span><br><span class="line">3.网桥docker0创建一对对等虚拟设备接口，一个叫veth，另一个叫eht0，成对匹配。</span><br><span class="line">	3.1.整个宿主机的网桥模式都是docker0，类似一个交换机有一堆接口，每个接口都叫veth，在本地主机和容器内分别创建一个虚拟接口，并让他们彼此联通（这样一对接口叫veth pair）；</span><br><span class="line">	3.2.每个容器实例内部也有一块网卡，每个接口都叫eth0；</span><br><span class="line">	3.3.docker0上面的每个veth匹配某个容器实例内部的eth0，两两配对，一一匹配</span><br><span class="line">	</span><br><span class="line">通过上述，讲宿主机上的所有容器都连接到这个内部网络上，两个容器在同一个网络下，会从这个网关下各自拿到分配的IP，此时两个容器的网络是互通的。</span><br><span class="line"></span><br><span class="line">详细看下图</span><br></pre></td></tr></table></figure></div>
@@ -559,7 +559,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E4%BA%92%E9%80%9A%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E7%BD%91%E7%BB%9C%E4%BA%92%E9%80%9A%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg"
                      
                 ></p>
 <p><strong>实例</strong></p>
@@ -568,12 +568,12 @@
 <p><strong>bridge网络案例</strong><br><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B01.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B01.jpg"
                      
                 ><br><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B02.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-bridge%E6%A1%88%E4%BE%8B02.jpg"
                      
                 ></p>
 <h4 id="host"><a href="#host" class="headerlink" title="host"></a><strong>host</strong></h4><blockquote>
@@ -583,7 +583,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-host%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-host%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg"
                      
                 ></p>
 <p><strong>实例</strong></p>
@@ -593,17 +593,17 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B01.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B01.jpg"
                      
                 ><br><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B02.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B02.jpg"
                      
                 ><br><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B03.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-host%E6%A1%88%E4%BE%8B03.jpg"
                      
                 ></p>
 <blockquote>
@@ -623,7 +623,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-none%E6%A1%88%E4%BE%8B01.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-none%E6%A1%88%E4%BE%8B01.jpg"
                      
                 ></p>
 <h4 id="container"><a href="#container" class="headerlink" title="container"></a><strong>container</strong></h4><blockquote>
@@ -633,7 +633,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-container%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-container%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%8601.jpg"
                      
                 ></p>
 <p><strong>演示案例</strong></p>
@@ -651,7 +651,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E7%BD%91%E7%BB%9C-container%E6%A1%88%E4%BE%8B01.jpg"
+                     data-src="/GSSBlog/images/docker/docker%E7%BD%91%E7%BB%9C-container%E6%A1%88%E4%BE%8B01.jpg"
                      
                 ></p>
 <blockquote>
@@ -709,7 +709,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/docker/docker%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png"
+                     data-src="/GSSBlog/images/docker/docker%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png"
                      
                 ></p>
 
@@ -751,7 +751,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/Docker/">#Docker</a>&nbsp;
+                        <a href="/GSSBlog/tags/Docker/">#Docker</a>&nbsp;
                     </li>
                 
             </ul>
@@ -765,7 +765,7 @@
                     <div class="article-prev">
                         <a class="prev"
                         rel="prev"
-                        href="/2023/10/28/12.docker-compose%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/"
+                        href="/GSSBlog/2023/10/28/12.docker-compose%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/"
                         >
                             <span class="left arrow-icon flex justify-center items-center">
                                 <i class="fa-solid fa-chevron-left"></i>
@@ -781,7 +781,7 @@
                     <div class="article-next">
                         <a class="next"
                         rel="next"
-                        href="/2023/10/28/11.1docker%E5%AE%B9%E5%99%A8%E6%B2%A1%E6%9C%89%E7%9B%B8%E5%BA%94%E5%91%BD%E4%BB%A4/"
+                        href="/GSSBlog/2023/10/28/11.1docker%E5%AE%B9%E5%99%A8%E6%B2%A1%E6%9C%89%E7%9B%B8%E5%BA%94%E5%91%BD%E4%BB%A4/"
                         >
                             <span class="title flex justify-center items-center">
                                 <span class="post-nav-title-item">解决容器启动，内部无法使用`ip addr`和`ping`命令</span>
@@ -811,7 +811,7 @@
  
     <div id="waline"></div>
     <script type="module"  data-swup-reload-script>
-        import { init } from '/js/libs/waline.mjs';
+        import { init } from '/GSSBlog/js/libs/waline.mjs';
 
         function loadWaline() {
             init({
@@ -878,7 +878,7 @@
               <span>2022</span>
               -
             
-            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">igxiaoshan</a>
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
         </div>
         
             <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
@@ -986,17 +986,17 @@
 
 
     
-<script src="/js/libs/Swup.min.js"></script>
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
 
-<script src="/js/libs/SwupSlideTheme.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
 
-<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
 
-<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
 
-<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
 
-<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
 
 <script>
     const swup = new Swup({
@@ -1023,32 +1023,32 @@
 
 
 
-<script src="/js/tools/imageViewer.js" type="module"></script>
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
 
-<script src="/js/utils.js" type="module"></script>
+<script src="/GSSBlog/js/utils.js" type="module"></script>
 
-<script src="/js/main.js" type="module"></script>
+<script src="/GSSBlog/js/main.js" type="module"></script>
 
-<script src="/js/layouts/navbarShrink.js" type="module"></script>
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
 
-<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
 
-<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
 
-<script src="/js/layouts/categoryList.js" type="module"></script>
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
 
-
-
-
-
-    
-<script src="/js/tools/codeBlock.js" type="module"></script>
 
 
 
 
     
-<script src="/js/layouts/lazyload.js" type="module"></script>
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
 
 
 
@@ -1056,10 +1056,10 @@
 
 
   
-<script src="/js/libs/Typed.min.js"></script>
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
 
   
-<script src="/js/plugins/typed.js" type="module"></script>
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
 
 
 
@@ -1070,14 +1070,14 @@
 <div class="post-scripts" data-swup-reload-script>
     
         
-<script src="/js/libs/anime.min.js"></script>
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
 
         
-<script src="/js/tools/tocToggle.js" type="module"></script>
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
 
-<script src="/js/layouts/toc.js" type="module"></script>
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
 
-<script src="/js/plugins/tabs.js" type="module"></script>
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
 
     
 </div>
