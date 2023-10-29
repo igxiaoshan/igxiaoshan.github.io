@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/10/28/多种方案部署pandora/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="Pandora能做什么 本地部署ChatGPT，Pandora绕过 Cloudflare，可以把ChatGPT部署在自己的电脑上，使用127.0.0.1即可使用官方的GPT（仅需登陆一次，即可正常使用14天左右） 服务器部署ChatGPT，我们可以使用同样的方法，将Pandora程序安装在vps上，甚至可以使用自己的域名，无需设置网络即可使用，也不必担心IP问题 我们可以使用Pandora，用多种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多种方案部署Pandora">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/10/28/%E5%A4%9A%E7%A7%8D%E6%96%B9%E6%A1%88%E9%83%A8%E7%BD%B2Pandora/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="Pandora能做什么 本地部署ChatGPT，Pandora绕过 Cloudflare，可以把ChatGPT部署在自己的电脑上，使用127.0.0.1即可使用官方的GPT（仅需登陆一次，即可正常使用14天左右） 服务器部署ChatGPT，我们可以使用同样的方法，将Pandora程序安装在vps上，甚至可以使用自己的域名，无需设置网络即可使用，也不必担心IP问题 我们可以使用Pandora，用多种">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-28T10:35:15.322Z">
+<meta property="article:modified_time" content="2023-10-19T07:41:13.080Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="ChatGPT">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            多种方案部署Pandora -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":null},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">多种方案部署Pandora</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-10-28 18:35:15</span>
+        <span class="mobile">2023-10-28 18:35:15</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-10-19 15:41:13</span>
+            <span class="mobile">2023-10-19 15:41:13</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/ChatGPT/">ChatGPT</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/ChatGPT/">ChatGPT</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="Pandora能做什么"><a href="#Pandora能做什么" class="headerlink" title="Pandora能做什么"></a>Pandora能做什么</h2><ul>
+<li>本地部署ChatGPT，Pandora绕过 Cloudflare，可以把ChatGPT部署在自己的电脑上，使用127.0.0.1即可使用官方的GPT（仅需登陆一次，即可正常使用14天左右）</li>
+<li>服务器部署ChatGPT，我们可以使用同样的方法，将Pandora程序安装在vps上，甚至可以使用自己的域名，无需设置网络即可使用，也不必担心IP问题</li>
+<li>我们可以使用Pandora，用多种方式使用GPT，例如命令行模式，web模式，其中web页面使用方法与官网一致，还能保存记录，非常完美</li>
+</ul>
+<h2 id="Docker部署"><a href="#Docker部署" class="headerlink" title="Docker部署"></a><strong><code>Docker部署</code></strong></h2><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 部署在本机,无论是windows、macOS或者linux系统</span></span><br><span class="line"><span class="comment">## 拉取镜像</span></span><br><span class="line">docker pull pengzhile/pandora</span><br><span class="line"></span><br><span class="line"><span class="comment">## 启动容器</span></span><br><span class="line">docker run  -e PANDORA_CLOUD=cloud -e PANDORA_SERVER=0.0.0.0:8899 -p 8899:8899 -d pengzhile/pandora</span><br><span class="line"></span><br><span class="line"><span class="comment">### 部署成功;访问127.0.0.1:8899可以登录chatgpt web页面</span></span><br><span class="line"><span class="comment">#### http://chat.openai.com/api/auth/session 可以获取 Access Token</span></span><br><span class="line"><span class="comment">#### 缺点: 登录或者获取token需要设置网络</span></span><br></pre></td></tr></table></figure></div>
+
+<h2 id="vps部署"><a href="#vps部署" class="headerlink" title="vps部署"></a><strong><code>vps部署</code></strong></h2><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 强调：在vps部署Pandora请使用国外主机，这样无论是电脑还是手机都可以使用GPT</span></span><br><span class="line"><span class="comment">### 安装docker环境(ubuntu系统)</span></span><br><span class="line">apt update &amp;&amp; apt install docker.io -y </span><br><span class="line"></span><br><span class="line"><span class="comment">### 拉取镜像</span></span><br><span class="line">docker pull pengzhile/pandora</span><br><span class="line"></span><br><span class="line"><span class="comment">#### 命令行启动</span></span><br><span class="line">docker run -it --<span class="built_in">rm</span> pengzhile/pandora</span><br><span class="line"><span class="comment">#### web模式</span></span><br><span class="line">docker run  -e PANDORA_CLOUD=cloud -e PANDORA_SERVER=0.0.0.0:8899 -p 8899:8899 -d pengzhile/pandora</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h2 id="绑定域名的方式"><a href="#绑定域名的方式" class="headerlink" title="绑定域名的方式"></a><strong><code>绑定域名的方式</code></strong></h2><p><code>使用nginx配置</code></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 编辑nginx配置文件</span></span><br><span class="line">vi /etc/nginx/nginx.conf</span><br><span class="line"></span><br><span class="line"><span class="comment">## 修改配置文件内容</span></span><br><span class="line">events &#123;&#125; </span><br><span class="line"></span><br><span class="line">http &#123;    </span><br><span class="line">    server &#123; </span><br><span class="line">            listen 80;        </span><br><span class="line">            server_name fboth.pp.ua;        </span><br><span class="line"></span><br><span class="line">        location / &#123;            </span><br><span class="line">            proxy_pass http://127.0.0.1:8899;        </span><br><span class="line">        &#125;    </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">## 退出;重启nginx</span></span><br><span class="line"><span class="comment">### 如果配置了SSL估计会遇到问题，具体看一下这个issue</span></span><br><span class="line">https://github.com/pengzhile/pandora/issues/81</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line">user www-data;</span><br><span class="line">worker_processes auto;</span><br><span class="line">pid /run/nginx.pid;</span><br><span class="line">include /etc/nginx/modules-enabled/*.conf;</span><br><span class="line"> </span><br><span class="line">events &#123;</span><br><span class="line">	worker_connections 768;</span><br><span class="line">	<span class="comment"># multi_accept on;</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">http &#123;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">##</span></span><br><span class="line">	<span class="comment"># Basic Settings</span></span><br><span class="line">	<span class="comment">##</span></span><br><span class="line"> </span><br><span class="line">	sendfile on;</span><br><span class="line">	tcp_nopush on;</span><br><span class="line">	types_hash_max_size 2048;</span><br><span class="line">	<span class="comment"># server_tokens off;</span></span><br><span class="line"> </span><br><span class="line">	<span class="comment"># server_names_hash_bucket_size 64;</span></span><br><span class="line">	proxy_headers_hash_bucket_size 1024;</span><br><span class="line">	<span class="comment"># server_name_in_redirect off;</span></span><br><span class="line"> </span><br><span class="line">	include /etc/nginx/mime.types;</span><br><span class="line">	default_type application/octet-stream;</span><br><span class="line"> </span><br><span class="line">	<span class="comment"># ----------HTTPS配置-----------  </span></span><br><span class="line">	server &#123;  </span><br><span class="line">		<span class="comment"># 监听HTTPS默认的443端口  </span></span><br><span class="line">		listen 443 ssl;  </span><br><span class="line">		<span class="comment"># 配置自己项目的域名  </span></span><br><span class="line">		server_name www.xxxxxx.com;  </span><br><span class="line">		<span class="comment"># 打开SSL加密传输  </span></span><br><span class="line">		<span class="comment"># ssl on;  </span></span><br><span class="line">		<span class="comment"># 输入域名后，首页文件所在的目录  </span></span><br><span class="line">		root html;  </span><br><span class="line">		<span class="comment"># 配置首页的文件名  </span></span><br><span class="line">		index index.html index.htm index.jsp index.ftl;  </span><br><span class="line">		<span class="comment"># 配置自己下载的数字证书  </span></span><br><span class="line">		ssl_certificate  cert/www.xxxx.cn.pem;  </span><br><span class="line">		<span class="comment"># 配置自己下载的服务器私钥  </span></span><br><span class="line">		ssl_certificate_key cert/www.xxxx.cn.key;</span><br><span class="line">		<span class="comment"># 停止通信时，加密会话的有效期，在该时间段内不需要重新交换密钥  </span></span><br><span class="line">		ssl_session_timeout 5m;  </span><br><span class="line">		<span class="comment"># TLS握手时，服务器采用的密码套件  </span></span><br><span class="line">		ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;  </span><br><span class="line">		<span class="comment"># 服务器支持的TLS版本  </span></span><br><span class="line">		ssl_protocols TLSv1 TLSv1.1 TLSv1.2;  </span><br><span class="line">		<span class="comment"># 开启由服务器决定采用的密码套件  </span></span><br><span class="line">		ssl_prefer_server_ciphers on;  </span><br><span class="line">		<span class="comment"># location / &#123;  </span></span><br><span class="line">		<span class="comment"># 	proxy_pass http://127.0.0.1:8899;  </span></span><br><span class="line">		<span class="comment"># 	# proxy_pass http://0.0.0.0:8899;</span></span><br><span class="line"> </span><br><span class="line">		<span class="comment"># &#125;  </span></span><br><span class="line">		location ^~ / &#123;</span><br><span class="line">			proxy_pass http://127.0.0.1:8899/; <span class="comment"># 将流量代理到 Pandora-Cloud 服务</span></span><br><span class="line">			proxy_set_header Host <span class="variable">$host</span>;</span><br><span class="line">			proxy_set_header X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">			proxy_set_header X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">			proxy_set_header REMOTE-HOST <span class="variable">$remote_addr</span>;</span><br><span class="line">			proxy_set_header Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">			proxy_set_header Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">			<span class="comment"># proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span></span><br><span class="line">			proxy_set_header X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br><span class="line">			add_header X-Cache <span class="variable">$upstream_cache_status</span>;</span><br><span class="line">			proxy_http_version 1.1;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment"># ---------HTTP请求转HTTPS-------------  </span></span><br><span class="line">	server &#123;</span><br><span class="line">		listen 80;</span><br><span class="line">		server_name www.xxxxx.cn;</span><br><span class="line">		<span class="comment"># location / &#123;</span></span><br><span class="line">		<span class="comment"># 	proxy_pass http://127.0.0.1:8899;</span></span><br><span class="line">		<span class="comment"># &#125;</span></span><br><span class="line">		<span class="comment">#rewrite ^(.*) https://www.xxxx.cn$1 permanent;</span></span><br><span class="line">		rewrite ^(.*)$ https://$host<span class="variable">$1</span>    permanent;  <span class="comment"># 强行将 http 转化 https 来访问。</span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">##</span></span><br><span class="line">	<span class="comment"># SSL Settings</span></span><br><span class="line">	<span class="comment">##</span></span><br><span class="line"> </span><br><span class="line">	ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3; <span class="comment"># Dropping SSLv3, ref: POODLE</span></span><br><span class="line">	ssl_prefer_server_ciphers on;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">##</span></span><br><span class="line">	<span class="comment"># Logging Settings</span></span><br><span class="line">	<span class="comment">##</span></span><br><span class="line"> </span><br><span class="line">	access_log /var/log/nginx/access.log;</span><br><span class="line">	error_log /var/log/nginx/error.log;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">##</span></span><br><span class="line">	<span class="comment"># Gzip Settings</span></span><br><span class="line">	<span class="comment">##</span></span><br><span class="line"> </span><br><span class="line">	gzip on;</span><br><span class="line"> </span><br><span class="line">	<span class="comment"># gzip_vary on;</span></span><br><span class="line">	<span class="comment"># gzip_proxied any;</span></span><br><span class="line">	<span class="comment"># gzip_comp_level 6;</span></span><br><span class="line">	<span class="comment"># gzip_buffers 16 8k;</span></span><br><span class="line">	<span class="comment"># gzip_http_version 1.1;</span></span><br><span class="line">	<span class="comment"># gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;</span></span><br><span class="line"> </span><br><span class="line">	<span class="comment">##</span></span><br><span class="line">	<span class="comment"># Virtual Host Configs</span></span><br><span class="line">	<span class="comment">##</span></span><br><span class="line">	<span class="comment">#include /etc/nginx/conf.d/*.conf;</span></span><br><span class="line">	<span class="comment">#include /etc/nginx/sites-enabled/*;</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">#mail &#123;</span></span><br><span class="line"><span class="comment">#	# See sample authentication script at:</span></span><br><span class="line"><span class="comment">#	# http://wiki.nginx.org/ImapAuthenticateWithApachePhpScript</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#	# auth_http localhost/auth.php;</span></span><br><span class="line"><span class="comment">#	# pop3_capabilities &quot;TOP&quot; &quot;USER&quot;;</span></span><br><span class="line"><span class="comment">#	# imap_capabilities &quot;IMAP4rev1&quot; &quot;UIDPLUS&quot;;</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#	server &#123;</span></span><br><span class="line"><span class="comment">#		listen     localhost:110;</span></span><br><span class="line"><span class="comment">#		protocol   pop3;</span></span><br><span class="line"><span class="comment">#		proxy      on;</span></span><br><span class="line"><span class="comment">#	&#125;</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#	server &#123;</span></span><br><span class="line"><span class="comment">#		listen     localhost:143;</span></span><br><span class="line"><span class="comment">#		protocol   imap;</span></span><br><span class="line"><span class="comment">#		proxy      on;</span></span><br><span class="line"><span class="comment">#	&#125;</span></span><br><span class="line"><span class="comment">#&#125;</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><code>或者使用其他工具: caddy</code></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 编辑配置文件</span></span><br><span class="line">vi /etc/caddy/Caddyfile</span><br><span class="line"></span><br><span class="line"><span class="comment">## 修改配置文件</span></span><br><span class="line">xx.com  <span class="comment">#这里是你解析的域名</span></span><br><span class="line">encode gzip </span><br><span class="line">reverse_proxy 127.0.0.1:8899</span><br><span class="line"></span><br><span class="line"><span class="comment">## 重启服务</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>Pandora不愧是一个优秀的项目，除了docker安装，还可以pip，解决了GPT使用上的诸多问题，而且速度比官网还快;很方便</p>
+</blockquote>
+<h2 id="扩展-docker启动命令"><a href="#扩展-docker启动命令" class="headerlink" title="扩展: docker启动命令"></a>扩展: docker启动命令</h2><h3 id="PANDORA-ACCESS-TOKEN-指定Access-Token字符串"><a href="#PANDORA-ACCESS-TOKEN-指定Access-Token字符串" class="headerlink" title="&#96;&#96;PANDORA_ACCESS_TOKEN 指定Access Token字符串"></a><strong>&#96;&#96;PANDORA_ACCESS_TOKEN<code> 指定</code>Access Token<code>字符串</code></strong></h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name my-pandora-token --restart always -e PANDORA_SERVER=0.0.0.0:8899  -e PANDORA_ACCESS_TOKEN=xxxx -p 8899:8899 pengzhile/pandora</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="PANDORA-TOKENS-FILE-指定一个存放多Access-Token的文件路径"><a href="#PANDORA-TOKENS-FILE-指定一个存放多Access-Token的文件路径" class="headerlink" title="&#96;&#96;PANDORA_TOKENS_FILE 指定一个存放多Access Token的文件路径"></a><strong>&#96;&#96;PANDORA_TOKENS_FILE<code> 指定一个存放多</code>Access Token<code>的文件路径</code></strong></h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name my-pandora-tokens --restart always  -e PANDORA_SERVER=0.0.0.0:8899 -e PANDORA_TOKENS_FILE=/home/access_token.json -p 8899:8899 -v /home/access_token.json:/home/access_token.json pengzhile/pandora</span><br></pre></td></tr></table></figure></div>
+
+<p><code>access_token.json内容如何，key自定义</code></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;key&quot;</span>:<span class="string">&quot;token&quot;</span>&#125;</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>这样就可以通过xxx.com?token&#x3D;key的方式访问</p>
+</blockquote>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>标题:</strong> 多种方案部署Pandora</li>
+        <li><strong>作者:</strong> igxiaoshan</li>
+        <li><strong>创建于
+                :</strong> 2023-10-28 18:35:15</li>
+        
+            <li>
+                <strong>更新于
+                    :</strong> 2023-10-19 15:41:13
+            </li>
+        
+        <li>
+            <strong>链接:</strong> https://igxiaoshan.github.io/2023/10/28/多种方案部署Pandora/
+        </li>
+        <li>
+            <strong>
+                版权声明:
+            </strong>
+            
+            本文章采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a> 进行许可。
+            
+
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/ChatGPT/">#ChatGPT</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2023/10/28/%E5%8D%95%E6%9C%BA%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">单机服务搭建</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;评论
+    </div>
+    
+
+        
+            
+ 
+    <div id="waline"></div>
+    <script type="module"  data-swup-reload-script>
+        import { init } from '/GSSBlog/js/libs/waline.mjs';
+
+        function loadWaline() {
+            init({
+                el: '#waline',
+                serverURL: 'https://example.example.com',
+                lang: 'zh-CN',
+                dark: 'body[class~="dark-mode"]',
+                requiredMeta: ['nick','mail'], // cannot customize by theme config, change it yourself
+            });
+        }
+
+        if ('true') {
+            const loadWalineTimeout = setTimeout(() => {
+                loadWaline();
+                clearTimeout(loadWalineTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadWaline);
+        }
+        
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">多种方案部署Pandora</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pandora%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-text">Pandora能做什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E9%83%A8%E7%BD%B2"><span class="nav-text">Docker部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vps%E9%83%A8%E7%BD%B2"><span class="nav-text">vps部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%91%E5%AE%9A%E5%9F%9F%E5%90%8D%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-text">绑定域名的方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95-docker%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">扩展: docker启动命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PANDORA-ACCESS-TOKEN-%E6%8C%87%E5%AE%9AAccess-Token%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-text">&#96;&#96;PANDORA_ACCESS_TOKEN 指定Access Token字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PANDORA-TOKENS-FILE-%E6%8C%87%E5%AE%9A%E4%B8%80%E4%B8%AA%E5%AD%98%E6%94%BE%E5%A4%9AAccess-Token%E7%9A%84%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84"><span class="nav-text">&#96;&#96;PANDORA_TOKENS_FILE 指定一个存放多Access Token的文件路径</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>
