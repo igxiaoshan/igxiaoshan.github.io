@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/10/30/2.mysql函数/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="单行函数 操作数据对象 接受参数返回一个结果 只对一行进行交换 每行返回一个结果 可以嵌套 参数可以是一列或者一个值  基本函数   函数 用法    ABS(X) 返回x的绝对值   SIGN(X) 返回x的符号.正数返回1,负数返回-1,0返回0   PI() 返回圆周率的值   CEIL(X),CEILING(X) 返回大于或者等于某个值的最小整数   FLOOR(X) 返回小于或者等于某个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL函数">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/10/30/2.mysql%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="单行函数 操作数据对象 接受参数返回一个结果 只对一行进行交换 每行返回一个结果 可以嵌套 参数可以是一列或者一个值  基本函数   函数 用法    ABS(X) 返回x的绝对值   SIGN(X) 返回x的符号.正数返回1,负数返回-1,0返回0   PI() 返回圆周率的值   CEIL(X),CEILING(X) 返回大于或者等于某个值的最小整数   FLOOR(X) 返回小于或者等于某个">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-30T06:15:41.163Z">
+<meta property="article:modified_time" content="2023-10-30T06:18:29.042Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            MySQL函数 -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">MySQL函数</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-10-30 14:15:41</span>
+        <span class="mobile">2023-10-30 14:15:41</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-10-30 14:18:29</span>
+            <span class="mobile">2023-10-30 14:18:29</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/">MySQL</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/Basic/">Basic</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/MySQL/">MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>4.8k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>19 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="单行函数"><a href="#单行函数" class="headerlink" title="单行函数"></a>单行函数</h2><ul>
+<li>操作数据对象</li>
+<li>接受参数返回一个结果</li>
+<li>只对一行进行交换</li>
+<li>每行返回一个结果</li>
+<li>可以嵌套</li>
+<li>参数可以是一列或者一个值</li>
+</ul>
+<h3 id="基本函数"><a href="#基本函数" class="headerlink" title="基本函数"></a>基本函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ABS(X)</td>
+<td>返回x的绝对值</td>
+</tr>
+<tr>
+<td>SIGN(X)</td>
+<td>返回x的符号.正数返回1,负数返回-1,0返回0</td>
+</tr>
+<tr>
+<td>PI()</td>
+<td>返回圆周率的值</td>
+</tr>
+<tr>
+<td>CEIL(X),CEILING(X)</td>
+<td>返回大于或者等于某个值的最小整数</td>
+</tr>
+<tr>
+<td>FLOOR(X)</td>
+<td>返回小于或者等于某个值的最大整数</td>
+</tr>
+<tr>
+<td>LEAST(e1,e2,e3…)</td>
+<td>返回列表中的最小值</td>
+</tr>
+<tr>
+<td>GREATEST(e1,e2,e3…)</td>
+<td>返回列表中的最大值</td>
+</tr>
+<tr>
+<td>MOD(x,y)</td>
+<td>返回x除以y后的余数</td>
+</tr>
+<tr>
+<td>RAND()</td>
+<td>返回0-1的随机数</td>
+</tr>
+<tr>
+<td>RAND(X)</td>
+<td>返回0-1的随机数,其中x的值用作种子值,相同的x值会产生相同的随机数</td>
+</tr>
+<tr>
+<td>ROUND(X)</td>
+<td>返回一个对x的值进行四舍五入后,最接近于x的整数</td>
+</tr>
+<tr>
+<td>ROUND(X,Y)</td>
+<td>返回一个对x的值进行四舍五入后最接近x的值,并保留到小数点后面y位</td>
+</tr>
+<tr>
+<td>TRUNCATE(X,Y)</td>
+<td>返回数字x截断为y位小数</td>
+</tr>
+<tr>
+<td>SQRT(X)</td>
+<td>返回x的平方根,当x的值为负数时,返回null</td>
+</tr>
+</tbody></table>
+<h3 id="进制转换函数"><a href="#进制转换函数" class="headerlink" title="进制转换函数"></a>进制转换函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BIN(X)</td>
+<td>返回x的二进制编码</td>
+</tr>
+<tr>
+<td>HEX(X)</td>
+<td>返回x的十六进制编码</td>
+</tr>
+<tr>
+<td>OCT(X)</td>
+<td>返回x的八进制编码</td>
+</tr>
+<tr>
+<td>CONV(X,F1,F2)</td>
+<td>返回f1进制数变成f2进制数</td>
+</tr>
+</tbody></table>
+<h3 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h3><blockquote>
+<p>注意:mysql的索引都是从1开始的</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ASCII(s)</td>
+<td>返回字符串s中的第一个字符的ASCII码值</td>
+</tr>
+<tr>
+<td>CHAR_LENGTH(s)</td>
+<td>返回字符串s的字符数,作用于CHARACTER_LENGTH(s)相同</td>
+</tr>
+<tr>
+<td>LENGTH(s)</td>
+<td>返回字符串s的字节数,和字符集有关(一个汉字占三个字节)</td>
+</tr>
+<tr>
+<td>CONCAT(s1,s2,s3….,sn)</td>
+<td>连接s1,s2,…,sn为一个字符串</td>
+</tr>
+<tr>
+<td>CONCAT_WS(x,s1,s2…,sn)</td>
+<td>同CONCAT(s1,s2…)函数,但是每个字符串之间要加上x</td>
+</tr>
+<tr>
+<td>INSERT(str,idx,len,replacestr)</td>
+<td>将字符串str从第idx位置开始,len个字符长的子串替换为字符串replacestr</td>
+</tr>
+<tr>
+<td>REPLACE(str,a,b)</td>
+<td>用字符串b替换字符串str中所有出现的字符串a</td>
+</tr>
+<tr>
+<td>UPPER(s)或UCASE(s)</td>
+<td>将字符串s的所有字母转换成大写字母</td>
+</tr>
+<tr>
+<td>LOWER(s)或LCASE(s)</td>
+<td>将字符串s的所有字母转成成小写字母</td>
+</tr>
+<tr>
+<td>LEFT(str,n)</td>
+<td>返回字符串str最左边的n个字符</td>
+</tr>
+<tr>
+<td>RIGHT(str,n)</td>
+<td>返回字符串str最右边的n个字符</td>
+</tr>
+<tr>
+<td>LPAD(str,len,pad)</td>
+<td>用字符串pad对str最左边进行填充,直到str的长度为len个字符</td>
+</tr>
+<tr>
+<td>RPAD(str,len,pad)</td>
+<td>用字符串pad对str最右边进行填充,直到str的长度为len个字符</td>
+</tr>
+<tr>
+<td>LTRIM(s)</td>
+<td>去掉字符串s左侧的空格</td>
+</tr>
+<tr>
+<td>RTRIM(s)</td>
+<td>去掉字符串s右侧的空格</td>
+</tr>
+<tr>
+<td>TRIM(s)</td>
+<td>去掉字符串s开始与结尾的空格</td>
+</tr>
+<tr>
+<td>TRIM(s1 FROM s)</td>
+<td>去掉字符串s开始与结尾的s1</td>
+</tr>
+<tr>
+<td>TRIM(LEADING s1 FROM s)</td>
+<td>去掉字符串s开始处的s1</td>
+</tr>
+<tr>
+<td>TRIM(TRAILING s1 FROM s)</td>
+<td>去掉字符串s结尾处的s1</td>
+</tr>
+<tr>
+<td>REPEAT(str,n)</td>
+<td>返回str重复n次的结果</td>
+</tr>
+<tr>
+<td>SPACE(n)</td>
+<td>返回n个空格</td>
+</tr>
+<tr>
+<td>STRCMP(s1,s2)</td>
+<td>比较字符串s1,s2的ASCII码值的大小</td>
+</tr>
+<tr>
+<td>SUBSTR(s,index,ken)</td>
+<td>返回字符串s的index位置其len个字符,作用与SUBSTRING(s,n,len),MID(s,n,len)相同</td>
+</tr>
+<tr>
+<td>LOCATE(substr,str)</td>
+<td>返回字符串substr在字符串str中首次出现的位置,作用与POSITION(substr IN str),INSTR(str,substr)相同.未找到则返回0</td>
+</tr>
+<tr>
+<td>ELT(m,s1,s2…,sn)</td>
+<td>返回指定位置的字符串,如果m&#x3D;1,则返回s1,如果m&#x3D;2,则返回s2,如果m&#x3D;n,则返回sn</td>
+</tr>
+<tr>
+<td>FIELT(s,s1,s2…,sn)</td>
+<td>返回字符串s在字符串列表中第一次出现的位置</td>
+</tr>
+<tr>
+<td>FIND_IN_SET(s1,s2)</td>
+<td>返回字符串s1在字符串s2中出现的位置,其中,字符串s2是一个以逗号分隔的字符串</td>
+</tr>
+<tr>
+<td>REVERSE(s)</td>
+<td>返回s反转后的字符串</td>
+</tr>
+<tr>
+<td>NULLIF(value1,value2)</td>
+<td>比较两个字符串,如果value1和value2相等,则返回NULL,否则返回value1</td>
+</tr>
+</tbody></table>
+<h3 id="日期和时间函数"><a href="#日期和时间函数" class="headerlink" title="日期和时间函数"></a>日期和时间函数</h3><h4 id="获取日期、时间"><a href="#获取日期、时间" class="headerlink" title="获取日期、时间"></a>获取日期、时间</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CURDATE(), CURRENT_DATE()</td>
+<td>返回当前日期,只包含年,月,日</td>
+</tr>
+<tr>
+<td>CURTIME(), CURRENT_TIME()</td>
+<td>返回当前时间,只包含时,分,秒</td>
+</tr>
+<tr>
+<td>NOW(), SYSDATE(), CURRENT_TIMESTAMP(), LOCALTIME(), LOCALTIMESTAMP()</td>
+<td>返回当前系统时间和日期</td>
+</tr>
+<tr>
+<td>UTC_DATE()</td>
+<td>返回UTC日期</td>
+</tr>
+<tr>
+<td>UTC_TIME()</td>
+<td>返回UTC时间</td>
+</tr>
+</tbody></table>
+<h4 id="日期与时间戳的转换"><a href="#日期与时间戳的转换" class="headerlink" title="日期与时间戳的转换"></a>日期与时间戳的转换</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>UNIX_TIMESTAMP()</td>
+<td>以UNIX时间戳的形式返回当前时间.</td>
+</tr>
+<tr>
+<td>UNIX_TIMESTAMP(date)</td>
+<td>将时间date以UNIX时间戳的形式返回</td>
+</tr>
+<tr>
+<td>FROM_UNIXTIME(timestamp)</td>
+<td>将UNIX时间戳的时间转为普通格式的时间</td>
+</tr>
+</tbody></table>
+<h4 id="获取月份-星期-星期数-天数等函数"><a href="#获取月份-星期-星期数-天数等函数" class="headerlink" title="获取月份,星期,星期数,天数等函数"></a>获取月份,星期,星期数,天数等函数</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>YEAR(date)&#x2F;MONTH(date)&#x2F;DAY(date)</td>
+<td>返回具体的日期值</td>
+</tr>
+<tr>
+<td>HOUR(time)&#x2F;MINUTE(time)&#x2F;SECOND(time)</td>
+<td>返回具体的时间值</td>
+</tr>
+<tr>
+<td>MONTHNAME(date)</td>
+<td>返回月份,January….</td>
+</tr>
+<tr>
+<td>DAYNAME(date)</td>
+<td>返回星期几,MONDAY,TUESDAY…</td>
+</tr>
+<tr>
+<td>WEEKDAY(date)</td>
+<td>返回周几,注意,周一是0,周二是1…周日是6</td>
+</tr>
+<tr>
+<td>QUARTER(date)</td>
+<td>返回日期对应的季度,范围是1-4</td>
+</tr>
+<tr>
+<td>WEEK(date), WEEKOFYEAR(date)</td>
+<td>返回一年中的第几周</td>
+</tr>
+<tr>
+<td>DAYOFYEAR(date)</td>
+<td>返回日期是一年中的第几天</td>
+</tr>
+<tr>
+<td>DAYOFMONTH(date)</td>
+<td>返回日期位于所在月份的第几天</td>
+</tr>
+<tr>
+<td>DAYOFWEEK(date)</td>
+<td>返回周几,注意,周日是1,周一是2…周六是7</td>
+</tr>
+</tbody></table>
+<h4 id="日期的操作函数"><a href="#日期的操作函数" class="headerlink" title="日期的操作函数"></a>日期的操作函数</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EXTRACT(type FROM date)</td>
+<td>返回指定日期中特定的部分,type指定返回的值</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>type参数的取值和含义</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>type取值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MICROSECOND</td>
+<td>返回毫秒值</td>
+</tr>
+<tr>
+<td>SECOND</td>
+<td>返回秒数</td>
+</tr>
+<tr>
+<td>MINUTE</td>
+<td>返回分钟数</td>
+</tr>
+<tr>
+<td>HOUR</td>
+<td>返回小时数</td>
+</tr>
+<tr>
+<td>DAY</td>
+<td>返回天数</td>
+</tr>
+<tr>
+<td>WEEK</td>
+<td>返回日期在一年中的第几个星期</td>
+</tr>
+<tr>
+<td>MONTH</td>
+<td>返回日期在一年中的第几个月</td>
+</tr>
+<tr>
+<td>QUARTER</td>
+<td>返回日期在一年中的第几个季度</td>
+</tr>
+<tr>
+<td>YEAR</td>
+<td>返回日期的年份</td>
+</tr>
+<tr>
+<td>SECOND_MICROSECOND</td>
+<td>返回秒和毫秒值</td>
+</tr>
+<tr>
+<td>MINUTE_MICROSECOND</td>
+<td>返回分钟和毫秒值</td>
+</tr>
+<tr>
+<td>MINUTE_SECOND</td>
+<td>返回分钟和秒值</td>
+</tr>
+<tr>
+<td>HOUR_MICROSECOND</td>
+<td>返回小时和毫秒值</td>
+</tr>
+<tr>
+<td>HOUR_SECOND</td>
+<td>返回小时和秒值</td>
+</tr>
+<tr>
+<td>HOUR_MINUTE</td>
+<td>返回小时和分钟值</td>
+</tr>
+<tr>
+<td>DAY_MICROSECOND</td>
+<td>返回天和毫秒值</td>
+</tr>
+<tr>
+<td>DAY_SECOND</td>
+<td>返回天和秒值</td>
+</tr>
+<tr>
+<td>DAY_MINUTE</td>
+<td>返回天和分钟值</td>
+</tr>
+<tr>
+<td>DAY_HOUR</td>
+<td>返回天和小时</td>
+</tr>
+<tr>
+<td>YEAR_MONTH</td>
+<td>返回年和月</td>
+</tr>
+</tbody></table>
+<h4 id="时间和秒钟转换的函数"><a href="#时间和秒钟转换的函数" class="headerlink" title="时间和秒钟转换的函数"></a>时间和秒钟转换的函数</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TIME_TO_SEC(time)</td>
+<td>将time转化为秒并返回结果值.转化的公式为<code>小时*3600+分钟*60+秒</code></td>
+</tr>
+<tr>
+<td>SEC_TO_TIME(seconds)</td>
+<td>将seconds描述转化为包括小时,分钟和秒的时间</td>
+</tr>
+</tbody></table>
+<h4 id="计算日期和时间的函数"><a href="#计算日期和时间的函数" class="headerlink" title="计算日期和时间的函数"></a>计算日期和时间的函数</h4><ul>
+<li>第一组<ul>
+<li>计算date与日期的时间相差值</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DATE_ADD(datetime, INTERVAL expr type),ADDDATE(date, INTERVAL expr type)</td>
+<td>返回与给定日期时间相差INTERVAL时间段的日期时间</td>
+</tr>
+<tr>
+<td>DATE_SUB(date, INTERVAL expr type),SUBDATE(date, INTERVAL expr type)</td>
+<td>返回与date相差INTERVAL时间间隔的日期</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>上述函数中type的取值</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>type取值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HOUR</td>
+<td>小时</td>
+</tr>
+<tr>
+<td>MINUTE</td>
+<td>分钟</td>
+</tr>
+<tr>
+<td>SECOND</td>
+<td>秒</td>
+</tr>
+<tr>
+<td>YEAR</td>
+<td>年</td>
+</tr>
+<tr>
+<td>MONTH</td>
+<td>月</td>
+</tr>
+<tr>
+<td>DAY</td>
+<td>日</td>
+</tr>
+<tr>
+<td>YEAR_MONTH</td>
+<td>年和月</td>
+</tr>
+<tr>
+<td>DAY_HOUR</td>
+<td>日和小时</td>
+</tr>
+<tr>
+<td>DAY_MINUTE</td>
+<td>日和分钟</td>
+</tr>
+<tr>
+<td>DAY_SECOND</td>
+<td>日和秒</td>
+</tr>
+<tr>
+<td>HOUR_MINUTE</td>
+<td>小时和分钟</td>
+</tr>
+<tr>
+<td>HOUR_SECOND</td>
+<td>小时和秒</td>
+</tr>
+<tr>
+<td>MINUTE_SECOND</td>
+<td>分钟和秒</td>
+</tr>
+</tbody></table>
+<ul>
+<li>第二组</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ADDTIME(time1,time2)</td>
+<td>返回time1加上time2的时间,当time2为一个数字时,代表的是<code>秒</code>,可以为负数</td>
+</tr>
+<tr>
+<td>SUBTIME(time1,time2)</td>
+<td>返回time1减去time2后的时间,当time2为一个数字时,代表的是<code>秒</code>,可以为负数</td>
+</tr>
+<tr>
+<td>DATEDIFF(date1,date2)</td>
+<td>返回date1-date2的日期间隔天数</td>
+</tr>
+<tr>
+<td>TIMEDIFF(time1,time2)</td>
+<td>返回time1-time2的时间间隔</td>
+</tr>
+<tr>
+<td>FROM_DAYS(N)</td>
+<td>返回从0000年1月1日起,N天以后的日期</td>
+</tr>
+<tr>
+<td>TO_DAYS(date)</td>
+<td>返回日期date距离0000年1月1日的天数</td>
+</tr>
+<tr>
+<td>LAST_DAY(date)</td>
+<td>返回date所在月份的最后一天的日期</td>
+</tr>
+<tr>
+<td>MAKEDATE(year,n)</td>
+<td>针对给定年份与所在年份中的天数返回的一个日期</td>
+</tr>
+<tr>
+<td>MAKETIME(hour,minute,second)</td>
+<td>将给定的小时,分钟和秒组合成时间并返回</td>
+</tr>
+<tr>
+<td>PERIOD_ADD(time,n)</td>
+<td>返回time加上n后的时间</td>
+</tr>
+</tbody></table>
+<h4 id="日期的格式化与解析"><a href="#日期的格式化与解析" class="headerlink" title="日期的格式化与解析"></a>日期的格式化与解析</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DATE_FORMAT(date,fmt)</td>
+<td>按照字符串fmt格式化日期date值</td>
+</tr>
+<tr>
+<td>TIME_FORMAT(time,fmt)</td>
+<td>按照字符串fmt格式化时间time值</td>
+</tr>
+<tr>
+<td>GET_FORMAT(date_type,format_type)</td>
+<td>返回日期字符串的显示格式</td>
+</tr>
+<tr>
+<td>STR_TO_DATE(str,fmt)</td>
+<td>按照字符串fmt对str进行解析,解析为一个日期</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>上述函数中fmt参数格式和说明</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>fmt格式符</th>
+<th>说明</th>
+<th>fmt格式符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%Y</td>
+<td>4位数字表示年份</td>
+<td>%y</td>
+<td>2位数字表示年份</td>
+</tr>
+<tr>
+<td>%M</td>
+<td>月名表示月份(January,…)</td>
+<td>%m</td>
+<td>2位数字表示月份(01,02…,12)</td>
+</tr>
+<tr>
+<td>%b</td>
+<td>缩写的月名(Jan,Feb…)</td>
+<td>%c</td>
+<td>数字表示月份(1,2,3….)</td>
+</tr>
+<tr>
+<td>%D</td>
+<td>英文后缀表示月中的天数(1st,2nd,3rd…)</td>
+<td>%d</td>
+<td>2位数字表示月中的天数(01,02…)</td>
+</tr>
+<tr>
+<td>%e</td>
+<td>数字形式表示月中的天数(1,2,3,4,5…)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>%H</td>
+<td>2位数字表示小数,24小时制(01,02…)</td>
+<td>%h和%I</td>
+<td>2位数字表示小时,12小时制(01,02…)</td>
+</tr>
+<tr>
+<td>%k</td>
+<td>数字形式的小时,24小时制(1,2,3…)</td>
+<td>%l</td>
+<td>数字形式表示小时,12小时制(1,2,3…)</td>
+</tr>
+<tr>
+<td>%i</td>
+<td>2位数字表示分钟(00,01,02…)</td>
+<td>%S和%s</td>
+<td>2位数字表示秒(00,01,02…)</td>
+</tr>
+<tr>
+<td>%W</td>
+<td>一周中的星期名称(Sunday,…)</td>
+<td>%a</td>
+<td>一周中的星期缩写(Sun,Mon,Tues…)</td>
+</tr>
+<tr>
+<td>%w</td>
+<td>以数字表示周中的天数(0&#x3D;Sunday,1&#x3D;Monday…)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>%j</td>
+<td>以3位数字表示年中的天数(001,002…)</td>
+<td>%U</td>
+<td>以数字表示年中的第几周,(1,2,3…)其中Sunday为周中第一天</td>
+</tr>
+<tr>
+<td>%u</td>
+<td>以数字表示年中的第几周(1,2,3…)其中Monday为周中第一天</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>%T</td>
+<td>24小时制</td>
+<td>%r</td>
+<td>12小时制</td>
+</tr>
+<tr>
+<td>%p</td>
+<td>AM或PM</td>
+<td>%%</td>
+<td>表示%</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>GET_FORMAT函数中date_type和format_type参数取值如下</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>日期类型</th>
+<th>格式化类型</th>
+<th>返回的格式化字符串</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DATE</td>
+<td>USA</td>
+<td>%m.%d.%Y</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>JIS</td>
+<td>%Y-%m-%d</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>ISO</td>
+<td>%Y-%m-%d</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>EUR</td>
+<td>%d.%m.%Y</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>INTERVAL</td>
+<td>%Y%m%d</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>USA</td>
+<td>%h:%i:%s %P</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>JIS</td>
+<td>%H:%i:%s</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>ISO</td>
+<td>%H:%i:%s</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>EUR</td>
+<td>%H:%i:%s</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>INTERVAL</td>
+<td>%H%i%s</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>USA</td>
+<td>%Y-%m-%d %H.%i.%s</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>JIS</td>
+<td>%Y-%m-%d %H.%i.%s</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>ISO</td>
+<td>%Y-%m-%d %H.%i.%s</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>EUR</td>
+<td>%Y-%m-%d %H.%i.%s</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>INTERVAL</td>
+<td>%Y%m%d %H%i%s</td>
+</tr>
+</tbody></table>
+<h3 id="流程控制函数"><a href="#流程控制函数" class="headerlink" title="流程控制函数"></a>流程控制函数</h3><blockquote>
+<p>流程处理函数可以根据不同的条件,执行不同的处理流程,可以实现不同的条件选择</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IF(value,value1,value2)</td>
+<td>如果value的值为TRUE,返回value1,否则返回value2</td>
+</tr>
+<tr>
+<td>IFNULL(value1,value2)</td>
+<td>如果value1不为NULL,返回value1,否则返回value2</td>
+</tr>
+<tr>
+<td>CASE WHEN 条件1 THEN 结果1 WHEN 条件2 THEN 结果2 … [ELSE resultn] END</td>
+<td>相当于Java中的 if..else if … else…</td>
+</tr>
+<tr>
+<td>CASE expr WHEN 常量值1 THEN 值1 WHEN 常量值1 THEN 值1 … [ELSE 值n] END</td>
+<td>相当于Java的switch…case…</td>
+</tr>
+</tbody></table>
+<h3 id="MYSQL信息函数"><a href="#MYSQL信息函数" class="headerlink" title="MYSQL信息函数"></a>MYSQL信息函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VERSION()</td>
+<td>返回当前mysql数据库版本</td>
+</tr>
+<tr>
+<td>CONNECTION_ID()</td>
+<td>返回当前mysql服务器连接数</td>
+</tr>
+<tr>
+<td>DATABASE(),SCHEMA()</td>
+<td>返回mysql命令行当前所在数据库</td>
+</tr>
+<tr>
+<td>USER(),CURRENT_USER(),SYSTEM_USER(),SESSION_USER()</td>
+<td>返回当前mysql连接用户名,格式为”主机名@用户名”</td>
+</tr>
+<tr>
+<td>CHARSET(value)</td>
+<td>返回字符串value的字符集</td>
+</tr>
+<tr>
+<td>COLLATION(value)</td>
+<td>返回字符串value的比较规则</td>
+</tr>
+</tbody></table>
+<h3 id="其他函数"><a href="#其他函数" class="headerlink" title="其他函数"></a>其他函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FORMAT(value,n)</td>
+<td>返回对数字value进行格式化后的结果数据,n表示<code>四舍五入</code>后保留小数点后n位</td>
+</tr>
+<tr>
+<td>CONV(value,from,to)</td>
+<td>将value值进行不同进制转换</td>
+</tr>
+<tr>
+<td>INET_ATON(ipvalue)</td>
+<td>将以点分隔的ip地址转化为一个数字</td>
+</tr>
+<tr>
+<td>INET_NTOA(value)</td>
+<td>将数字形式的ip转化为以点分隔的地址</td>
+</tr>
+<tr>
+<td>BENCHMARK(n,expr)</td>
+<td>将表达式expr重复n边.用于测试mysql处理expr表达式所消耗的时间</td>
+</tr>
+<tr>
+<td>CONVERT(value USING char_code)</td>
+<td>将value的字符编码修改为char_code</td>
+</tr>
+</tbody></table>
+<h2 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h2><ul>
+<li>什么是聚合函数<ul>
+<li>聚合函数作用于一组数据,并对一组数据返回一个值</li>
+</ul>
+</li>
+</ul>
+<h3 id="聚合函数类型"><a href="#聚合函数类型" class="headerlink" title="聚合函数类型"></a>聚合函数类型</h3><ul>
+<li><p>AVG()</p>
+</li>
+<li><p>SUM()</p>
+</li>
+<li><p>MAX()</p>
+</li>
+<li><p>MIN()</p>
+</li>
+<li><p>COUNT()</p>
+</li>
+<li><p>聚合函数不能嵌套调用</p>
+</li>
+</ul>
+<blockquote>
+<p>比如<code>AVG(SUM())</code>这样调用</p>
+</blockquote>
+<ul>
+<li>问题：用count(*)，count(1)，count(列名)谁好呢?</li>
+</ul>
+<blockquote>
+<p>其实,对于<code>MyISAM</code>引擎的表是没有区别的.这种引擎内部有一个计数器在维护着行数</p>
+<p><code>Innodb</code>引擎的表用<code>COUNT(*),COUNT(1)</code>直接读行数,复杂度是<code>O(n)</code>,因为<code>Innodb</code>真的要去读一遍,但好于具体的<code>COUNT(列名)</code></p>
+</blockquote>
+<ul>
+<li>问题：能不能使用count(列名)替换count(*)?</li>
+</ul>
+<blockquote>
+<p>不能使用<code>COUNT(列名)</code>来代替<code>COUNT(*)</code>,<code>COUNT(*)</code>是SQL92定义的标准统计行数的语法,跟数据库无关,跟NULL和非NULL无关</p>
+<p>说明: <code>COUNT(*)</code>会统计值为NULL的行,而<code>COUNT(列名)</code>不会统计此列为NULL值的行</p>
+</blockquote>
+<h3 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h3><h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><blockquote>
+<p>可以使用<code>group by</code>将结果分为若干组</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">column</span>, group_function(<span class="keyword">column</span>)</span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">table</span></span><br><span class="line">[<span class="keyword">WHERE</span> <span class="keyword">condition</span>]</span><br><span class="line">[<span class="keyword">GROUP</span> <span class="keyword">BY</span> group_by_expression]</span><br><span class="line">[<span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">column</span>];</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注意: <code>WHERE</code>一定要放在<code>FROM</code>后面</p>
+</blockquote>
+<ul>
+<li><p>在SELECT列表中所有未包含在组函数中的列都应该包含在 GROUP BY子句中</p>
+</li>
+<li><p>包含在 GROUP BY 子句中的列不必包含在SELECT 列表中</p>
+</li>
+</ul>
+<h4 id="使用多个列分组"><a href="#使用多个列分组" class="headerlink" title="使用多个列分组"></a>使用多个列分组</h4><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> department_id dept_id, job_id, <span class="built_in">SUM</span>(salary)</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> department_id, job_id ;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="GROUP-BY中使用WITH-ROLLUP"><a href="#GROUP-BY中使用WITH-ROLLUP" class="headerlink" title="GROUP BY中使用WITH ROLLUP"></a>GROUP BY中使用WITH ROLLUP</h4><blockquote>
+<p> 使用 <code>WITH ROLLUP</code> 关键字之后，在所有查询出的分组记录之后增加一条记录，该记录计算查询出的所有记录的总和，即统计记录数量。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> department_id,<span class="built_in">AVG</span>(salary)</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">WHERE</span> department_id <span class="operator">&gt;</span> <span class="number">80</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> department_id <span class="keyword">WITH</span> <span class="keyword">ROLLUP</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查询结果</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+--------------+</span></span><br><span class="line"><span class="operator">|</span> department_id <span class="operator">|</span> <span class="built_in">AVG</span>(salary)  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+--------------+</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">90</span> <span class="operator">|</span> <span class="number">19333.333333</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>           <span class="number">100</span> <span class="operator">|</span>  <span class="number">8600.000000</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>           <span class="number">110</span> <span class="operator">|</span> <span class="number">10150.000000</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>          <span class="keyword">NULL</span> <span class="operator">|</span> <span class="number">11809.090909</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+--------------+</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注意: 当使用<code>ROLLUP</code>时,不能同时使用<code>ORDER BY</code>子句进行结果排序,即<code>ROLLUP</code>和<code>ORDER BY</code>是互相排斥的</p>
+</blockquote>
+<h3 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h3><h4 id="基本使用-1"><a href="#基本使用-1" class="headerlink" title="基本使用"></a>基本使用</h4><p>过滤分组: HAVING子句</p>
+<ul>
+<li>行已经被分组</li>
+<li>使用了聚合函数</li>
+<li>满足HAVING子句中条件的分组将被显示</li>
+<li>HAVING不能单独使用,必须跟GROUP BY一起使用</li>
+</ul>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> department_id, <span class="built_in">MAX</span>(salary)</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> department_id</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">MAX</span>(salary)<span class="operator">&gt;</span><span class="number">10000</span> ;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="WHERE和HAVING的对比"><a href="#WHERE和HAVING的对比" class="headerlink" title="WHERE和HAVING的对比"></a>WHERE和HAVING的对比</h3><ul>
+<li>WHERE 可以直接使用表中的字段作为筛选条件,但不能使用分组中的计算函数作为筛选条件;HAVING必须要与GROUP BY 配合使用,可以把分组计算的函数和分组字段作为筛选条件</li>
+</ul>
+<p>这就决定了,在需要对数据进行分组统计的时候,HAVING可以完成WHERE不能完成的任务.这是因为,在查询语法结构中,WHERE 在 GROUP BY 之前,所以无法对分组结果进行筛选,HAVING 在GROUP BY之后,可以使用分组字段和分组中的计算函数,对分组的结果集进行筛选,这个功能是WHERE无法完成的.另外,WHERE排除的记录不再包括在分组中.</p>
+<ul>
+<li>如果需要通过连接从关联表中获取需要的数据,WHERE是先筛选后连接,而HAVING是先连接后筛选</li>
+</ul>
+<p>这一点,就决定了在关联查询中,WHERE 比HAVING更高效.因为WHERE可以先筛选,用一个筛选后的较小数据集和关联表进行连接,这样占用的资源比较少,执行效率也比较高.HAVING则需要先把结果集准备好,也就是用未被筛选的数据集进行关联,然后对这个大的数据集进行筛选,这样占用的资源就比较多,执行效率也比较低.</p>
+<p>总结</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>WHERE</td>
+<td>先筛选数据再关联,执行效率高</td>
+<td>不能使用分组中的计算函数进行筛选</td>
+</tr>
+<tr>
+<td>HAVING</td>
+<td>可以使用分组中的计算函数</td>
+<td>在最后的结果集中进行筛选,执行效率低</td>
+</tr>
+</tbody></table>
+<h3 id="SELECT的执行过程"><a href="#SELECT的执行过程" class="headerlink" title="SELECT的执行过程"></a>SELECT的执行过程</h3><h4 id="查询结构"><a href="#查询结构" class="headerlink" title="查询结构"></a>查询结构</h4><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1：</span></span><br><span class="line"><span class="keyword">SELECT</span> ...,....,...</span><br><span class="line"><span class="keyword">FROM</span> ...,...,....</span><br><span class="line"><span class="keyword">WHERE</span> 多表的连接条件</span><br><span class="line"><span class="keyword">AND</span> 不包含组函数的过滤条件</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> ...,...</span><br><span class="line"><span class="keyword">HAVING</span> 包含组函数的过滤条件</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ... <span class="keyword">ASC</span><span class="operator">/</span><span class="keyword">DESC</span></span><br><span class="line">LIMIT ...,...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 方式2：</span></span><br><span class="line"><span class="keyword">SELECT</span> ...,....,...</span><br><span class="line"><span class="keyword">FROM</span> ... <span class="keyword">JOIN</span> ...</span><br><span class="line"><span class="keyword">ON</span> 多表的连接条件</span><br><span class="line"><span class="keyword">JOIN</span> ...</span><br><span class="line"><span class="keyword">ON</span> ...</span><br><span class="line"><span class="keyword">WHERE</span> 不包含组函数的过滤条件</span><br><span class="line"><span class="keyword">AND</span><span class="operator">/</span><span class="keyword">OR</span> 不包含组函数的过滤条件</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> ...,...</span><br><span class="line"><span class="keyword">HAVING</span> 包含组函数的过滤条件</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ... <span class="keyword">ASC</span><span class="operator">/</span><span class="keyword">DESC</span></span><br><span class="line">LIMIT ...,...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 其中：</span></span><br><span class="line">#（<span class="number">1</span>）<span class="keyword">from</span>：从哪些表中筛选</span><br><span class="line">#（<span class="number">2</span>）<span class="keyword">on</span>：关联多表查询时，去除笛卡尔积</span><br><span class="line">#（<span class="number">3</span>）<span class="keyword">where</span>：从表中筛选的条件</span><br><span class="line">#（<span class="number">4</span>）<span class="keyword">group</span> <span class="keyword">by</span>：分组依据</span><br><span class="line">#（<span class="number">5</span>）<span class="keyword">having</span>：在统计结果中再次筛选</span><br><span class="line">#（<span class="number">6</span>）<span class="keyword">order</span> <span class="keyword">by</span>：排序</span><br><span class="line">#（<span class="number">7</span>）limit：分页</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="SELECT执行顺序"><a href="#SELECT执行顺序" class="headerlink" title="SELECT执行顺序"></a>SELECT执行顺序</h4><ul>
+<li><p>关键字的顺序不能颠倒</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">FROM</span> ... <span class="keyword">WHERE</span> ... <span class="keyword">GROUP</span> <span class="keyword">BY</span> ... <span class="keyword">HAVING</span> ... <span class="keyword">ORDER</span> <span class="keyword">BY</span> ... LIMIT ...</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>SELECT 语句的执行顺序（在 MySQL 和 Oracle 中，SELECT 执行顺序基本相同）</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ... <span class="keyword">WHERE</span> ... <span class="keyword">GROUP</span> <span class="keyword">BY</span> ... <span class="keyword">HAVING</span> ... <span class="keyword">SELECT</span> 的字段 ... <span class="keyword">DISTINCT</span> ... <span class="keyword">ORDER</span> <span class="keyword">BY</span> ... LIMIT ...</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">FROM</span> <span class="operator">&lt;</span>left_table<span class="operator">&gt;</span></span><br><span class="line"><span class="number">2</span> <span class="keyword">ON</span> <span class="operator">&lt;</span>join_condition<span class="operator">&gt;</span></span><br><span class="line"><span class="number">3</span> <span class="operator">&lt;</span>join_type<span class="operator">&gt;</span> <span class="keyword">JOIN</span> <span class="operator">&lt;</span>right_table<span class="operator">&gt;</span></span><br><span class="line"><span class="number">4</span> <span class="keyword">WHERE</span> <span class="operator">&lt;</span>where_condition<span class="operator">&gt;</span></span><br><span class="line"><span class="number">5</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="operator">&lt;</span>group_by_list<span class="operator">&gt;</span></span><br><span class="line"><span class="number">6</span> <span class="keyword">HAVING</span> <span class="operator">&lt;</span>having_condition<span class="operator">&gt;</span></span><br><span class="line"><span class="number">7</span> <span class="keyword">SELECT</span></span><br><span class="line"><span class="number">8</span> <span class="keyword">DISTINCT</span> <span class="operator">&lt;</span>select_list<span class="operator">&gt;</span></span><br><span class="line"><span class="number">9</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="operator">&lt;</span>order_by_condition<span class="operator">&gt;</span></span><br><span class="line"><span class="number">10</span> LIMIT <span class="operator">&lt;</span>limit_number<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>比如,这个sql执行的顺序</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> player_id, player_name, <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">as</span> num <span class="comment">-- 顺序 5</span></span><br><span class="line"><span class="keyword">FROM</span> player <span class="keyword">JOIN</span> team <span class="keyword">ON</span> player.team_id <span class="operator">=</span> team.team_id <span class="comment">-- 顺序 1</span></span><br><span class="line"><span class="keyword">WHERE</span> height <span class="operator">&gt;</span> <span class="number">1.80</span> <span class="comment">-- 顺序 2</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> player.team_id <span class="comment">-- 顺序 3</span></span><br><span class="line"><span class="keyword">HAVING</span> num <span class="operator">&gt;</span> <span class="number">2</span> <span class="comment">-- 顺序 4</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> num <span class="keyword">DESC</span> <span class="comment">-- 顺序 6</span></span><br><span class="line">LIMIT <span class="number">2</span> <span class="comment">-- 顺序 7</span></span><br></pre></td></tr></table></figure></div>
+
+<p>在 SELECT 语句执行这些步骤的时候，每个步骤都会产生一个 虚拟表 ，然后将这个虚拟表传入下一个步 </p>
+<p>骤中作为输入。需要注意的是，这些步骤隐含在 SQL 的执行过程中，对于我们来说是不可见的。</p>
+</li>
+</ul>
+<h4 id="SQL-的执行原理"><a href="#SQL-的执行原理" class="headerlink" title="SQL 的执行原理"></a>SQL 的执行原理</h4><p><code>SELECT</code> 是先执行 <code>FROM</code> 这一步的。在这个阶段，如果是多张表联查，还会经历下面的几个步骤： </p>
+<ol>
+<li><p>首先先通过 <code>CROSS JOIN</code> 求笛卡尔积，相当于得到虚拟表 <code>vt（virtual table）1-1</code>； </p>
+</li>
+<li><p>通过 <code>ON</code> 进行筛选，在虚拟表 <code>vt1-1</code> 的基础上进行筛选，得到虚拟表 <code>vt1-2</code>； </p>
+</li>
+<li><p>添加外部行。如果我们使用的是左连接、右链接或者全连接，就会涉及到外部行，也就是在虚拟表 <code>vt1-2</code> 的基础上增加外部行，得到虚拟表 <code>vt1-3</code>。</p>
+</li>
+</ol>
+<p>当然如果我们操作的是两张以上的表，还会重复上面的步骤，直到所有表都被处理完为止。这个过程得到是我们的原始数据。 </p>
+<p>当我们拿到了查询数据表的原始数据，也就是最终的虚拟表 <code>vt1</code> ，就可以在此基础上再进行 <code>WHERE </code>阶 段 。在这个阶段中，会根据<code> vt1</code> 表的结果进行筛选过滤，得到虚拟表 <code>vt2</code> 。 </p>
+<p>然后进入第三步和第四步，也就是 <code>GROUP BY</code> 和 <code>HAVING</code> 阶段 。在这个阶段中，实际上是在虚拟表 <code>vt2 </code>的 基础上进行分组和分组过滤，得到中间的虚拟表 <code>vt3 </code>和<code>vt4</code>。 </p>
+<p>当我们完成了条件筛选部分之后，就可以筛选表中提取的字段，也就是进入到 <code>SELECT </code>和 <code>DISTINCT</code> 阶段 。 </p>
+<p>首先在 <code>SELECT</code> 阶段会提取想要的字段，然后在 <code>DISTINCT </code>阶段过滤掉重复的行，分别得到中间的虚拟表 <code>vt5-1 </code>和<code> vt5-2</code> 。 </p>
+<p>当我们提取了想要的字段数据之后，就可以按照指定的字段进行排序,也就是<code>ORDER BY </code>阶段 ,得到虚拟表 <code>vt6</code> 。 </p>
+<p>最后在<code>vt6</code>的基础上，取出指定行的记录，也就是 <code>LIMIT</code> 阶段 ，得到最终的结果，对应的是虚拟表 <code>vt7</code> 。 </p>
+<p>当然我们在写 <code>SELECT</code> 语句的时候，不一定存在所有的关键字，<code>相应的阶段就会省略</code>。 </p>
+<p>同时因为 SQL 是一门类似英语的结构化查询语言，所以我们在写 SELECT 语句的时候，还要注意相应的 关键字顺序，所谓<code>底层运行的原理</code>，就是我们刚才讲到的<code>执行顺序</code>。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/MySQL/">#MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/GSSBlog/2023/10/30/3.%E5%AD%90%E6%9F%A5%E8%AF%A2/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">MySQL子查询</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2023/10/30/1.Mysql%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">MySQL服务安装,卸载</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">MySQL函数</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E8%A1%8C%E5%87%BD%E6%95%B0"><span class="nav-text">单行函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0"><span class="nav-text">基本函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="nav-text">进制转换函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0"><span class="nav-text">字符串函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4%E5%87%BD%E6%95%B0"><span class="nav-text">日期和时间函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E5%87%BD%E6%95%B0"><span class="nav-text">流程控制函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MYSQL%E4%BF%A1%E6%81%AF%E5%87%BD%E6%95%B0"><span class="nav-text">MYSQL信息函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%87%BD%E6%95%B0"><span class="nav-text">其他函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0"><span class="nav-text">聚合函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">聚合函数类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GROUP-BY"><span class="nav-text">GROUP BY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HAVING"><span class="nav-text">HAVING</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WHERE%E5%92%8CHAVING%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-text">WHERE和HAVING的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SELECT%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-text">SELECT的执行过程</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>

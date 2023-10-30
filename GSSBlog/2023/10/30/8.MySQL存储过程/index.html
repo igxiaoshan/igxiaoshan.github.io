@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/10/30/8.mysql存储过程/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="存储过程概述 含义: 存储过程的英文是stored procedure,它的思想很简单,就是一组经过预先编译的SQL语句的封装   执行过程  存储过程预先存储在MySQL服务器上,需要执行的时候,客户端只需要向服务器端发出调用存储过程的命令,服务器端就可以把预先存储好的这一系列的SQL语句全部执行   好处  简化操作,提高sql语句的重用性,减少了开发程序员的压力 减少操作过程的失误,提高效率">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL存储过程(PROCEDURE)">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/10/30/8.MySQL%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="存储过程概述 含义: 存储过程的英文是stored procedure,它的思想很简单,就是一组经过预先编译的SQL语句的封装   执行过程  存储过程预先存储在MySQL服务器上,需要执行的时候,客户端只需要向服务器端发出调用存储过程的命令,服务器端就可以把预先存储好的这一系列的SQL语句全部执行   好处  简化操作,提高sql语句的重用性,减少了开发程序员的压力 减少操作过程的失误,提高效率">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-30T06:15:41.178Z">
+<meta property="article:modified_time" content="2023-10-30T06:20:53.454Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            MySQL存储过程(PROCEDURE) -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">MySQL存储过程(PROCEDURE)</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-10-30 14:15:41</span>
+        <span class="mobile">2023-10-30 14:15:41</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-10-30 14:20:53</span>
+            <span class="mobile">2023-10-30 14:20:53</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/">MySQL</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/Basic/">Basic</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/MySQL/">MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.5k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>12 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="存储过程概述"><a href="#存储过程概述" class="headerlink" title="存储过程概述"></a>存储过程概述</h2><blockquote>
+<p>含义: 存储过程的英文是<code>stored procedure</code>,它的思想很简单,就是一组经过<code>预先编译</code>的SQL语句的封装</p>
+</blockquote>
+<ul>
+<li><p>执行过程</p>
+<ul>
+<li>存储过程预先存储在MySQL服务器上,需要执行的时候,客户端只需要向服务器端发出调用存储过程的命令,服务器端就可以把预先存储好的这一系列的SQL语句全部执行</li>
+</ul>
+</li>
+<li><p>好处</p>
+<ul>
+<li>简化操作,提高sql语句的重用性,减少了开发程序员的压力</li>
+<li>减少操作过程的失误,提高效率</li>
+<li>减少网络传输量(客户端不需要把所有的sql语句通过网络发给客户端)</li>
+<li>减少了sql语句暴露在网上的风险,也提高了数据查询的安全性</li>
+</ul>
+</li>
+<li><p>分类</p>
+<blockquote>
+<p>存储过程的参数类型可以是<code>IN</code>,<code>OUT</code>和<code>INOUT</code></p>
+</blockquote>
+<ul>
+<li>没有参数(无参无返回值)</li>
+<li>仅仅带 IN 类型 (有参无返回值)</li>
+<li>仅仅带 OUT 类型(无参有返回值)</li>
+<li>有 IN 类型也有 OUT 类型 (有参有返回值)</li>
+<li>带 INOUT 类型(有参有返回值)</li>
+</ul>
+</li>
+</ul>
+<h2 id="创建存储过程"><a href="#创建存储过程" class="headerlink" title="创建存储过程"></a>创建存储过程</h2><ul>
+<li><p>创建语法</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> 存储过程名( <span class="keyword">IN</span><span class="operator">|</span> <span class="keyword">OUT</span><span class="operator">|</span> <span class="keyword">INOUT</span> 参数名 参数类型, ...)</span><br><span class="line">[characteristics]</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	存储过程体</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure></div>
+
+<p>参数解析</p>
+<ul>
+<li><code>IN</code>:表示入参</li>
+<li><code>OUT</code>:表示出参</li>
+<li><code>INOUT</code>: 表示当前参数可是出参,也可以是入参</li>
+</ul>
+<blockquote>
+<p>形参类型可以是mysql数据库中的任意类型</p>
+</blockquote>
+<p><code>characteristics</code>表示创建存储过程时指定对存储过程的约束条件,取值有</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LANGUAGE</span> <span class="keyword">SQL</span></span><br><span class="line"><span class="operator">|</span> [<span class="keyword">NOT</span>] <span class="keyword">DETERMINISTIC</span></span><br><span class="line"><span class="operator">|</span> &#123; <span class="keyword">CONTAINS</span> <span class="keyword">SQL</span> <span class="operator">|</span> <span class="keyword">NO</span> <span class="keyword">SQL</span> <span class="operator">|</span> <span class="keyword">READS</span> <span class="keyword">SQL</span> DATA <span class="operator">|</span> <span class="keyword">MODIFIES</span> <span class="keyword">SQL</span> DATA&#125;</span><br><span class="line"><span class="operator">|</span> <span class="keyword">SQL</span> SECURITY &#123;DEFINER <span class="operator">|</span> INVOKER&#125;</span><br><span class="line"><span class="operator">|</span> COMMENT <span class="string">&#x27;STRING&#x27;</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>LANGUAGE SQL</code>: 说明存储过程执行体是由sql组成的,当前系统支持的语言为sql</li>
+<li><code>[NOT] DETERMINISTIC</code>: 指明存储过程执行的结果是否确定. DETERMINISTIC 表示结果是确定的.每次执行存储过程时,相同的输入会得到相同的输出. NOT DETERMINISTIC 表示结果是不确定的,相同的输入可能得到不同的输出.如果没有指定任意一个值,默认为<code>NOT DETERMINISTIC</code></li>
+<li><code>&#123; CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA&#125;</code>:指明子程序使用sql语句的限制<ul>
+<li><code>CONTAINS SQL</code>表示当前存储过程的子程序包含sql语句,但是并不包含读写数据的sql语句</li>
+<li><code>NO SQL</code>表示当前存储过程的子程序不包含任何sql语句</li>
+<li><code>READS SQL DATA</code>表示当前存储过程的子程序中包含读数据的sql语句</li>
+<li><code>MODIFIES SQL DATA</code>表示当前存储过程的子程序中包含写数据的sql语句</li>
+<li>默认情况下 系统会指定为 CONTAINS SQL</li>
+</ul>
+</li>
+<li><code>SQL SECURITY &#123;DEFINER | INVOKER&#125;</code>执行当前存储过程的权限,即指明哪些用户能够执行当前的存储过程<ul>
+<li><code>DEFINER</code>表示只有当前存储过程的创建者或者定义者才能执行当前存储过程</li>
+<li><code>INVOKER</code>表示拥有当前存储过程的访问权限的用户能够执行当前存储过程</li>
+<li>如果没有设置相关的值,则MySQL默认指定为<code>DERFINER</code></li>
+</ul>
+</li>
+<li><code>COMMENT &#39;STRING&#39;</code>:注释信息,可以用来描述存储过程</li>
+</ul>
+<blockquote>
+<p>存储过程体中可以有多条sql语句,如果仅仅一条sql语句,则可以省略 begin 和 end</p>
+</blockquote>
+<p>编写存储过程并不是一件简单的事,可能存储过程中需要复杂的sql语句</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> <span class="keyword">begin</span> ... <span class="keyword">end</span> : <span class="keyword">begin</span> ... <span class="keyword">end</span> 中间包含多个语句,每个语句都以(;)号为结束符</span><br><span class="line"><span class="number">2.</span> <span class="keyword">declare</span>: 用来声明变量,使用的位置位于 <span class="keyword">begin</span> ..<span class="keyword">end</span> 语句中间,而且需要在其它语句使用之前进行变量的声明</span><br><span class="line"><span class="number">3.</span> <span class="keyword">set</span>:赋值语句,用于对变量进行赋值</span><br><span class="line"><span class="number">4.</span> <span class="keyword">select</span> ... <span class="keyword">into</span> : 把从数据表中查询的结果存放到变量中,也就是为变量赋值</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>需要设置新的结束标记</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER 新的结束标记</span><br><span class="line"><span class="comment">-- 因为mysql默认的语句结束符号是&quot;;&quot;,为了避免与存储过程中sql语句结束符冲突,需要使用 delimiter 改变存储过程的结束符</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 比如: &quot;delimiter // &quot;语句的作用就是将mysql的结束符设置为 // ,并以 &quot;end //&quot;结束存储过程</span></span><br><span class="line"><span class="comment">-- 当使用DELIMITER命令时，应该避免使用反斜杠（‘\’）字符，因为反斜线是MySQL的转义字符</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 实例</span></span><br><span class="line">DELIMTER <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> 存储过程名(<span class="keyword">IN</span><span class="operator">|</span><span class="keyword">OUT</span><span class="operator">|</span><span class="keyword">INOUT</span> 参数名 参数类型, ...)</span><br><span class="line">[characteristic]</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">SQL</span> 语句<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">SQL</span> 语句<span class="number">2</span>;</span><br><span class="line"><span class="keyword">END</span> <span class="operator">/</span><span class="operator">/</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h2 id="调用存储过程"><a href="#调用存储过程" class="headerlink" title="调用存储过程"></a>调用存储过程</h2><h3 id="调用格式"><a href="#调用格式" class="headerlink" title="调用格式"></a>调用格式</h3><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 存储过程有多种调用方法.存储过程必须使用 CALL 语句调用,并且存储过程和数据库相关.如果要执行其他数据库中的存储过程,需要指定数据库名称;如: CALL dbname.procname.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CALL</span> 存储过程名(实参列表)</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>方式1: IN方法</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CALL</span> SP1(<span class="string">&#x27;值&#x27;</span>)</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>方式2: OUT方法</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="variable">@name</span>;</span><br><span class="line"><span class="keyword">CALL</span> sp2(<span class="variable">@name</span>);</span><br><span class="line"><span class="keyword">SELECT</span> <span class="variable">@name</span>;</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>方式3: INOUT方法</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="variable">@name</span><span class="operator">=</span>值;</span><br><span class="line"><span class="keyword">CALL</span> sp3(<span class="variable">@name</span>);</span><br><span class="line"><span class="keyword">SELECT</span> <span class="variable">@name</span>;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>在 MySQL 中，存储过程不像普通的编程语言（比如 VC++、Java 等）那样有专门的集成开发环境。因 </p>
+<p>此，你可以通过 SELECT 语句，把程序执行的中间结果查询出来，来调试一个 SQL 语句的正确性。调试 </p>
+<p>成功之后，把 SELECT 语句后移到下一个 SQL 语句之后，再调试下一个 SQL 语句。这样 逐步推进 ，就可 </p>
+<p>以完成对存储过程中所有操作的调试了。当然，你也可以把存储过程中的 SQL 语句复制出来，逐段单独 </p>
+<p>调试。</p>
+<h1 id="存储函数"><a href="#存储函数" class="headerlink" title="存储函数"></a>存储函数</h1><h2 id="语法解析"><a href="#语法解析" class="headerlink" title="语法解析"></a>语法解析</h2><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 语法格式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> 函数名 (参数名 参数类型 , ...)</span><br><span class="line"><span class="keyword">RETURNS</span> 返回值类型</span><br><span class="line">[characteristics ...]</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	函数体 <span class="comment">-- 函数体中肯定得有 return 语句</span></span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure></div>
+
+<p>说明:</p>
+<p>1, 参数列表: 指定参数为 IN,OUT,INOUT只对procedure 是合法的, function 中总是默认为 in参数</p>
+<p>2, returns type 语句表示函数返回数据的类型</p>
+<p>3, characteristics 创建函数时指定的对函数的约束,取值与创建存储过程时相同</p>
+<p>4, 函数体也可以用 begin .. end 来表示sql代码的开始和结束.如果函数体只有一条语句,可以省略 begin …end</p>
+<h2 id="调用函数"><a href="#调用函数" class="headerlink" title="调用函数"></a>调用函数</h2><blockquote>
+<p>在MySQL中,存储函数的使用方法与MySQL的内部函数的使用方式是一样的.换言之,用户自己定义的存储函数与MySQL内部函数是一个性质的.区别在于,存储函数是用户自己定义的,而内部函数是MySQL的开发者定义的</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 函数名(实参列表)</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注意: 如果在创建存储函数中报错 “you might want to use the less safe log_bin_trust_funtion_creators variable” 有两种处理方式</p>
+<p>方式一: 加上必要的函数特性 “[NOT] DETERMINISTIC” 和 “{CONTAINS SQL | NOT SQL | READS SQL DATA | MODIFIES SQL DATA}”</p>
+<p>方式二: 在服务端执行命令行  “SET GLOBAL log_bin_trust_funtion_creators &#x3D; 1”</p>
+</blockquote>
+<h2 id="对比存储过程和存储函数"><a href="#对比存储过程和存储函数" class="headerlink" title="对比存储过程和存储函数"></a>对比存储过程和存储函数</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>关键字</th>
+<th>调用语法</th>
+<th>返回值</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>存储过程</td>
+<td>PROCEDURE</td>
+<td>CALL 存储过程()</td>
+<td>理解为有0个或者多个</td>
+<td>一般用于更新</td>
+</tr>
+<tr>
+<td>存储函数</td>
+<td>FUNCTION</td>
+<td>SELECT 存储函数()</td>
+<td>只能是一个</td>
+<td>一般用于查询结果为一个值并返回时</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>此外,存储函数可以放在查询语句中使用,存储过程不行.反之,存储过程的功能更加强大,包括能够执行对表的操作(比如创建表,删除表)和事务操作,这些功能是存储函数不具备的</p>
+</blockquote>
+<h1 id="存储过程和函数的查看-修改-删除"><a href="#存储过程和函数的查看-修改-删除" class="headerlink" title="存储过程和函数的查看,修改,删除"></a>存储过程和函数的查看,修改,删除</h1><h2 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h2><blockquote>
+<p>创建完成过后,如何知道存储函数和存储过程是否成功了呢</p>
+<p>用户可以使用 SHOW STATUS 语句或者	SHOW CREATE 语句来查看,也可以直接从系统的 information_schema 数据库中查询</p>
+</blockquote>
+<ul>
+<li><p>使用SHOW CREATE 语句查看存储过程和函数的创建信息</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 语句结构</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> &#123;<span class="keyword">PROCEDURE</span> <span class="operator">|</span> <span class="keyword">FUNCTION</span>&#125; 存储过程名或者函数名</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 举例</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> FUNCATION test_function \G;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>使用SHOW STATUS 语句查看存储过程和函数的状态信息</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 语法结构</span></span><br><span class="line"><span class="keyword">SHOW</span> &#123;<span class="keyword">PROCEDURE</span> <span class="operator">|</span> <span class="keyword">FUNCTION</span>&#125; STATUS [<span class="keyword">LIKE</span> <span class="string">&#x27;pattern&#x27;</span>]</span><br><span class="line"><span class="comment">-- 这个语句返回子程序的特征,如数据库,名字,类型,创建者以及创建和修改时间</span></span><br><span class="line"><span class="comment">-- [LIKE &#x27;pattern&#x27;]: 匹配存储过程或函数的名称,可以省略.当省略不写时,会列出MySQL数据库中存在的所有存储过程或函数的信息.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 举例</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">PROCEDURE</span> STATUS <span class="keyword">LIKE</span> <span class="string">&#x27;SELECT%&#x27;</span> \G</span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">1.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line">Db: test_db</span><br><span class="line">Name: SelectAllData</span><br><span class="line">Type: <span class="keyword">PROCEDURE</span></span><br><span class="line">Definer: root<span class="variable">@localhost</span></span><br><span class="line">Modified: <span class="number">2021</span><span class="number">-10</span><span class="number">-16</span> <span class="number">15</span>:<span class="number">55</span>:<span class="number">07</span></span><br><span class="line">Created: <span class="number">2021</span><span class="number">-10</span><span class="number">-16</span> <span class="number">15</span>:<span class="number">55</span>:<span class="number">07</span></span><br><span class="line">Security_type: DEFINER</span><br><span class="line">Comment:</span><br><span class="line">character_set_client: utf8mb4</span><br><span class="line">collation_connection: utf8mb4_general_ci</span><br><span class="line">Database <span class="keyword">Collation</span>: utf8mb4_general_ci</span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>从 information_schema.Routines表中查看存储过程和函数信息</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--Mysql中存储过程和函数的信息都存储在 information_schema 数据库下的 Routines 表中.可以通过查询该表的记录来查询存储过程和函数的信息</span></span><br><span class="line"><span class="comment">-- 语法结构</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> information_schema.Routines</span><br><span class="line"><span class="keyword">WHERE</span> ROUTINE_NAME <span class="operator">=</span> <span class="string">&#x27;存储过程或函数名&#x27;</span> [<span class="keyword">AND</span> ROUTINE_TYPE <span class="operator">=</span> &#123;<span class="string">&#x27;PROCEDURE | FUNCTION&#x27;</span>&#125;];</span><br><span class="line"><span class="comment">-- 注意: 如果在MySQL数据库中存在存储过程和函数名称相同的情况,最好指定routine_type查询条件来说明查询的是存储过程还是函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 举例</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> information_schema.Routines</span><br><span class="line"><span class="keyword">WHERE</span> ROUTINE_NAME <span class="operator">=</span><span class="string">&#x27;count_by_id&#x27;</span> <span class="keyword">AND</span> ROUTINE_TYPE <span class="operator">=</span> <span class="string">&#x27;FUNCTION&#x27;</span> \G</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h2 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h2><blockquote>
+<p>修改存储过程或者函数,不影响存储过程或者函数功能,只是修改相关特性,使用ALTER 语句实现</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 语法结构</span></span><br><span class="line"><span class="keyword">ALTER</span> &#123;<span class="keyword">PROCEDURE</span> <span class="operator">|</span> <span class="keyword">FUNCTION</span>&#125; 存储过程名或者存储函数名 [characteristic ...]</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 其中 characteristic 指定存储过程或者函数的特性,其读取信息与创建存储过程,函数时的取值信息略有不同</span></span><br><span class="line">&#123; CONSTAINS <span class="keyword">SQL</span> <span class="operator">|</span> <span class="keyword">NO</span> <span class="keyword">SQL</span> <span class="operator">|</span> <span class="keyword">READS</span> <span class="keyword">SQL</span> DATA <span class="operator">|</span> <span class="keyword">MODIFIES</span> <span class="keyword">SQL</span> DATA&#125;</span><br><span class="line"><span class="operator">|</span> <span class="keyword">SQL</span> SECURITY &#123; DEFINER <span class="operator">|</span> INVOKER&#125;</span><br><span class="line"><span class="operator">|</span> COMMENT <span class="string">&#x27;string&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改存储过程使用`ALTER PROCEDURE`语句,修改存储函数使用`ALTER FUNCTION`语句.但是,这两个语句的结构是一样的,语句中的所有参数也是一样的</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 举例</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">PROCEDURE</span> countProc</span><br><span class="line"><span class="keyword">MODIFIES</span> <span class="keyword">SQL</span> DATA</span><br><span class="line"><span class="keyword">SQL</span> SECURITY INVOKER;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改后查询</span></span><br><span class="line"><span class="keyword">SELECT</span> specific_name, sql_data_access, security_type</span><br><span class="line"><span class="keyword">FROM</span> information_schema.<span class="string">&#x27;ROUTINES&#x27;</span></span><br><span class="line"><span class="keyword">WHERE</span> routine_name <span class="operator">=</span> <span class="string">&#x27;countProc&#x27;</span> ADN routine_type <span class="operator">=</span> <span class="string">&#x27;PROCEDURE&#x27;</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>CONSTAINS SQL</code>: 表示子程序包含sql语句,但不包含读或者写数据的语句</li>
+<li><code>NO SQL</code>: 表示子程序不包含sql语句</li>
+<li><code>READS SQL DATA</code>: 表示子程序中包含读数据的语句</li>
+<li><code>MODIFIES SQL DATA</code>: 表示子程序中包含写数据的语句</li>
+<li><code>SQL SECURITY &#123;DEFINER | INVOKER&#125;</code>:指明谁有权限来执行<ul>
+<li><code>DEFINER</code>: 表示只有定义者自己才能执行</li>
+<li><code>INVOKER</code>: 表示调用者可以执行</li>
+</ul>
+</li>
+<li><code>COMMENT &#39;string&#39; </code>: 表示注释信息</li>
+</ul>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><blockquote>
+<p>删除存储过程和函数,可以使用 drop 语句</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 语法结构</span></span><br><span class="line"><span class="keyword">DROP</span> &#123;<span class="keyword">PROCEDURE</span> <span class="operator">|</span> <span class="keyword">FUNCTION</span>&#125; [IF <span class="keyword">EXISTS</span>] 存储过程或函数的名</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>IF EXISTS</code>: 如果程序或者函数不存在,它可以防止发生错误,产生一个用SHOW WARNINGS查看的警告</li>
+</ul>
+<h1 id="存储过程的优缺点"><a href="#存储过程的优缺点" class="headerlink" title="存储过程的优缺点"></a>存储过程的优缺点</h1><blockquote>
+<p>存储过程的使用,一直存在很多争议.比如有些公司对于大型项目要求使用存储过程,而有些公司是明确禁止使用存储过程的.</p>
+</blockquote>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ul>
+<li><code>存储过程可以一次编译多次使用</code>.存储过程只在创建时进行编译,之后的使用都不需要重新编译,可以提升sql的执行效率</li>
+<li><code>可以减少开发工作量</code>将代码封装成模块,实际上是编程的核心思想之一,这样可以把复杂的问题拆解成不同的模块,然后模块之间可以重复使用,在减少开发工作量的同时,还能保证代码的结构清晰</li>
+<li><code>存储过程的安全性强</code>.我们在设定存储过程的时候可以<code>设置对用户的使用权限</code>,这样就和视图一样具有较强的安全性</li>
+<li><code>可以减少网络传输量</code>.因为代码封装到存储过程中,每次使用只需要调用存储过程即可,这样就可以减少网络传输量</li>
+<li><code>良好的封装性</code>.在进行相对复杂的数据库操作时,原本需要一条一条的sql语句,可能要连接多次数据库才能完成的操作,现在变成了一次存储过程,只需要<code>连接一次即可</code></li>
+</ul>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><blockquote>
+<p>基于上面这些优点，不少大公司都要求大型项目使用存储过程，比如微软、IBM 等公司。但是国内的阿里并不推荐开发人员使用存储过程，这是为什么呢？</p>
+<p>阿里开发规范 </p>
+<p>【强制】禁止使用存储过程，存储过程难以调试和扩展，更没有移植性。 </p>
+</blockquote>
+<ul>
+<li><code>可移植性差</code> 存储过程不能跨数据库移植,比如在 MySQL,Oracle 和 SQL Server 里编写的存储过程,再换成其他数据库时就需要重新编写</li>
+<li><code>调试困难</code>,只有少数的DBMS支持存储过程的调试,对于复杂的存储过程来说,开发和维护都不容易,虽然也有一些第三方工具可以对存储过程进行调试,但是收费</li>
+<li><code>存储过程的版本管理很困难</code>.比如数据表索引发生变化了,可能会导致存储过程失效,我们在开发软件的时候往往需要进行版本管理,但是存储过程本身没有版本控制,版本迭代更新很麻烦</li>
+<li><code>它不适合高并发的场景</code>.高并发的场景需要减少数据库的压力,有时数据库会采用分库分表的方式,而且对可扩展性要求很高,在这种情况下,存储过程会变得难以维护,<code>增加数据库的压力</code>,显然就不适用了</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/MySQL/">#MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/GSSBlog/2023/10/30/9.MySQL%E5%8F%98%E9%87%8F,%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6,%E6%B8%B8%E6%A0%87/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">MySQL变量、流程控制、游标</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2023/10/30/7.MySQL%E8%A7%86%E5%9B%BE/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">MySQL视图(VIEW)</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">MySQL存储过程(PROCEDURE)</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E6%A6%82%E8%BF%B0"><span class="nav-text">存储过程概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="nav-text">创建存储过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="nav-text">调用存储过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E6%A0%BC%E5%BC%8F"><span class="nav-text">调用格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E8%AF%95"><span class="nav-text">调试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%87%BD%E6%95%B0"><span class="nav-text">存储函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E8%A7%A3%E6%9E%90"><span class="nav-text">语法解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-text">调用函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%92%8C%E5%AD%98%E5%82%A8%E5%87%BD%E6%95%B0"><span class="nav-text">对比存储过程和存储函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%92%8C%E5%87%BD%E6%95%B0%E7%9A%84%E6%9F%A5%E7%9C%8B-%E4%BF%AE%E6%94%B9-%E5%88%A0%E9%99%A4"><span class="nav-text">存储过程和函数的查看,修改,删除</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B"><span class="nav-text">查看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9"><span class="nav-text">修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-text">存储过程的优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-text">缺点</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>

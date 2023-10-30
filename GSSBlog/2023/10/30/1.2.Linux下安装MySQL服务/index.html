@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/10/30/1.2.linux下安装mysql服务/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="安装前检查MySQL依赖检查&#x2F;tmp临时目录权限（必不可少） 由于mysql安装过程中，会通过mysql用户在&#x2F;tmp目录下新建tmp_db文件，所以请给&#x2F;tmp较大的权限。   12## 执行命令,授予权限chmod -R 777 &#x2F;tmp  检查依赖123456## 检查依赖rpm -qa | grep libaiorpm -qa | grep net-tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL服务安装">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/10/30/1.2.Linux%E4%B8%8B%E5%AE%89%E8%A3%85MySQL%E6%9C%8D%E5%8A%A1/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="安装前检查MySQL依赖检查&#x2F;tmp临时目录权限（必不可少） 由于mysql安装过程中，会通过mysql用户在&#x2F;tmp目录下新建tmp_db文件，所以请给&#x2F;tmp较大的权限。   12## 执行命令,授予权限chmod -R 777 &#x2F;tmp  检查依赖123456## 检查依赖rpm -qa | grep libaiorpm -qa | grep net-tools">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-30T06:23:46.504Z">
+<meta property="article:modified_time" content="2023-10-30T06:25:39.861Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            MySQL服务安装 -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">MySQL服务安装</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-10-30 14:23:46</span>
+        <span class="mobile">2023-10-30 14:23:46</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-10-30 14:25:39</span>
+            <span class="mobile">2023-10-30 14:25:39</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/">MySQL</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/Advanced/">Advanced</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/MySQL/">MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.7k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>7 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="安装前检查MySQL依赖"><a href="#安装前检查MySQL依赖" class="headerlink" title="安装前检查MySQL依赖"></a>安装前检查MySQL依赖</h2><h3 id="检查-tmp临时目录权限（必不可少）"><a href="#检查-tmp临时目录权限（必不可少）" class="headerlink" title="检查&#x2F;tmp临时目录权限（必不可少）"></a>检查&#x2F;tmp临时目录权限（必不可少）</h3><blockquote>
+<p>由于mysql安装过程中，会通过mysql用户在&#x2F;tmp目录下新建tmp_db文件，所以请给&#x2F;tmp较大的权限。 </p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 执行命令,授予权限</span></span><br><span class="line"><span class="built_in">chmod</span> -R 777 /tmp</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="检查依赖"><a href="#检查依赖" class="headerlink" title="检查依赖"></a>检查依赖</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 检查依赖</span></span><br><span class="line">rpm -qa | grep libaio</span><br><span class="line"></span><br><span class="line">rpm -qa | grep net-tools</span><br><span class="line"></span><br><span class="line"><span class="comment">## 如果不存在需要到CentOS中进行rpm安装</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><blockquote>
+<h2 id="将之前下载好的文件-上传到-opt-mysql80文件夹下"><a href="#将之前下载好的文件-上传到-opt-mysql80文件夹下" class="headerlink" title="将之前下载好的文件,上传到 /opt/mysql80文件夹下"></a>将之前下载好的文件,上传到 <code>/opt/mysql80</code>文件夹下</h2></blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 执行安装命令</span></span><br><span class="line"><span class="comment">## 注意: 必须按照我下列文件顺序执行安装</span></span><br><span class="line"></span><br><span class="line">rpm-ivh mysql-community-common-8.0.25-1.el7.x86_64.rpm</span><br><span class="line">rpm-ivh mysql-community-client-plugins-8.0.25-1.el7.x86_64.rpm </span><br><span class="line">rpm-ivh mysql-community-libs-8.0.25-1.el7.x86_64.rpm</span><br><span class="line">rpm-ivh mysql-community-client-8.0.25-1.el7.x86_64.rpm</span><br><span class="line">rpm-ivh mysql-community-server-8.0.25-1.el7.x86_64.rpm</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>rpm</code>是 Redhat Package Manage缩写,通过rpm的管理,用户可以把源代码包装成以rpm为扩展名的文件形式,易于安装</li>
+<li><code>-i</code> –instll安装软件包</li>
+<li><code>-v</code> –verbose提供更多的详细信息输出</li>
+<li><code>-h</code> –hash 软件包安装的时候列出哈希标记(和-v一起使用效果更好),展示进度条</li>
+</ul>
+<h1 id="注意-安装中可能会报错"><a href="#注意-安装中可能会报错" class="headerlink" title="注意: 安装中可能会报错"></a>注意: 安装中可能会报错</h1><ul>
+<li><h2 id="案例一"><a href="#案例一" class="headerlink" title="案例一"></a>案例一</h2></li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line">mariadb-libs被 mysql-community-libs-8.0.25-1.e17.X86_64 取代</span><br><span class="line"></span><br><span class="line"><span class="comment">## 解决方案</span></span><br><span class="line">yum remove mysql-libs <span class="comment"># 清除之前安装过得依赖</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><h2 id="案例二"><a href="#案例二" class="headerlink" title="案例二"></a>案例二</h2></li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line">mysql-community-client(x86-64) &gt;= 5.7.9 被 mysql-community-server-5.7.30-1.e17.x86_64 需要</span><br><span class="line"></span><br><span class="line"><span class="comment">## 解决方案</span></span><br><span class="line"><span class="comment">#在安装指令末尾加上 --nodeps --force ，即安装时不检查依赖关系</span></span><br><span class="line">rpm -ivh mysql-community-client-5.7.30-1.el7.x86_64.rpm --nodeps --force</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><h2 id="案例三"><a href="#案例三" class="headerlink" title="案例三"></a>案例三</h2></li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@server mysql-5.7.22]<span class="comment"># rpm -ivh mysql-community-server-5.7.22-1.el7.x86_64.rpm </span></span><br><span class="line">警告：mysql-community-server-5.7.22-1.el7.x86_64.rpm: 头V3 DSA/SHA1 Signature, 密钥 ID 5072e1f5: NOKEY</span><br><span class="line">错误：依赖检测失败：</span><br><span class="line">	/usr/bin/perl 被 mysql-community-server-5.7.22-1.el7.x86_64 需要</span><br><span class="line">	net-tools 被 mysql-community-server-5.7.22-1.el7.x86_64 需要</span><br><span class="line">	perl(Getopt::Long) 被 mysql-community-server-5.7.22-1.el7.x86_64 需要</span><br><span class="line">	perl(strict) 被 mysql-community-server-5.7.22-1.el7.x86_64 需要</span><br><span class="line"></span><br><span class="line"><span class="comment">###根据以上内容显示：perl、net-tools 被需要！个人感觉缺少组件，尝试用 yum install 了一下：</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># yum -y install perl.x86_64</span></span><br><span class="line"><span class="comment"># yum -y install net-tools.x86_64</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><h2 id="案例四"><a href="#案例四" class="headerlink" title="案例四"></a>案例四</h2></li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 如果是 MySQL8 版本，连接时还会出现如下问题：</span></span><br><span class="line"><span class="comment">#### 配置新连接报错：错误号码 2058，分析是 mysql 密码加密方法变了。</span></span><br><span class="line"><span class="comment">##### 解决方法：Linux下 mysql -u root -p 登录你的 mysql 数据库，然后 执行这条SQL：</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;你的密码&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">### 然后就可以连接工具了</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="查看MySQL版本"><a href="#查看MySQL版本" class="headerlink" title="查看MySQL版本"></a>查看MySQL版本</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 执行如下命令，如果成功表示安装mysql成功。类似java-version如果打出版本等信息</span></span><br><span class="line">mysql --version</span><br><span class="line">或</span><br><span class="line">mysqladmin	--version</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 检查安装包</span></span><br><span class="line">rpm-qa|grep-imysql</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="服务初始化"><a href="#服务初始化" class="headerlink" title="服务初始化"></a>服务初始化</h3><blockquote>
+<p>为了保证数据库目录与文件的所有者为mysql登录用户，如果你是以root身份运行mysql服务，需要执行下面的命令初始化：</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysqld --initialize --user=mysql</span><br><span class="line"><span class="comment">## 说明：--initialize选项默认以“安全”模式来初始化，则会为root用户生成一个密码并将该密码标记为已过期,登录后需要重新设置一个新的密码,生成的临时密码会往日志中记录一份</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#### 查看密码</span></span><br><span class="line"><span class="built_in">cat</span> /var/log/mysqld.log</span><br><span class="line"></span><br><span class="line"><span class="comment">### A temporary password is generated for root@localhost: ;hT!hHgWd52&gt;</span></span><br><span class="line"><span class="comment">### 这个  &#x27;;hT!hHgWd52&gt;&#x27;   就是临时密码</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="服务启动"><a href="#服务启动" class="headerlink" title="服务启动"></a>服务启动</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加不加.service后缀都可以</span></span><br><span class="line">启动：systemctl start mysqld.service</span><br><span class="line">关闭：systemctl stop mysqld.service</span><br><span class="line">重启：systemctl restar tmysqld.service</span><br><span class="line">查看状态：systemctl status mysqld.service</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 查看服务进程</span></span><br><span class="line">ps -ef | grep -i mysql</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 查看MySQL服务是否自启动</span></span><br><span class="line">systemctl list-unit-files |grep mysqld.service</span><br><span class="line"></span><br><span class="line"><span class="comment">### 默认是enabled</span></span><br><span class="line"><span class="comment">#### 如果不是enabled可以运行如下命令设置自启动</span></span><br><span class="line">systemctl <span class="built_in">enable</span> mysqld.service</span><br><span class="line"></span><br><span class="line"><span class="comment">#### 如果希望不进行自启动，运行如下命令设置</span></span><br><span class="line">systemctldisablemysqld.service</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="MySQL登录"><a href="#MySQL登录" class="headerlink" title="MySQL登录"></a>MySQL登录</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p <span class="string">&#x27;密码&#x27;</span></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 修改密码</span></span><br><span class="line"><span class="comment">#### 因为初始化密码默认是过期的，所以查看数据库会报错</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;你的新密码&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">##### 5.7版本之后（不含5.7），mysql加入了全新的密码安全机制。设置新密码太简单会报错。</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="设置远程登录"><a href="#设置远程登录" class="headerlink" title="设置远程登录"></a>设置远程登录</h3><blockquote>
+<p>出现的问题 :</p>
+<p>在用SQLyog或Navicat中配置远程连接Mysql数据库时遇到如下报错信息，这是由于Mysql配置了不支持远程连接引起的。</p>
+</blockquote>
+<ul>
+<li><p>步骤一</p>
+<ul>
+<li><code>物理机 ping 虚拟机 ip</code><ul>
+<li><code>ping 192.168.23.112</code></li>
+</ul>
+</li>
+<li><code>物理机 telnet 虚拟机 ip 端口号</code><ul>
+<li><code>开启telnet</code></li>
+<li><code>控制面板</code>—&gt;<code>所有控制面板项</code>—-&gt;<code>程序和功能</code>—-&gt;<code>启用或关闭Windows功能</code>—-&gt;<code>找到 Telnet客户端</code>—&gt;<code>开启 Telnet客户端</code></li>
+<li><code>telnet 192.168.23.112 3306</code></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 如果物理机ping不同,解决网路问题</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 如果telnet不同,解决端口问题</span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>步骤二</p>
+<ul>
+<li>检查防火墙</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 防火墙基础命令</span></span><br><span class="line"><span class="comment">### firewalld.service后缀 .service可不加</span></span><br><span class="line">systemctl start firewalld.service <span class="comment"># 开启防火墙</span></span><br><span class="line">systemctl stop firewalld.service <span class="comment"># 关闭防火墙</span></span><br><span class="line">systemctl status firewalld.service <span class="comment"># 查看防火墙状态</span></span><br><span class="line">systemctl <span class="built_in">enable</span> firewalld.service <span class="comment"># 设置开机启动防火墙</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service <span class="comment"># 设置开机禁用防火墙</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### 如果提示: Unit firewalld.service could not be found .说明没有安装防火墙,需要安装</span></span><br><span class="line">yum install firewalld firewall-config</span><br><span class="line"></span><br><span class="line"><span class="comment">##### 注意: centos7下默认的防火墙是firewall,替代了之前的iptables,firewall有图形化管理界面和命令行管理两种方式.</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>添加放行端口</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 添加3306端口</span></span><br><span class="line">firewall-cmd --zone=public --add-port=3306/tcp --permanent</span><br><span class="line"></span><br><span class="line"><span class="comment">## 刷新防火墙</span></span><br><span class="line"><span class="comment">### 一定要刷新,否则不生效</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看firewall状态</span></span><br><span class="line">firewall-cmd --state</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>附加指令</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 查看防火墙放行规则</span></span><br><span class="line">firewall-cmd --list-all</span><br><span class="line"></span><br><span class="line"><span class="comment">## 添加放行服务</span></span><br><span class="line">firewall-cmd --zone=public --add-service=http --permanent</span><br><span class="line"></span><br><span class="line"><span class="comment">## 列出支持的zone</span></span><br><span class="line">firewall-cmd --get-zone</span><br><span class="line"></span><br><span class="line"><span class="comment">## 列出支持的服务,在列表中放行的</span></span><br><span class="line">firewall-cmd --get-services</span><br><span class="line"></span><br><span class="line"><span class="comment">## 移除放行的端口</span></span><br><span class="line">firewall-cmd --remove-port=80/tcp --permanent</span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看已经放行的端口</span></span><br><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>步骤三</p>
+<ul>
+<li>在linux系统下修改用户主机信息</li>
+</ul>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询当前用户的信息</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">user</span>, host <span class="keyword">FROM</span> <span class="keyword">user</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改当前用户host</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">user</span> <span class="keyword">SET</span> host <span class="operator">=</span> <span class="string">&#x27;%&#x27;</span> <span class="keyword">WHERE</span> <span class="keyword">user</span> <span class="operator">=</span> <span class="string">&#x27;root&#x27;</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>修改后执行<code>flush privileges</code>使配置立即生效</li>
+</ul>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flush privileges;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>此时到此基本上已经可以,但是</p>
+</li>
+<li><p>如果是MySQL5.7版本,可以直接使用SQLyog或者Navicat成功连接MySQL服务了</p>
+</li>
+<li><p>如果是MySQL8.0版本,会因为密码的加密规则调整,致使连接失败</p>
+<ul>
+<li><p>错误信息如下</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">错误号码2058</span><br><span class="line">Plugin caching_sha0_password could net be loaded: <span class="string">&#x27;乱码&#x27;</span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>分析: mysql密码加密方法变了</p>
+</li>
+<li><p>解决办法</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 在linux下登录mysql服务,执行以下sql语句</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">&#x27;root&#x27;</span>;</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+</li>
+<li><p>至此完成远程登录设置</p>
+</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/MySQL/">#MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2023/10/30/1.1.Linux%E4%B8%8B%E5%8D%B8%E8%BD%BDMySQL%E6%9C%8D%E5%8A%A1/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">MySQL服务卸载</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">MySQL服务安装</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%89%8D%E6%A3%80%E6%9F%A5MySQL%E4%BE%9D%E8%B5%96"><span class="nav-text">安装前检查MySQL依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5-tmp%E4%B8%B4%E6%97%B6%E7%9B%AE%E5%BD%95%E6%9D%83%E9%99%90%EF%BC%88%E5%BF%85%E4%B8%8D%E5%8F%AF%E5%B0%91%EF%BC%89"><span class="nav-text">检查&#x2F;tmp临时目录权限（必不可少）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E4%BE%9D%E8%B5%96"><span class="nav-text">检查依赖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="nav-text">安装过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E4%B9%8B%E5%89%8D%E4%B8%8B%E8%BD%BD%E5%A5%BD%E7%9A%84%E6%96%87%E4%BB%B6-%E4%B8%8A%E4%BC%A0%E5%88%B0-opt-mysql80%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%8B"><span class="nav-text">将之前下载好的文件,上传到 &#x2F;opt&#x2F;mysql80文件夹下</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F-%E5%AE%89%E8%A3%85%E4%B8%AD%E5%8F%AF%E8%83%BD%E4%BC%9A%E6%8A%A5%E9%94%99"><span class="nav-text">注意: 安装中可能会报错</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%80"><span class="nav-text">案例一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E4%BA%8C"><span class="nav-text">案例二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%89"><span class="nav-text">案例三</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E5%9B%9B"><span class="nav-text">案例四</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BMySQL%E7%89%88%E6%9C%AC"><span class="nav-text">查看MySQL版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">服务初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8"><span class="nav-text">服务启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL%E7%99%BB%E5%BD%95"><span class="nav-text">MySQL登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95"><span class="nav-text">设置远程登录</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>

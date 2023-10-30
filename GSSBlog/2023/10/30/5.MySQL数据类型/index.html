@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/10/30/5.mysql数据类型/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="数据类型   类型 类型举例    整数类型 TINYINT、SMALLINT、MEDIUMINT、INT(INTEGER)、BIGINT   浮点类型 FLOAT, DOUBLE   定点数类型 DECIMAL   位类型 BIT   日期和时间类型 YEAR, TIME, DATE, DATATIME, TIMESTAMP   文本字符串类型 CHAR, VARCHAR, TINYTEXT,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL数据类型">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/10/30/5.MySQL%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="数据类型   类型 类型举例    整数类型 TINYINT、SMALLINT、MEDIUMINT、INT(INTEGER)、BIGINT   浮点类型 FLOAT, DOUBLE   定点数类型 DECIMAL   位类型 BIT   日期和时间类型 YEAR, TIME, DATE, DATATIME, TIMESTAMP   文本字符串类型 CHAR, VARCHAR, TINYTEXT,">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-30T06:15:41.171Z">
+<meta property="article:modified_time" content="2023-10-30T06:19:24.920Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            MySQL数据类型 -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">MySQL数据类型</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-10-30 14:15:41</span>
+        <span class="mobile">2023-10-30 14:15:41</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-10-30 14:19:24</span>
+            <span class="mobile">2023-10-30 14:19:24</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/">MySQL</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/Basic/">Basic</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/MySQL/">MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>4k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>15 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>类型举例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>整数类型</td>
+<td>TINYINT、SMALLINT、MEDIUMINT、INT(INTEGER)、BIGINT</td>
+</tr>
+<tr>
+<td>浮点类型</td>
+<td>FLOAT, DOUBLE</td>
+</tr>
+<tr>
+<td>定点数类型</td>
+<td>DECIMAL</td>
+</tr>
+<tr>
+<td>位类型</td>
+<td>BIT</td>
+</tr>
+<tr>
+<td>日期和时间类型</td>
+<td>YEAR, TIME, DATE, DATATIME, TIMESTAMP</td>
+</tr>
+<tr>
+<td>文本字符串类型</td>
+<td>CHAR, VARCHAR, TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT</td>
+</tr>
+<tr>
+<td>枚举类型</td>
+<td>ENUM</td>
+</tr>
+<tr>
+<td>集合类型</td>
+<td>SET</td>
+</tr>
+<tr>
+<td>二进制字符串类型</td>
+<td>BINARY, VARBINARY, TINYBLOB, BLOB, MEDIUMBLOB, LONGBLOB</td>
+</tr>
+<tr>
+<td>JSON类型</td>
+<td>JSON对象, JSON数组</td>
+</tr>
+<tr>
+<td>空间数据类型</td>
+<td>单值类型: GEOMETRY, POINT, LINESTRING, POLYGON;集合类型: MULTIPOINT, MULTILINESPRING, MULTIPOLYGON, GEOMETRYCOLLECTION</td>
+</tr>
+</tbody></table>
+<h3 id="常见数据类型的属性"><a href="#常见数据类型的属性" class="headerlink" title="常见数据类型的属性"></a>常见数据类型的属性</h3><table>
+<thead>
+<tr>
+<th>MySQL关键字</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NULL</td>
+<td>数据列可包含NULL值</td>
+</tr>
+<tr>
+<td>NOT NULL</td>
+<td>数据列不允许包含NULL值</td>
+</tr>
+<tr>
+<td>DEFAULT</td>
+<td>默认值</td>
+</tr>
+<tr>
+<td>PRIMARY KEY</td>
+<td>主键</td>
+</tr>
+<tr>
+<td>AUTO_INCREMENT</td>
+<td>自动递增,适用于整数类型</td>
+</tr>
+<tr>
+<td>UNSIGNED</td>
+<td>无符号</td>
+</tr>
+<tr>
+<td>CHARACTER SET ‘字符集’</td>
+<td>指定一个字符集</td>
+</tr>
+</tbody></table>
+<h2 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h2><h3 id="类型介绍"><a href="#类型介绍" class="headerlink" title="类型介绍"></a>类型介绍</h3><blockquote>
+<p>整数类型一共有5种,包括<code>TINYINT</code>,<code>SMALLINT</code>,<code>MEDIUMINT</code>,<code>INT(INTEGER)</code>和<code>BIGINT</code></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>整数类型</th>
+<th>字节</th>
+<th>有符号数取值范围</th>
+<th>无符号数取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TINYINT</td>
+<td>1</td>
+<td>-128-127</td>
+<td>0-255</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>2</td>
+<td>-32768-32767</td>
+<td>0-65535</td>
+</tr>
+<tr>
+<td>MEDIUMINT</td>
+<td>3</td>
+<td>-8388608-8388607</td>
+<td>0-16777215</td>
+</tr>
+<tr>
+<td>INT(INTEGER)</td>
+<td>4</td>
+<td>-2147483648-2147483647</td>
+<td>0-4294967295</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>8</td>
+<td>-9223372036854775808-9223372036854775807</td>
+<td>0-18446744073709551615</td>
+</tr>
+</tbody></table>
+<h3 id="可选属性"><a href="#可选属性" class="headerlink" title="可选属性"></a>可选属性</h3><blockquote>
+<p>整数类型的可选属性有三个</p>
+</blockquote>
+<ul>
+<li><h4 id="M"><a href="#M" class="headerlink" title="M"></a>M</h4><code>M</code>: 表示宽度,M的取值范围是(0-255).例如:int(5):当数据宽度小于5位的时候,在数字前面需要用字符填满宽度.该项功能需要配合<code>ZEROFILL</code>使用,表示用”0”填满宽度,否则指定显示宽度无效</li>
+</ul>
+<blockquote>
+<p>如果设置显示宽度,那么插入的数据宽度超过显示宽度的限制,会不会截断或者插入失败?</p>
+</blockquote>
+<p><code>答案</code>: 不会对插入的数据有任何影响,还是按照类型的实际宽度进行保存,即<code>显示宽度与类型可以存储的值范围无关</code>.<code>从MySQL8.0.17开始,整数数据类型不推荐使用显示宽度属性</code>.</p>
+<p>整数数据类型可以在定义表结构时指定所需要的的显示宽度,如果不指定,则系统会为每一种类型指定默认的宽度值.</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 举例</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_int1 ( x TINYINT, y <span class="type">SMALLINT</span>, z MEDIUMINT, m <span class="type">INT</span>, n <span class="type">BIGINT</span> );</span><br><span class="line"></span><br><span class="line"><span class="keyword">DESC</span> test_int1;</span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+--------------+------+-----+---------+-------+</span></span><br><span class="line"><span class="operator">|</span> Field <span class="operator">|</span> Type <span class="operator">|</span> <span class="keyword">Null</span> <span class="operator">|</span> Key <span class="operator">|</span> <span class="keyword">Default</span> <span class="operator">|</span> Extra <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+--------------+------+-----+---------+-------+</span></span><br><span class="line"><span class="operator">|</span> x <span class="operator">|</span> tinyint(<span class="number">4</span>) <span class="operator">|</span> YES <span class="operator">|</span> <span class="operator">|</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> y <span class="operator">|</span> <span class="type">smallint</span>(<span class="number">6</span>) <span class="operator">|</span> YES <span class="operator">|</span> <span class="operator">|</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> z <span class="operator">|</span> mediumint(<span class="number">9</span>) <span class="operator">|</span> YES <span class="operator">|</span> <span class="operator">|</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> m <span class="operator">|</span> <span class="type">int</span>(<span class="number">11</span>) <span class="operator">|</span> YES <span class="operator">|</span> <span class="operator">|</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> n <span class="operator">|</span> <span class="type">bigint</span>(<span class="number">20</span>) <span class="operator">|</span> YES <span class="operator">|</span> <span class="operator">|</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+--------------+------+-----+---------+-------+</span></span><br><span class="line"><span class="number">5</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line">	</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><h4 id="UNSIGNED"><a href="#UNSIGNED" class="headerlink" title="UNSIGNED"></a>UNSIGNED</h4></li>
+</ul>
+<p><code>UNSIGNED</code>: 无符号类型(非负), 所有的整数数据类型都有一个可选的属性UNSIGNED(无符号属性),无符号整数类型的最小取值为0.所以,如果需要在MySQL数据库中保存非负整数值时,可以将整数类型设置为无符号类型.</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- int类型默认显示宽度为int(11)，无符号int类型默认显示宽度为int(10)。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_int3(</span><br><span class="line">f1 <span class="type">INT</span> UNSIGNED</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">DESC</span> test_int3;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------+------------------+------+-----+---------+-------+</span></span><br><span class="line"><span class="operator">|</span> Field <span class="operator">|</span> Type <span class="operator">|</span> <span class="keyword">Null</span> <span class="operator">|</span> Key <span class="operator">|</span> <span class="keyword">Default</span> <span class="operator">|</span> Extra <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+------------------+------+-----+---------+-------+</span></span><br><span class="line"><span class="operator">|</span> f1 <span class="operator">|</span> <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="operator">|</span> YES <span class="operator">|</span> <span class="operator">|</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+------------------+------+-----+---------+-------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><h4 id="ZEROFILL"><a href="#ZEROFILL" class="headerlink" title="ZEROFILL"></a>ZEROFILL</h4></li>
+</ul>
+<p><code>ZEROFILL</code>: 0填充,(如果某列是zerofill,那么MySQL会自动为当前列添加UNSIGNED属性),如果指定了ZEROFILL知识表示不够M位时,用0在左边填充,如果超过M位,只要不超过数据存储范围即可.</p>
+<p>原来,在int(M)中,M的值跟int(M)所占用多少存储空间并无任何关系.int(3),int(4),int(8)在磁盘上都是占用4bytes的存储空间.也就是说,<code>int(M),必须和 UNSIGNED ZEROFILL 一起使用才有意义.</code>如果整数值超过M位,就按照实际位数存储.只是无须再用字符0进行填充.</p>
+<h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><p><code>TINYINT</code> ：一般用于枚举数据，比如系统设定取值范围很小且固定的场景。 </p>
+<p><code>SMALLINT</code> ：可以用于较小范围的统计数据，比如统计工厂的固定资产库存数量等。 </p>
+<p><code>MEDIUMINT</code> ：用于较大整数的计算，比如车站每日的客流量等。 </p>
+<p><code>INT、INTEGER</code> ：取值范围足够大，一般情况下不用考虑超限问题，用得最多。比如商品编号。 </p>
+<p><code>BIGINT</code> ：只有当你处理特别巨大的整数时才会用到。比如双十一的交易量、大型门户网站点击量、证券公司衍生产品持仓等。</p>
+<h3 id="如何选择"><a href="#如何选择" class="headerlink" title="如何选择"></a>如何选择</h3><p>在评估用哪种整数类型的时候，你需要考虑 存储空间 和 可靠性 的平衡问题：一方 面，用占用字节数少的整数类型可以节省存储空间；另一方面，要是为了节省存储空间， 使用的整数类型取值范围太小，一旦遇到超出取值范围的情况，就可能引起 系统错误 ，影响可靠性。</p>
+<p>举个例子，商品编号采用的数据类型是 INT。原因就在于，客户门店中流通的商品种类较多，而且，每天都有旧商品下架，新商品上架，这样不断迭代，日积月累。 </p>
+<p>如果使用 SMALLINT 类型，虽然占用字节数比 INT 类型的整数少，但是却不能保证数据不会超出范围65535。相反，使用 INT，就能确保有足够大的取值范围，不用担心数据超出范围影响可靠性的问题。</p>
+<p>你要注意的是，在实际工作中，系统故障产生的成本远远超过增加几个字段存储空间所产生的成本。因此，我建议你首先确保数据不会超过取值范围，在这个前提之下，再去考虑如何节省存储空间。</p>
+<h2 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h2><h3 id="类型介绍-1"><a href="#类型介绍-1" class="headerlink" title="类型介绍"></a>类型介绍</h3><blockquote>
+<p>浮点数和定点数类型的特点是可以<code>处理小数</code>,你可以把整数看成小数的一个特例.因此,浮点数和定点数使用场景比整数大多了.MySQL支持的浮点数类型分别是<code>FLOAT</code>,<code>DOUBLE</code>,<code>REAL</code></p>
+</blockquote>
+<ul>
+<li>FLOAT表示单精度浮点数</li>
+<li>DOUBLE表示双精度浮点数</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>字节</th>
+<th>有符号数取值范围</th>
+<th>无符号数取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FLOAT</td>
+<td>4</td>
+<td>-3.402823466E+38～-1.175494351E-38</td>
+<td>0 , (1.175494351E-38～3.402823466E+38)</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>8</td>
+<td>-1.7976931348623157E+308～-2.2250738585072014E-308</td>
+<td>0 和 (2.2250738585072014E-308～1.7976931348623157E+308)</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>REAL默认就是 DOUBLE。如果你把 SQL 模式设定为启用“ REAL_AS_FLOAT ”，那 么，MySQL 就认为 REAL 是 FLOAT。如果要启用“REAL_AS_FLOAT”，可以通过以下 SQL 语句实现：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> sql_mode <span class="operator">=</span> “REAL_AS_FLOAT”;</span><br></pre></td></tr></table></figure></div>
+</blockquote>
+<h2 id="定点数类型"><a href="#定点数类型" class="headerlink" title="定点数类型"></a>定点数类型</h2><h3 id="类型介绍-2"><a href="#类型介绍-2" class="headerlink" title="类型介绍"></a>类型介绍</h3><blockquote>
+<p>MySQL中,定点类型只有<code>	DECIMAL</code>一种</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>字节</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DECIMAL(M,D),DEC,NUMERIC</td>
+<td>M+2字节</td>
+<td>有效范围由M和D决定</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>使用 DECIMAL(M,D) 的方式表示高精度小数。其中，M被称为精度，D被称为标度。0&lt;&#x3D;M&lt;&#x3D;65， 0&lt;&#x3D;D&lt;&#x3D;30，D&lt;M。例如，定义DECIMAL（5,2）的类型，表示该列取值范围是-999.99~999.99。</p>
+</blockquote>
+<ul>
+<li><p>定点数在MySQL内部是以 <code>字符串</code> 的形式进行存储，这就决定了它一定是精准的。</p>
+</li>
+<li><p>当DECIMAL类型不指定精度和标度时，其默认为DECIMAL(10,0)。当数据的精度超出了定点数类型的精度范围时，则MySQL同样会进行四舍五入处理。</p>
+</li>
+</ul>
+<p><code>浮点数 vs 定点数</code></p>
+<ul>
+<li><p>浮点数相对于定点数的优点是在长度一定的情况下，浮点类型取值范围大，但是不精准，适用于需要取值范围大，又可以容忍微小误差的科学计算场景（比如计算化学、分子建模、流体动力学等） </p>
+</li>
+<li><p>定点数类型取值范围相对小，但是精准，没有误差，适合于对精度要求极高的场景 （比如涉及金额计算的场景）</p>
+</li>
+</ul>
+<h2 id="位类型-BIT"><a href="#位类型-BIT" class="headerlink" title="位类型: BIT"></a>位类型: BIT</h2><h3 id="类型介绍-3"><a href="#类型介绍-3" class="headerlink" title="类型介绍"></a>类型介绍</h3><blockquote>
+<p>BIT类型中存储的是二进制值，类似010110。 </p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>二进制字符串类型</th>
+<th>长度</th>
+<th>长度范围</th>
+<th>占用空间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BIT(M)</td>
+<td>M</td>
+<td>1&lt;&#x3D; M &lt;&#x3D; 64</td>
+<td>约为(M+7)&#x2F;8个字节</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>BIT类型，如果没有指定(M)，默认是1位。这个1位，表示只能存1位的二进制值。这里(M)是表示二进制的位数，位数最小值为1，最大值为64。 </p>
+<h4 id="使用SELECT命令查询位字段时，可以用-BIN-或-HEX-函数进行读取。"><a href="#使用SELECT命令查询位字段时，可以用-BIN-或-HEX-函数进行读取。" class="headerlink" title="使用SELECT命令查询位字段时，可以用 BIN() 或 HEX() 函数进行读取。"></a>使用SELECT命令查询位字段时，可以用 BIN() 或 HEX() 函数进行读取。</h4><h4 id="使用b-0查询数据时，可以直接查询出存储的十进制数据的值。"><a href="#使用b-0查询数据时，可以直接查询出存储的十进制数据的值。" class="headerlink" title="使用b+0查询数据时，可以直接查询出存储的十进制数据的值。"></a>使用b+0查询数据时，可以直接查询出存储的十进制数据的值。</h4></blockquote>
+<h2 id="日期与时间类型"><a href="#日期与时间类型" class="headerlink" title="日期与时间类型"></a>日期与时间类型</h2><h3 id="类型介绍-4"><a href="#类型介绍-4" class="headerlink" title="类型介绍"></a>类型介绍</h3><blockquote>
+<p>MySQL有多种表示日期和时间的数据类型，不同的版本可能有所差异，MySQL8.0版本支持的日期和时间类型主要有：YEAR类型、TIME类型、DATE类型、DATETIME类型和TIMESTAMP类型。 </p>
+</blockquote>
+<ul>
+<li><code>YEAR</code>类型通常用来表示年</li>
+<li><code>DATE</code>类型通常用来表示年,月,日</li>
+<li><code>TIME</code>类型通常用来表示时,分,秒</li>
+<li><code>DATETIME</code>类型通常用来表示年,月,日,时,分,秒</li>
+<li><code>TIMESTAMP</code>类型通常用来表示带时区的年,月,日,时,分,秒</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>字节</th>
+<th>日期格式</th>
+<th>最小值</th>
+<th>最大值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>YEAR</td>
+<td>年</td>
+<td>1</td>
+<td>YYYY或者YY</td>
+<td>1901</td>
+<td>2155</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>时间</td>
+<td>3</td>
+<td>HH:MM:SS</td>
+<td>-838:59:59</td>
+<td>838:59:59</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>日期</td>
+<td>3</td>
+<td>YYYY-MM-DD</td>
+<td>1000-01-01</td>
+<td>9999-12-03</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>日期时间</td>
+<td>8</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>1000-01-01 00:00:00</td>
+<td>9999-12-31 23:59:59</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>日期时间</td>
+<td>4</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>1970-01-01 00:00:00 UTC</td>
+<td>2038-01-19 03:14:07 UTC</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>为什么时间类型 TIME 的取值范围不是 -23:59:59～23:59:59 呢？原因是 MySQL 设计的 TIME 类型，不光表 示一天之内的时间，而且可以用来表示一个时间间隔，这个时间间隔可以超过 24 小时。</p>
+</blockquote>
+<blockquote>
+<p>可以看到，不同数据类型表示的时间内容不同、取值范围不同，而且占用的字节数也不一样，你要根据实际需要灵活选取。</p>
+</blockquote>
+<h3 id="DATETIME-类型"><a href="#DATETIME-类型" class="headerlink" title="DATETIME 类型"></a>DATETIME 类型</h3><blockquote>
+<p>DATETIME类型在所有的日期时间类型中占用的存储空间最大，总共需要 8 个字节的存储空间。在格式上为DATE类型和TIME类型的组合，可以表示为 YYYY-MM-DD HH:MM:SS ，其中YYYY表示年份，MM表示月份，DD表示日期，HH表示小时，MM表示分钟，SS表示秒。</p>
+</blockquote>
+<h3 id="TIMESTAMP-类型"><a href="#TIMESTAMP-类型" class="headerlink" title="TIMESTAMP 类型"></a>TIMESTAMP 类型</h3><blockquote>
+<p>TIMESTAMP类型也可以表示日期时间，其显示格式与DATETIME类型相同，都是 YYYY-MM-DD HH:MM:SS，需要4个字节的存储空间。但是TIMESTAMP存储的时间范围比DATETIME要小很多，只能存储“1970-01-01 00:00:01 UTC”到“2038-01-19 03:14:07 UTC”之间的时间。其中，UTC表示世界统一时间，也叫作世界标准时间</p>
+<h4 id="存储数据的时候需要对当前时间所在的时区进行转换，查询数据的时候再将时间转换回当前的时区。因此，使用TIMESTAMP存储的同一个时间值，在不同的时区查询时会显示不同的时间。"><a href="#存储数据的时候需要对当前时间所在的时区进行转换，查询数据的时候再将时间转换回当前的时区。因此，使用TIMESTAMP存储的同一个时间值，在不同的时区查询时会显示不同的时间。" class="headerlink" title="存储数据的时候需要对当前时间所在的时区进行转换，查询数据的时候再将时间转换回当前的时区。因此，使用TIMESTAMP存储的同一个时间值，在不同的时区查询时会显示不同的时间。"></a>存储数据的时候需要对当前时间所在的时区进行转换，查询数据的时候再将时间转换回当前的时区。因此，使用TIMESTAMP存储的同一个时间值，在不同的时区查询时会显示不同的时间。</h4></blockquote>
+<h3 id="TIMESTAMP和DATETIME的区别"><a href="#TIMESTAMP和DATETIME的区别" class="headerlink" title="TIMESTAMP和DATETIME的区别"></a>TIMESTAMP和DATETIME的区别</h3><ul>
+<li>TIMESTAMP 存储空间比较小,表示的日期时间范围也比较小</li>
+<li>底层存储方式不同, TIMESTAMP 底层存储的是<code>毫秒值</code>, 距离 1970-01-01 00:00:00 0 毫秒的毫秒值</li>
+<li>两个日期比较大小或者日期计算时, TIMESTAMP 更方便,更快</li>
+<li>TIMESTAMP 和时区有关. TIMESTAMP 会根据用户的时区不同,显示不同的结果. 而 DATETIME 则只能反映出插入时当地的时区,其他时区的人查看数据必然会有误差的</li>
+</ul>
+<h2 id="文本字符串类型"><a href="#文本字符串类型" class="headerlink" title="文本字符串类型"></a>文本字符串类型</h2><blockquote>
+<p>MySQL中，文本字符串总体上分为 CHAR 、 VARCHAR 、 TINYTEXT 、 TEXT 、 MEDIUMTEXT 、LONGTEXT 、 ENUM 、 SET 等类型。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>文本字符串类型</th>
+<th>值的长度</th>
+<th>长度范围</th>
+<th>占用的存储空间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CHAR(M)</td>
+<td>M</td>
+<td>0&lt;&#x3D; M &lt;&#x3D;255</td>
+<td>M个字节</td>
+</tr>
+<tr>
+<td>VARCAHR(M)</td>
+<td>M</td>
+<td>0&lt;&#x3D; M &lt;&#x3D; 65535</td>
+<td>M+1个字节</td>
+</tr>
+<tr>
+<td>TINYTEXT</td>
+<td>L</td>
+<td>0&lt;&#x3D; L &lt;&#x3D; 255</td>
+<td>L+2个字节</td>
+</tr>
+<tr>
+<td>TEXT</td>
+<td>L</td>
+<td>0&lt;&#x3D; L &lt;&#x3D; 65535</td>
+<td>L+2个字节</td>
+</tr>
+<tr>
+<td>MEDIUMTEXT</td>
+<td>L</td>
+<td>0&lt;&#x3D; L &lt;&#x3D; 16777215</td>
+<td>L+3个字节</td>
+</tr>
+<tr>
+<td>LONGTEXT</td>
+<td>L</td>
+<td>0&lt;&#x3D; L &lt;&#x3D; 4294967295</td>
+<td>L+4个字节</td>
+</tr>
+<tr>
+<td>ENUM</td>
+<td>L</td>
+<td>1&lt;&#x3D; L &lt;&#x3D;65535</td>
+<td>1或2个字节</td>
+</tr>
+<tr>
+<td>SET</td>
+<td>L</td>
+<td>0&lt;&#x3D; L &lt;&#x3D;64</td>
+<td>1,2,3,4或8个字节</td>
+</tr>
+</tbody></table>
+<h3 id="CHAR和VARCAHR类型"><a href="#CHAR和VARCAHR类型" class="headerlink" title="CHAR和VARCAHR类型"></a>CHAR和VARCAHR类型</h3><blockquote>
+<p>CHAR和VARCHAR类型都可以存储比较短的字符串</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>文本字符串类型</th>
+<th>特点</th>
+<th>值的长度</th>
+<th>长度范围</th>
+<th>占用的存储空间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CHAR(M)</td>
+<td>固定长度</td>
+<td>M</td>
+<td>0&lt;&#x3D; M &lt;&#x3D;255</td>
+<td>M个字节</td>
+</tr>
+<tr>
+<td>VARCAHR(M)</td>
+<td>可变长度</td>
+<td>M</td>
+<td>0&lt;&#x3D; M &lt;&#x3D; 65535</td>
+<td>M+1个字节</td>
+</tr>
+</tbody></table>
+<ul>
+<li><h3 id="CHAR-类型"><a href="#CHAR-类型" class="headerlink" title="CHAR 类型"></a>CHAR 类型</h3><ul>
+<li>CHAR(M) 类型一般需要预先定义字符串长度,如果不指定M,则表示默认长度是1个字节</li>
+<li>如果保存时,数据的时间长度比CHAR类型声明的长度小,则会在<code>右侧填充</code>空格以达到指定的长度.当MySQL检索CHAR 类型的数据时,CHAR类型的字段会去除尾部的空格</li>
+<li>定义CHAR类型字段时,声明的长度即为CHAR类型字段所占的存储空间的字节数</li>
+</ul>
+</li>
+<li><h3 id="VARCHAR-类型"><a href="#VARCHAR-类型" class="headerlink" title="VARCHAR 类型"></a>VARCHAR 类型</h3><ul>
+<li>VARCHAR(M) 定义时,<code>必须指定</code>长度M,否则报错</li>
+<li>MySQL4.0版本一下,VARCHAR(20):指的是20字节,如果存放UTF8汉字时,只能存6个(每个汉字占3个字节);MySQL5.0版本以上,VARCHAR(20):指的是20个字符</li>
+<li>检索VARCHAR类型的字段数据时,会保留数据尾部的空格. VARCHAR类型的字段所占用的存储空间为字符串时间长度加1个字节</li>
+</ul>
+</li>
+</ul>
+<h3 id="CHAR-和-VARCHAR-类型"><a href="#CHAR-和-VARCHAR-类型" class="headerlink" title="CHAR 和 VARCHAR 类型"></a>CHAR 和 VARCHAR 类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特点</th>
+<th>空间上</th>
+<th>时间上</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CAHR(M)</td>
+<td>固定长度</td>
+<td>浪费存储空间</td>
+<td>效率高</td>
+<td>存储不大,速度要求高</td>
+</tr>
+<tr>
+<td>VARCHAR(M)</td>
+<td>可变长度</td>
+<td>节省存储空间</td>
+<td>效率低</td>
+<td>非CHAR场景</td>
+</tr>
+</tbody></table>
+<ul>
+<li>情况1：存储很短的信息。比如门牌号码101，201……这样很短的信息应该用char，因为varchar还要占个 byte用于存储信息长度，本来打算节约存储的，结果得不偿失。</li>
+<li>情况2：固定长度的。比如使用uuid作为主键，那用char应该更合适。因为他固定长度，varchar动态根据长度的特性就消失了，而且还要占个长度信息。</li>
+<li>情况3：十分频繁改变的column。因为varchar每次存储都要有额外的计算，得到长度等工作，如果一个非常频繁改变的，那就要有很多的精力用于计算，而这些对于char来说是不需要的。</li>
+<li>情况4：具体存储引擎中的情况：<ul>
+<li><code>MyISAM </code>数据存储引擎和数据列：MyISAM数据表，最好使用固定长度(CHAR)的数据列代替可变长 度(VARCHAR)的数据列。这样使得整个表静态化，从而使 数据检索更快 ，用空间换时间。</li>
+<li><code>MEMORY</code>存储引擎和数据列：MEMORY数据表目前都使用固定长度的数据行存储，因此无论使用 CHAR或VARCHAR列都没有关系，两者都是作为CHAR类型处理的。 </li>
+<li><code>InnoDB</code> 存储引擎，建议使用VARCHAR类型。因为对于InnoDB数据表，内部的行存储格式并没有区分固定长度和可变长度列（所有数据行都使用指向数据列值的头指针），而且主要影响性能的因素是数据行使用的存储总量，由于char平均占用的空间多于varchar，所以除了简短并且固定长度的,其他考虑varchar。这样节省空间，对磁盘I&#x2F;O和数据存储总量比较好。</li>
+</ul>
+</li>
+</ul>
+<h2 id="JSON-类型"><a href="#JSON-类型" class="headerlink" title="JSON 类型"></a>JSON 类型</h2><p>JSON（JavaScript Object Notation）是一种轻量级的 数据交换格式 。简洁和清晰的层次结构使得 JSON 成为理想的数据交换语言。它易于人阅读和编写，同时也易于机器解析和生成，并有效地提升网络传输效率。JSON 可以将 JavaScript 对象中表示的一组数据转换为字符串，然后就可以在网络或者程序之间轻松地传递这个字符串，并在需要的时候将它还原为各编程语言所支持的数据格式。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/MySQL/">#MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/GSSBlog/2023/10/30/6.MySQL%E7%BA%A6%E6%9D%9F/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">MySQL约束</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2023/10/30/4.%E5%88%9B%E5%BB%BA%E5%92%8C%E7%AE%A1%E7%90%86%E8%A1%A8/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">MySQL创建和管理数据库</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">MySQL数据类型</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-text">常见数据类型的属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">整数类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E4%BB%8B%E7%BB%8D"><span class="nav-text">类型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E5%B1%9E%E6%80%A7"><span class="nav-text">可选属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9"><span class="nav-text">如何选择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E7%B1%BB%E5%9E%8B"><span class="nav-text">浮点类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E4%BB%8B%E7%BB%8D-1"><span class="nav-text">类型介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%82%B9%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">定点数类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E4%BB%8B%E7%BB%8D-2"><span class="nav-text">类型介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E7%B1%BB%E5%9E%8B-BIT"><span class="nav-text">位类型: BIT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E4%BB%8B%E7%BB%8D-3"><span class="nav-text">类型介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E6%9C%9F%E4%B8%8E%E6%97%B6%E9%97%B4%E7%B1%BB%E5%9E%8B"><span class="nav-text">日期与时间类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E4%BB%8B%E7%BB%8D-4"><span class="nav-text">类型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DATETIME-%E7%B1%BB%E5%9E%8B"><span class="nav-text">DATETIME 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIMESTAMP-%E7%B1%BB%E5%9E%8B"><span class="nav-text">TIMESTAMP 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIMESTAMP%E5%92%8CDATETIME%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">TIMESTAMP和DATETIME的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="nav-text">文本字符串类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CHAR%E5%92%8CVARCAHR%E7%B1%BB%E5%9E%8B"><span class="nav-text">CHAR和VARCAHR类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CHAR-%E7%B1%BB%E5%9E%8B"><span class="nav-text">CHAR 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VARCHAR-%E7%B1%BB%E5%9E%8B"><span class="nav-text">VARCHAR 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CHAR-%E5%92%8C-VARCHAR-%E7%B1%BB%E5%9E%8B"><span class="nav-text">CHAR 和 VARCHAR 类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-%E7%B1%BB%E5%9E%8B"><span class="nav-text">JSON 类型</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>
