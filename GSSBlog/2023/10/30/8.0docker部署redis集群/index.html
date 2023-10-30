@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/10/30/8.0docker部署redis集群/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="分布式存储案例cluster(集群)模式-docker版哈希槽分区进行亿级数据存储 经典问题1~2亿条数据需要缓存,请问如何设计这个存储案例  单机单台100%不可能,必须用分布式存储 搭建redis分布式存储架构  解决方案  哈希取余分区    2亿条记录就是2亿个k,v键值对;单机不行,必须要分布式多机存储 假设有3台机器构成一个集群,用户每次读写操作都是根据公式: hash(key) %">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker部署redis集群">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/10/30/8.0docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="分布式存储案例cluster(集群)模式-docker版哈希槽分区进行亿级数据存储 经典问题1~2亿条数据需要缓存,请问如何设计这个存储案例  单机单台100%不可能,必须用分布式存储 搭建redis分布式存储架构  解决方案  哈希取余分区    2亿条记录就是2亿个k,v键值对;单机不行,必须要分布式多机存储 假设有3台机器构成一个集群,用户每次读写操作都是根据公式: hash(key) %">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E5%8F%96%E4%BD%99%E5%88%86%E5%8C%BA%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95%E5%88%86%E5%8C%BA%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AF%E6%9C%8D%E5%8A%A1IP%E8%8A%82%E7%82%B9%E6%98%A0%E5%B0%84%E6%9E%B6%E6%9E%84%E5%9B%BE02.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AFK,V%E8%90%BD%E5%80%BC%E8%A7%84%E5%88%9903.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AF%E5%AE%B9%E9%94%99%E6%80%A7%E6%9E%B6%E6%9E%84%E5%9B%BE04.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AF%E6%89%A9%E5%B1%95%E6%80%A7%E6%9E%B6%E6%9E%84%E5%9B%BE05.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AF%E6%95%B0%E6%8D%AE%E5%80%BE%E6%96%9C%E6%9E%B6%E6%9E%84%E5%9B%BE06.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84%E5%9B%BE01.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD-%E8%AE%A1%E7%AE%97key%E8%90%BD%E5%85%A5%E8%A7%84%E5%88%9902.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD-CRC16%E7%AE%97%E6%B3%9503.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E4%B8%89%E4%B8%BB%E4%B8%89%E4%BB%8E-%E6%9E%84%E5%BB%BA%E4%B8%BB%E4%BB%8E%E5%85%B3%E7%B3%BB%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E5%A2%9E%E5%8A%A0%E6%9C%8D%E5%8A%A1%E8%8A%82%E7%82%B901.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E9%A6%96%E6%AC%A1check%E9%9B%86%E7%BE%A401.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD%E9%87%8D%E6%96%B0%E5%88%86%E9%85%8D%E6%80%BB01.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E7%AC%AC%E4%BA%8C%E6%AC%A1check%E9%9B%86%E7%BE%A401.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E5%A2%9E%E5%8A%A0%E6%9C%8D%E5%8A%A1%E8%8A%82%E7%82%B9-%E4%B8%BB%E8%8A%82%E7%82%B9%E4%B8%8B%E6%8C%82%E8%BD%BD%E4%BB%8E%E8%8A%82%E7%82%B901.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E7%AC%AC%E4%BA%8C%E6%AC%A1check%E9%9B%86%E7%BE%A401.png">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E7%BC%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD%E9%87%8D%E6%96%B0%E5%88%86%E9%85%8D01.png">
+<meta property="article:published_time" content="2023-10-30T01:10:29.812Z">
+<meta property="article:modified_time" content="2023-10-30T03:14:21.729Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://igxiaoshan.github.io/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E5%8F%96%E4%BD%99%E5%88%86%E5%8C%BA%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Docker部署redis集群 -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":null},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">Docker部署redis集群</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-10-30 09:10:29</span>
+        <span class="mobile">2023-10-30 09:10:29</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-10-30 11:14:21</span>
+            <span class="mobile">2023-10-30 11:14:21</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="分布式存储案例"><a href="#分布式存储案例" class="headerlink" title="分布式存储案例"></a><strong>分布式存储案例</strong></h2><h2 id="cluster-集群-模式-docker版"><a href="#cluster-集群-模式-docker版" class="headerlink" title="cluster(集群)模式-docker版"></a><strong>cluster(集群)模式-docker版</strong></h2><p><strong>哈希槽分区进行亿级数据存储</strong></p>
+<h3 id="经典问题"><a href="#经典问题" class="headerlink" title="经典问题"></a>经典问题</h3><p><strong>1~2亿条数据需要缓存,请问如何设计这个存储案例</strong></p>
+<blockquote>
+<p>单机单台100%不可能,必须用分布式存储</p>
+<p>搭建redis分布式存储架构</p>
+</blockquote>
+<p><strong>解决方案</strong></p>
+<ul>
+<li><h4 id="哈希取余分区"><a href="#哈希取余分区" class="headerlink" title="哈希取余分区"></a><strong>哈希取余分区</strong></h4></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E5%8F%96%E4%BD%99%E5%88%86%E5%8C%BA%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg"
+                     
+                ></p>
+<blockquote>
+<p>2亿条记录就是2亿个k,v键值对;单机不行,必须要分布式多机存储</p>
+<p>假设有3台机器构成一个集群,用户每次读写操作都是根据公式: <code>hash(key) % N个机器台数</code>,计算出哈希值,用来决定数据映射到哪一个节点上</p>
+</blockquote>
+<p><strong>优点</strong></p>
+<blockquote>
+<p>简单粗暴，直接有效，只需要预估好数据规划好节点，例如3台、8台、10台，就能保证一段时间的数据支撑。使用Hash算法让固定的一部分请求落到同一台服务器上，这样每台服务器固定处理一部分请求（并维护这些请求的信息），起到负载均衡 + 分而治之的作用</p>
+</blockquote>
+<p><strong>缺点</strong></p>
+<blockquote>
+<p>原来规划好的节点，进行扩容或者缩容就比较麻烦了，不管扩缩，每次数据变动导致节点有变动，映射关系需要重新进行计算，在服务器个数固定不变时没有问题，如果需要弹性扩容或者故障停机的情况下，原来的取模公式就会发生变化：<code>Hash(key) /3 </code>会变成<code>Hash（key）/ ？</code>。此时地址经过取余遇到某个redis机器宕机了，由于台数数量变化，会导致hash取余全部数据重新洗牌。</p>
+</blockquote>
+<ul>
+<li><h4 id="一致性哈希算法分区"><a href="#一致性哈希算法分区" class="headerlink" title="一致性哈希算法分区"></a><strong>一致性哈希算法分区</strong></h4></li>
+</ul>
+<blockquote>
+<p>一致性哈希算法在1997年由麻省理工学院中提出的，设计目标是为了解决<code>分布式缓存数据变动和映射问题，某个机器宕机了，分母数量改变了，自然取余数不OK了</code></p>
+</blockquote>
+<p><strong>作用</strong></p>
+<blockquote>
+<p>提出一致性Hash解决方案，目的是当服务器个数发生变动时，尽量减少影响客户端到服务器的映射关系</p>
+</blockquote>
+<p><strong>流程</strong></p>
+<p>步骤一: 算法构建一致性哈希环</p>
+<blockquote>
+<p>一致性哈希环</p>
+<p>一致性哈希算法必然有个hash函数并按照算法产生hash值，这个算法的所有可能哈希值会构成一个全量集，这个集合可以成为一个<code>hash空间[0,2^32-1]</code>，这是一个线性空间，但是在算法中，我们通过适当的逻辑控制将它<code>首尾相连(0=2^32)</code>，这样让它逻辑上形成一个环形空间</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95%E5%88%86%E5%8C%BA%E6%9E%B6%E6%9E%84%E5%9B%BE01.jpg"
+                     
+                ></p>
+<blockquote>
+<p>它也是按照使用取模的方法,前面笔记介绍的节点取模算法是对节点(服务器)的数量进行取模。而一致性Hash算法是对<code>2^32</code>取模，简单来说，<code>一致性Hash算法将整个哈希值空间组织成一个虚拟的圆环</code>，如假设某哈希函数H的值空间为0-2^32-1(即哈希值是一个32位无符号整形)，整个哈希环如上图：整个空间<code>按顺时针方向组织</code>，圆环的正上方的点代表0，0点右侧的第一个点代表1，以此类推2，3，4，…..直到2^32-1，也就是说0点左侧的第一个点代表2^32-1，0和2^32-1在零点中方向重合，我们把这个由2^32个点组成的圆环成为Hash环</p>
+</blockquote>
+<p>步骤二: 服务器IP节点映射</p>
+<blockquote>
+<p>节点映射</p>
+<p>将集群中各个IP节点映射到环上的某一个位置</p>
+<p>将各个服务器使用Hash进行一个哈希,集体可以选择服务器的ip或者主机名作为关键字进行哈希,这样每台机器就能确定其在哈希环上的位置。假如4个节点NodeA、B、C、D，经过IP地址的哈希函数计算（hash（ip）），使用IP地址哈希后在环空间的位置如下所示</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AF%E6%9C%8D%E5%8A%A1IP%E8%8A%82%E7%82%B9%E6%98%A0%E5%B0%84%E6%9E%B6%E6%9E%84%E5%9B%BE02.png"
+                     
+                ></p>
+<p>步骤三: key落到服务器的落键规则</p>
+<blockquote>
+<p>当我们需要存储一个K,V键值对时，首先计算key的hash值，hash（key），将这个key使用相同的函数hash计算出哈希值并确定此数据在环上的位置，从此位置沿着环顺时针‘行走’，第一台遇到的服务器就是其应该定位到的服务器，并将该键值对存储在该点上。</p>
+<p>如，我们有Object A，Object B，Object C，Object D四个数据对象，经过哈希计算后，在环空间上的位置如下所示，根据一致性Hash算法，数据A会被定位到Node A上，B被定位到Node B上，C被定位到Node C上，D被定位到Node D上。</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AFK,V%E8%90%BD%E5%80%BC%E8%A7%84%E5%88%9903.png"
+                     
+                ></p>
+<p><strong>优点</strong></p>
+<p>优点一: </p>
+<p><strong>一致性哈希算法的<code>容错性</code></strong></p>
+<blockquote>
+<p>容错性</p>
+<p>假设Node C宕机，可以看到此时对象A，B，D不会受到影响，只有C对象被重定位到Node D。一般的，在一致性Hash算法中，如果一台服务器不可用，则受影响的数据仅仅是此服务器到环空间中前一台服务器（即沿着逆时针方向行走遇到的第一台服务）之间数据，其它不会受到影响。简单说，就是C挂了，收到影响的只是B、C之前的数据，并且这些数据会转移到D进行存储。如下图</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AF%E5%AE%B9%E9%94%99%E6%80%A7%E6%9E%B6%E6%9E%84%E5%9B%BE04.png"
+                     
+                ></p>
+<p>优点二:</p>
+<p><strong>一致性哈希算法的<code>扩展性</code></strong></p>
+<blockquote>
+<p>扩展性</p>
+<p>服务器数量增加了，只需要加一台节点Node X，X的位置在A和B之间，那受到影响的也就是A和B之间的数据，重新把A和X的数据录入到X上即可，不会导致Hash取余全部数据重新洗牌。如下图</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AF%E6%89%A9%E5%B1%95%E6%80%A7%E6%9E%B6%E6%9E%84%E5%9B%BE05.png"
+                     
+                ></p>
+<p><strong>缺点</strong></p>
+<p><strong>一致性哈希算法的<code>数据倾斜</code>问题</strong></p>
+<blockquote>
+<p>Hash环的数据倾斜问题</p>
+<p>一致性哈希算法在服务节点太少时，容易因为节点分布不均匀而造成数据倾斜（被缓存的对象大部分集中缓存在某一台服务器上）问题。</p>
+<p>如：系统中只有两台服务器，如下图所示</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E7%8E%AF%E6%95%B0%E6%8D%AE%E5%80%BE%E6%96%9C%E6%9E%B6%E6%9E%84%E5%9B%BE06.png"
+                     
+                ></p>
+<h4 id="一致性哈希算法-小总结"><a href="#一致性哈希算法-小总结" class="headerlink" title="一致性哈希算法-小总结"></a>一致性哈希算法-小总结</h4><blockquote>
+<p>为了在节点数目发生改变时尽可能少的迁移数据</p>
+<p>将所有的存储节点排列在首尾相接的Hash环上，每个key在计算Hash后会顺时针找到临近的存储节点存放，而当有节点加入或退出时仅影响该节点在Hash环上顺时针相邻的后续节点。</p>
+<p><strong>优点</strong></p>
+<p>加入和删除节点只影响哈希环中顺时针方向相邻的节点，对其他节点无影响</p>
+<p><strong>缺点</strong><br>数据的分布和节点的位置有关，因为这些节点不是均匀的分布在哈希环上的，所以数据在进行存储时达不到均匀分布的效果。</p>
+</blockquote>
+<ul>
+<li><h4 id="哈希槽分区"><a href="#哈希槽分区" class="headerlink" title="哈希槽分区"></a>哈希槽分区</h4></li>
+</ul>
+<blockquote>
+<p>哈希槽实质就是一个数组，数组 <code>[0,2^14-1]</code> 形成hash slot 空间</p>
+</blockquote>
+<p><strong>为什么会出现</strong></p>
+<blockquote>
+<p>解决一致性哈希算法的数据倾斜问题</p>
+</blockquote>
+<p><strong>作用</strong></p>
+<blockquote>
+<p>解决均匀分配的问题，在数据和节点之间又加入了一层，把这层称为哈希槽（slot），用于管理数据和节点之间的关系，现在就相当于节点上放的是槽，槽里放的是数据</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84%E5%9B%BE01.png"
+                     
+                ></p>
+<blockquote>
+<p>槽解决的是粒度问题，相当于把粒度变大了，这样便于数据移动</p>
+<p>哈希解决的是映射问题，使用key的哈希值来计算所在的槽，便于数据分配</p>
+</blockquote>
+<p><strong>多少个Hash槽</strong></p>
+<blockquote>
+<p>一个集群只能有<code>16384</code>个槽，编号<code>0-16383（0-2^14-1)</code>。这些槽会分配给集群中所在主节点，分配策略没有要求。可以指定哪些编号的槽分配给哪个主节点。集群会记录节点和槽对应关系。解决了节点和槽的关系后，接下来就需要对key求哈希值，然后对16384取余，余数是几，key就落入对应的槽里。<code>slot=CRC16(key)%16384</code>。以槽为单位移动数据，因为槽的数目是固定的，处理起来比较容易，这样数据移动问题就解决了。</p>
+</blockquote>
+<p><strong>哈希槽计算</strong></p>
+<blockquote>
+<p>Redis集群中内置了<code>16384</code>个哈希槽，redis会根据节点数量大致均等的将哈希槽映射到不同的节点。当需要在redis集群中放置一个<code>key-value</code>时，redis先对key使用<code>CRC16</code>算法算出一个结果，然后把结果对<code>16384</code>求余数，这样每个key都会对应一个编号在<code>0-16383</code>之间的哈希槽，也就是映射到某个节点上。</p>
+<p>如下所示：key值A，B在Node2，key值C落在Node3上</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD-%E8%AE%A1%E7%AE%97key%E8%90%BD%E5%85%A5%E8%A7%84%E5%88%9902.png"
+                     
+                ><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD-CRC16%E7%AE%97%E6%B3%9503.png"
+                     
+                ></p>
+<h2 id="Redis三主三从集群配置"><a href="#Redis三主三从集群配置" class="headerlink" title="Redis三主三从集群配置"></a>Redis三主三从集群配置</h2><h3 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h3><blockquote>
+<p><a href="/GSSBlog/2023/10/30/0.1docker%E4%BB%8B%E7%BB%8D/index.html">安装docker</a></p>
+<p><code>docker启动</code>—&gt;<code>systemctl start docker</code></p>
+</blockquote>
+<h3 id="创建redis实例"><a href="#创建redis实例" class="headerlink" title="创建redis实例"></a>创建redis实例</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker run -d --name redis-node1 --net host --privileged=<span class="literal">true</span> -v /mydata/redis/cluster/redis-node-1:/data redis:6.0.8 --cluster-enabled <span class="built_in">yes</span> --appendonly <span class="built_in">yes</span> --port 6381</span><br><span class="line"></span><br><span class="line">docker run -d --name redis-node2 --net host --privileged=<span class="literal">true</span> -v /mydata/redis/cluster/redis-node-2:/data redis:6.0.8 --cluster-enabled <span class="built_in">yes</span> --appendonly <span class="built_in">yes</span> --port 6382</span><br><span class="line"></span><br><span class="line">docker run -d --name redis-node3 --net host --privileged=<span class="literal">true</span> -v /mydata/redis/cluster/redis-node-3:/data redis:6.0.8 --cluster-enabled <span class="built_in">yes</span> --appendonly <span class="built_in">yes</span> --port 6383</span><br><span class="line"></span><br><span class="line">docker run -d --name redis-node4 --net host --privileged=<span class="literal">true</span> -v /mydata/redis/cluster/redis-node-4:/data redis:6.0.8 --cluster-enabled <span class="built_in">yes</span> --appendonly <span class="built_in">yes</span> --port 6384</span><br><span class="line"></span><br><span class="line">docker run -d --name redis-node5 --net host --privileged=<span class="literal">true</span> -v /mydata/redis/cluster/redis-node-5:/data redis:6.0.8 --cluster-enabled <span class="built_in">yes</span> --appendonly <span class="built_in">yes</span> --port 6385</span><br><span class="line"></span><br><span class="line">docker run -d --name redis-node6 --net host --privileged=<span class="literal">true</span> -v /mydata/redis/cluster/redis-node-6:/data redis:6.0.8 --cluster-enabled <span class="built_in">yes</span> --appendonly <span class="built_in">yes</span> --port 6386</span><br><span class="line"></span><br><span class="line"><span class="comment">### 命令分解</span></span><br><span class="line">docker run  <span class="comment"># 创建并运行docker容器实例</span></span><br><span class="line">--name redis-node  <span class="comment"># 容器名称</span></span><br><span class="line">--net host  <span class="comment"># 使用宿主机的IP和端口,默认</span></span><br><span class="line">--privileged=<span class="literal">true</span>  <span class="comment"># 获取宿主机root用户权限</span></span><br><span class="line">-v /mydata/redis/share/redis-node:/data  <span class="comment"># 容器卷,宿主机地址:docker内部地址</span></span><br><span class="line">redis:6.0.8  <span class="comment"># reids镜像和版本号</span></span><br><span class="line">--cluster-enabled <span class="built_in">yes</span>  <span class="comment"># 开启redis集群</span></span><br><span class="line">--appendonly <span class="built_in">yes</span>  <span class="comment"># 开启持久化</span></span><br><span class="line">--port 6389  <span class="comment"># redis 端口号</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="构建主从关系"><a href="#构建主从关系" class="headerlink" title="构建主从关系"></a>构建主从关系</h3><blockquote>
+<p>redis-cli –cluster create 192.168.211.122:6381 192.168.211.122:6382 192.168.211.122:6383 192.168.211.122:6384 192.168.211.122:6385 192.168.211.122:6386 –cluster-replicas 1</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 进入node1容器内部,构建主从关系</span></span><br><span class="line">docker <span class="built_in">exec</span> -it docker-node1 /bin/bash</span><br><span class="line"></span><br><span class="line">redis-cli --cluster create 192.168.211.122:6381 192.168.211.122:6382 192.168.211.122:6383 192.168.211.122:6384 192.168.211.122:6385 192.168.211.122:6386 --cluster-replicas 1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 示例</span></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it 7695b8a6290c /bin/bash</span></span><br><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli --cluster create 192.168.211.122:6381 192.168.211.122:6382 192.168.211.122:6383 192.168.211.122:6384 192.168.211.122:6385 192.168.211.122:6386 --cluster-replicas 1</span></span><br><span class="line">&gt;&gt;&gt; Performing <span class="built_in">hash</span> slots allocation on 6 nodes...</span><br><span class="line">Master[0] -&gt; Slots 0 - 5460</span><br><span class="line">Master[1] -&gt; Slots 5461 - 10922</span><br><span class="line">Master[2] -&gt; Slots 10923 - 16383</span><br><span class="line">Adding replica 192.168.211.122:6385 to 192.168.211.122:6381</span><br><span class="line">Adding replica 192.168.211.122:6386 to 192.168.211.122:6382</span><br><span class="line">Adding replica 192.168.211.122:6384 to 192.168.211.122:6383</span><br><span class="line">&gt;&gt;&gt; Trying to optimize slaves allocation <span class="keyword">for</span> anti-affinity</span><br><span class="line">[WARNING] Some slaves are <span class="keyword">in</span> the same host as their master</span><br><span class="line">M: 36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">M: 6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">M: 34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">S: 07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384</span><br><span class="line">   replicates 34fee68e4f9828340aea9dc71a2c2091981002ee</span><br><span class="line">S: ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385</span><br><span class="line">   replicates 36877ecd044077c08ff640c14eb60698fada9e5a</span><br><span class="line">S: 16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386</span><br><span class="line">   replicates 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">Can I <span class="built_in">set</span> the above configuration? (<span class="built_in">type</span> <span class="string">&#x27;yes&#x27;</span> to accept): <span class="built_in">yes</span></span><br><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to <span class="built_in">join</span> the cluster</span><br><span class="line">Waiting <span class="keyword">for</span> the cluster to <span class="built_in">join</span></span><br><span class="line">.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.211.122:6381)</span><br><span class="line">M: 36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 36877ecd044077c08ff640c14eb60698fada9e5a</span><br><span class="line">S: 16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">S: 07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 34fee68e4f9828340aea9dc71a2c2091981002ee</span><br><span class="line">M: 6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>成功示例图,如下</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E4%B8%89%E4%B8%BB%E4%B8%89%E4%BB%8E-%E6%9E%84%E5%BB%BA%E4%B8%BB%E4%BB%8E%E5%85%B3%E7%B3%BB%E6%9E%B6%E6%9E%84%E5%9B%BE.png"
+                     
+                ></p>
+<h3 id="查看集群状态"><a href="#查看集群状态" class="headerlink" title="查看集群状态"></a>查看集群状态</h3><blockquote>
+<p>查看集群状态 <code>cluster info</code></p>
+<p>查看集群节点 <code>cluster nodes</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 连接进入6381客户端</span></span><br><span class="line">redis-cli -p 6381</span><br><span class="line"></span><br><span class="line">cluster info <span class="comment">## 查看集群状态</span></span><br><span class="line">cluster nodes <span class="comment">## 查看集群节点</span></span><br><span class="line"></span><br><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli -p 6381</span></span><br><span class="line"><span class="comment">### 查看集群状态</span></span><br><span class="line">127.0.0.1:6381&gt; cluster info</span><br><span class="line">cluster_state:ok</span><br><span class="line">cluster_slots_assigned:16384</span><br><span class="line">cluster_slots_ok:16384</span><br><span class="line">cluster_slots_pfail:0</span><br><span class="line">cluster_slots_fail:0</span><br><span class="line">cluster_known_nodes:6</span><br><span class="line">cluster_size:3</span><br><span class="line">cluster_current_epoch:6</span><br><span class="line">cluster_my_epoch:1</span><br><span class="line">cluster_stats_messages_ping_sent:108</span><br><span class="line">cluster_stats_messages_pong_sent:108</span><br><span class="line">cluster_stats_messages_sent:216</span><br><span class="line">cluster_stats_messages_ping_received:103</span><br><span class="line">cluster_stats_messages_pong_received:108</span><br><span class="line">cluster_stats_messages_meet_received:5</span><br><span class="line">cluster_stats_messages_received:216</span><br><span class="line"></span><br><span class="line"><span class="comment">### 查看集群节点信息</span></span><br><span class="line">127.0.0.1:6381&gt; cluster nodes</span><br><span class="line">ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385@16385 slave 36877ecd044077c08ff640c14eb60698fada9e5a 0 1686884480383 1 connected</span><br><span class="line">16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386@16386 slave 6af5921ced502eae0ae93c991e1cafcee595e237 0 1686884479000 2 connected</span><br><span class="line">07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384@16384 slave 34fee68e4f9828340aea9dc71a2c2091981002ee 0 1686884481390 3 connected</span><br><span class="line">6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382@16382 master - 0 1686884482000 2 connected 5461-10922</span><br><span class="line">36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381@16381 myself,master - 0 1686884477000 1 connected 0-5460</span><br><span class="line">34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383@16383 master - 0 1686884482397 3 connected 10923-16383</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="读写存储"><a href="#读写存储" class="headerlink" title="读写存储"></a>读写存储</h3><blockquote>
+<p>由于目前已经是集群模式</p>
+<p>单机版连接客户端的方式<code>redis-cli -p prot</code>已经不适用了</p>
+<p>需要使用集群版连接方式;,防止路由失效<code>redis-cli -p port -c</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 单机连接</span></span><br><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli -p 6381</span></span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">(empty array)</span><br><span class="line">127.0.0.1:6381&gt; <span class="built_in">set</span> k1 v1</span><br><span class="line">(error) MOVED 12706 192.168.211.122:6383</span><br><span class="line">127.0.0.1:6381&gt; <span class="built_in">set</span> k2 v2</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6381&gt; <span class="built_in">set</span> k3 v3</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6381&gt; <span class="built_in">set</span> k4 v4</span><br><span class="line">(error) MOVED 8455 192.168.211.122:6382</span><br><span class="line">127.0.0.1:6381&gt; <span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 无法正确路由,添加key失效</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 集群模式连接</span></span><br><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli -p 6381 -c</span></span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">1) <span class="string">&quot;k3&quot;</span></span><br><span class="line">2) <span class="string">&quot;k2&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### 刷新掉所有的key</span></span><br><span class="line">127.0.0.1:6381&gt; flushall</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">(empty array)</span><br><span class="line">127.0.0.1:6381&gt; <span class="built_in">set</span> k1 v1</span><br><span class="line">-&gt; Redirected to slot [12706] located at 192.168.211.122:6383</span><br><span class="line">OK</span><br><span class="line">192.168.211.122:6383&gt; <span class="built_in">set</span> k2 v2</span><br><span class="line">-&gt; Redirected to slot [449] located at 192.168.211.122:6381</span><br><span class="line">OK</span><br><span class="line"><span class="comment">### 可以正常切换路由,添加key</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="查看集群信息"><a href="#查看集群信息" class="headerlink" title="查看集群信息"></a>查看集群信息</h3><blockquote>
+<p><code>redis-cli --cluster check 192.168.211.112:6381</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli --cluster check 192.168.211.122:6381</span></span><br><span class="line">192.168.211.122:6381 (36877ecd...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">192.168.211.122:6382 (6af5921c...) -&gt; 0 keys | 5462 slots | 1 slaves.</span><br><span class="line">192.168.211.122:6383 (34fee68e...) -&gt; 1 keys | 5461 slots | 1 slaves.</span><br><span class="line">[OK] 1 keys <span class="keyword">in</span> 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.211.122:6381)</span><br><span class="line">M: 36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 36877ecd044077c08ff640c14eb60698fada9e5a</span><br><span class="line">S: 16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">S: 07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 34fee68e4f9828340aea9dc71a2c2091981002ee</span><br><span class="line">M: 6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="容错切换迁移"><a href="#容错切换迁移" class="headerlink" title="容错切换迁移"></a>容错切换迁移</h3><blockquote>
+<p>停掉<code>node1(master)</code>节点,让node1下的slave上位</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE         COMMAND                   CREATED        STATUS       PORTS     NAMES</span><br><span class="line">b69b4d4562ab   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node6</span><br><span class="line">51cf2c0eb2bf   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node5</span><br><span class="line">c00847c63342   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node4</span><br><span class="line">4c9337895da0   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node3</span><br><span class="line">5db5d9f4a1d2   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node2</span><br><span class="line">7695b8a6290c   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node1</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker stop redis-node1</span></span><br><span class="line">redis-node1</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE         COMMAND                   CREATED        STATUS       PORTS     NAMES</span><br><span class="line">b69b4d4562ab   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node6</span><br><span class="line">51cf2c0eb2bf   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node5</span><br><span class="line">c00847c63342   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node4</span><br><span class="line">4c9337895da0   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node3</span><br><span class="line">5db5d9f4a1d2   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   47 hours ago   Up 4 hours             redis-node2</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it 5db5d9f4a1d2 /bin/bash</span></span><br><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli -p 6382 -c</span></span><br><span class="line">127.0.0.1:6382&gt; cluster nodes</span><br><span class="line">34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383@16383 master - 0 1686896764000 3 connected 10923-16383</span><br><span class="line">36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381@16381 master,fail - 1686896713157 1686896710000 1 disconnected</span><br><span class="line">16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386@16386 slave 6af5921ced502eae0ae93c991e1cafcee595e237 0 1686896765526 2 connected</span><br><span class="line">07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384@16384 slave 34fee68e4f9828340aea9dc71a2c2091981002ee 0 1686896764520 3 connected</span><br><span class="line">ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385@16385 master - 0 1686896766530 7 connected 0-5460</span><br><span class="line">6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382@16382 myself,master - 0 1686896765000 2 connected 5461-10922</span><br><span class="line">127.0.0.1:6382&gt; <span class="built_in">exit</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<blockquote>
+<p>恢复node1节点;观察</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker start redis-node1</span></span><br><span class="line">redis-node1</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE         COMMAND                   CREATED      STATUS         PORTS     NAMES</span><br><span class="line">b69b4d4562ab   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   2 days ago   Up 5 hours               redis-node6</span><br><span class="line">51cf2c0eb2bf   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   2 days ago   Up 5 hours               redis-node5</span><br><span class="line">c00847c63342   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   2 days ago   Up 5 hours               redis-node4</span><br><span class="line">4c9337895da0   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   2 days ago   Up 5 hours               redis-node3</span><br><span class="line">5db5d9f4a1d2   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   2 days ago   Up 5 hours               redis-node2</span><br><span class="line">7695b8a6290c   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   2 days ago   Up 2 seconds             redis-node1</span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it redis-node1 /bin/bash</span></span><br><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli -p 6381 -c</span></span><br><span class="line">127.0.0.1:6381&gt; cluster nodes</span><br><span class="line">36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381@16381 myself,slave ac38a3672a052a72855157d03e5c1bf9b73c717e 0 1686901124000 7 connected</span><br><span class="line">6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382@16382 master - 0 1686901125589 2 connected 5461-10922</span><br><span class="line">34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383@16383 master - 0 1686901124583 3 connected 10923-16383</span><br><span class="line">ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385@16385 master - 0 1686901124000 7 connected 0-5460</span><br><span class="line">16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386@16386 slave 6af5921ced502eae0ae93c991e1cafcee595e237 0 1686901122572 2 connected</span><br><span class="line">07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384@16384 slave 34fee68e4f9828340aea9dc71a2c2091981002ee 0 1686901121567 3 connected</span><br><span class="line">127.0.0.1:6381&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">### 重新进入node1容器;查看集群节点;</span></span><br><span class="line"><span class="comment">### 此时node1由停机前(master)转变成启动后(slave)</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<blockquote>
+<p>还原之前的3主3从</p>
+<p>思路：<code>启动停掉的6381,此时6381已成了slave;先停掉6381的master,再启动.此时就能恢复</code></p>
+</blockquote>
+<h3 id="主从扩容"><a href="#主从扩容" class="headerlink" title="主从扩容"></a>主从扩容</h3><blockquote>
+<p>新增两个服务节点对集群扩容</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#### 新增6387,6388两个节点</span></span><br><span class="line">docker run -d --name redis-node7 --privileged=<span class="literal">true</span> --net=host -v /mydata/redis/cluster/redis-node-7:/data redis:6.0.8 --cluster-enabled <span class="built_in">yes</span> --appendonly <span class="built_in">yes</span> --port 6387</span><br><span class="line"></span><br><span class="line">docker run -d --name redis-node8 --privileged=<span class="literal">true</span> --net=host -v /mydata/redis/cluster/redis-node-8:/data redis:6.0.8 --cluster-enabled <span class="built_in">yes</span> --appendonly <span class="built_in">yes</span> --port 6388</span><br><span class="line"></span><br><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker ps</span></span><br><span class="line">CONTAINER ID   IMAGE         COMMAND                   CREATED          STATUS          PORTS     NAMES</span><br><span class="line">a354a3b65af8   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   2 seconds ago    Up 2 seconds              redis-node8</span><br><span class="line">8428e85359ea   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   27 seconds ago   Up 26 seconds             redis-node7</span><br><span class="line">b69b4d4562ab   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   7 days ago       Up 3 minutes              redis-node6</span><br><span class="line">51cf2c0eb2bf   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   7 days ago       Up 3 minutes              redis-node5</span><br><span class="line">c00847c63342   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   7 days ago       Up 3 minutes              redis-node4</span><br><span class="line">4c9337895da0   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   7 days ago       Up 3 minutes              redis-node3</span><br><span class="line">5db5d9f4a1d2   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   7 days ago       Up 3 minutes              redis-node2</span><br><span class="line">7695b8a6290c   redis:6.0.8   <span class="string">&quot;docker-entrypoint.s…&quot;</span>   7 days ago       Up 3 minutes              redis-node1</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<blockquote>
+<p>进入6387容器内部，进行主从节点挂载和内容空间分配</p>
+</blockquote>
+<ul>
+<li><p>进入容器实例内部，将实例节点加入集群</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7_001 ~]<span class="comment"># docker exec -it 8428e85359ea /bin/bash</span></span><br><span class="line">root@CentOS7_001:/data<span class="comment">#</span></span><br><span class="line"></span><br><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli --cluster add-node 192.168.211.122:6387 192.168.211.122:6381</span></span><br><span class="line">&gt;&gt;&gt; Adding node 192.168.211.122:6387 to cluster 192.168.211.122:6381</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.211.122:6381)</span><br><span class="line">S: 36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates ac38a3672a052a72855157d03e5c1bf9b73c717e</span><br><span class="line">M: 34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 34fee68e4f9828340aea9dc71a2c2091981002ee</span><br><span class="line">M: 6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">&gt;&gt;&gt; Send CLUSTER MEET to node 192.168.211.122:6387 to make it <span class="built_in">join</span> the cluster.</span><br><span class="line">[OK] New node added correctly.</span><br><span class="line">root@CentOS7_001:/data<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<pre><code>增加服务节点
+</code></pre>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E5%A2%9E%E5%8A%A0%E6%9C%8D%E5%8A%A1%E8%8A%82%E7%82%B901.png"
+                     
+                ></p>
+<pre><code>  首次check集群
+</code></pre>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E9%A6%96%E6%AC%A1check%E9%9B%86%E7%BE%A401.png"
+                     
+                ></p>
+<ul>
+<li><p>重新分配槽号</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli --cluster reshard 192.168.211.122:6387</span></span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.211.122:6387)</span><br><span class="line">M: 73f0387ac7a8fde1429667c942d5bb4a6b11689e 192.168.211.122:6387</span><br><span class="line">   slots: (0 slots) master</span><br><span class="line">S: 16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">S: 36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates ac38a3672a052a72855157d03e5c1bf9b73c717e</span><br><span class="line">M: 34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 34fee68e4f9828340aea9dc71a2c2091981002ee</span><br><span class="line">M: 6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">How many slots <span class="keyword">do</span> you want to move (from 1 to 16384)? 4096</span><br><span class="line">What is the receiving node ID? 73f0387ac7a8fde1429667c942d5bb4a6b11689e</span><br><span class="line">Please enter all the <span class="built_in">source</span> node IDs.</span><br><span class="line">  Type <span class="string">&#x27;all&#x27;</span> to use all the nodes as <span class="built_in">source</span> nodes <span class="keyword">for</span> the <span class="built_in">hash</span> slots.</span><br><span class="line">  Type <span class="string">&#x27;done&#x27;</span> once you entered all the <span class="built_in">source</span> nodes IDs.</span><br><span class="line">Source node <span class="comment">#1: all</span></span><br><span class="line"></span><br><span class="line">Ready to move 4096 slots.</span><br><span class="line">  Source nodes:</span><br><span class="line">    M: 34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383</span><br><span class="line">       slots:[10923-16383] (5461 slots) master</span><br><span class="line">       1 additional replica(s)</span><br><span class="line">    M: 6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382</span><br><span class="line">       slots:[5461-10922] (5462 slots) master</span><br><span class="line">       1 additional replica(s)</span><br><span class="line">    M: ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385</span><br><span class="line">       slots:[0-5460] (5461 slots) master</span><br><span class="line">       1 additional replica(s)</span><br><span class="line">  Destination node:</span><br><span class="line">    M: 73f0387ac7a8fde1429667c942d5bb4a6b11689e 192.168.211.122:6387</span><br><span class="line">       slots: (0 slots) master</span><br><span class="line">  Resharding plan:</span><br><span class="line">    Moving slot 5461 from 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">    Moving slot 5462 from 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">    Moving slot 5463 from 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">    Moving slot 5464 from 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">    Moving slot 5465 from 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">    Moving slot 5466 from 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">    Moving slot 5467 from 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">......</span><br></pre></td></tr></table></figure></div>
+
+<pre><code>哈希槽扩容重新分配
+</code></pre>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD%E9%87%8D%E6%96%B0%E5%88%86%E9%85%8D%E6%80%BB01.png"
+                     
+                ></p>
+<blockquote>
+<p><a href="/GSSBlog/2023/10/30/8.1docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88%E9%99%84%E5%BD%951/index.html">详细分配图</a></p>
+</blockquote>
+<pre><code>  第二次check集群
+</code></pre>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E7%AC%AC%E4%BA%8C%E6%AC%A1check%E9%9B%86%E7%BE%A401.png"
+                     
+                ></p>
+<blockquote>
+<p>槽号分派说明</p>
+<p>重新分配成本太高,所以前三家各自匀出来一部分，从6381，6382，6383三个主节点中分别匀出1364个坑位给新节点6387</p>
+</blockquote>
+<ul>
+<li><p>为6387主节点挂在6388从节点</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#### </span></span><br><span class="line">命令：redis-cli --cluster add-node ip:新slave端口 ip:新master端口 --cluster-slave --cluster-master-id 新主机节点ID</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli --cluster add-node 192.168.211.122:6388 192.168.211.122:6387 --cluster-slave --cluster-                                   master-id 73f0387ac7a8fde1429667c942d5bb4a6b11689e</span></span><br><span class="line">&gt;&gt;&gt; Adding node 192.168.211.122:6388 to cluster 192.168.211.122:6387</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.211.122:6387)</span><br><span class="line">M: 73f0387ac7a8fde1429667c942d5bb4a6b11689e 192.168.211.122:6387</span><br><span class="line">   slots:[0-1364],[5461-6826],[10923-12287] (4096 slots) master</span><br><span class="line">S: 16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">S: 36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates ac38a3672a052a72855157d03e5c1bf9b73c717e</span><br><span class="line">M: 34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383</span><br><span class="line">   slots:[12288-16383] (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 34fee68e4f9828340aea9dc71a2c2091981002ee</span><br><span class="line">M: 6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382</span><br><span class="line">   slots:[6827-10922] (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385</span><br><span class="line">   slots:[1365-5460] (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">&gt;&gt;&gt; Send CLUSTER MEET to node 192.168.211.122:6388 to make it <span class="built_in">join</span> the cluster.</span><br><span class="line">Waiting <span class="keyword">for</span> the cluster to <span class="built_in">join</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; Configure node as replica of 192.168.211.122:6387.</span><br><span class="line">[OK] New node added correctly.</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<pre><code>扩容主节点挂载从节点
+</code></pre>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E5%A2%9E%E5%8A%A0%E6%9C%8D%E5%8A%A1%E8%8A%82%E7%82%B9-%E4%B8%BB%E8%8A%82%E7%82%B9%E4%B8%8B%E6%8C%82%E8%BD%BD%E4%BB%8E%E8%8A%82%E7%82%B901.png"
+                     
+                ></p>
+<pre><code>  第三次check集群
+</code></pre>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E7%AC%AC%E4%BA%8C%E6%AC%A1check%E9%9B%86%E7%BE%A401.png"
+                     
+                ></p>
+<ul>
+<li><p>扩容完成</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli --cluster check 192.168.211.122:6387</span></span><br><span class="line">192.168.211.122:6387 (73f0387a...) -&gt; 0 keys | 4096 slots | 1 slaves.</span><br><span class="line">192.168.211.122:6383 (34fee68e...) -&gt; 1 keys | 4096 slots | 1 slaves.</span><br><span class="line">192.168.211.122:6382 (6af5921c...) -&gt; 0 keys | 4096 slots | 1 slaves.</span><br><span class="line">192.168.211.122:6385 (ac38a367...) -&gt; 0 keys | 4096 slots | 1 slaves.</span><br><span class="line">[OK] 1 keys <span class="keyword">in</span> 4 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.211.122:6387)</span><br><span class="line">M: 73f0387ac7a8fde1429667c942d5bb4a6b11689e 192.168.211.122:6387</span><br><span class="line">   slots:[0-1364],[5461-6826],[10923-12287] (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 16567fbe877b25e90f97d9b2af76ef80ca3427d8 192.168.211.122:6386</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 6af5921ced502eae0ae93c991e1cafcee595e237</span><br><span class="line">S: 36877ecd044077c08ff640c14eb60698fada9e5a 192.168.211.122:6381</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates ac38a3672a052a72855157d03e5c1bf9b73c717e</span><br><span class="line">S: 6bf8e9d337e27154408acbd2a6a9677bdde939da 192.168.211.122:6388</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 73f0387ac7a8fde1429667c942d5bb4a6b11689e</span><br><span class="line">M: 34fee68e4f9828340aea9dc71a2c2091981002ee 192.168.211.122:6383</span><br><span class="line">   slots:[12288-16383] (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 07bd7bc35e2a88624855481ee24ff89d8cfcf759 192.168.211.122:6384</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 34fee68e4f9828340aea9dc71a2c2091981002ee</span><br><span class="line">M: 6af5921ced502eae0ae93c991e1cafcee595e237 192.168.211.122:6382</span><br><span class="line">   slots:[6827-10922] (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: ac38a3672a052a72855157d03e5c1bf9b73c717e 192.168.211.122:6385</span><br><span class="line">   slots:[1365-5460] (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">root@CentOS7_001:/data<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h3 id="主从缩容"><a href="#主从缩容" class="headerlink" title="主从缩容"></a>主从缩容</h3><blockquote>
+<p>能扩容就要能缩容,减少服务器性能浪费</p>
+</blockquote>
+<ul>
+<li><p>删除6388从节点</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#### 命令：redis-cli --cluster del-node ip:从机端口 从机6388节点ID</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">root@CentOS7_001:/data<span class="comment"># redis-cli --cluster del-node 192.168.211.122:6388 6bf8e9d337e27154408acbd2a6a9677bdde939da</span></span><br><span class="line">&gt;&gt;&gt; Removing node 6bf8e9d337e27154408acbd2a6a9677bdde939da from cluster 192.168.211.122:6388</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER RESET SOFT to the deleted node.</span><br><span class="line">root@CentOS7_001:/data<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+</li>
+<li><p>重新分配6387master服务槽号,并删除6387节点</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#### 命令： redis-cli --cluster reshard 192.168.211.122:6387</span></span><br><span class="line"></span><br><span class="line">redis-cli --cluster del-node 192.168.211.122:6387 73f0387ac7a8fde1429667c942d5bb4a6b11689e</span><br><span class="line">&gt;&gt;&gt; Removing node 73f0387ac7a8fde1429667c942d5bb4a6b11689e from cluster 192.168.211.122:6387</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER RESET SOFT to the deleted node.</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<pre><code>哈希槽缩容重新分配
+</code></pre>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/docker/redis%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88-%E9%9B%86%E7%BE%A4%E7%BC%A9%E5%AE%B9%E6%96%B9%E6%A1%88-%E5%93%88%E5%B8%8C%E6%A7%BD%E9%87%8D%E6%96%B0%E5%88%86%E9%85%8D01.png"
+                     
+                ></p>
+<ul>
+<li>删除容器实例</li>
+<li>缩容完成</li>
+</ul>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>标题:</strong> Docker部署redis集群</li>
+        <li><strong>作者:</strong> igxiaoshan</li>
+        <li><strong>创建于
+                :</strong> 2023-10-30 09:10:29</li>
+        
+            <li>
+                <strong>更新于
+                    :</strong> 2023-10-30 11:14:21
+            </li>
+        
+        <li>
+            <strong>链接:</strong> https://igxiaoshan.github.io/2023/10/30/8.0docker部署redis集群/
+        </li>
+        <li>
+            <strong>
+                版权声明:
+            </strong>
+            
+            本文章采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a> 进行许可。
+            
+
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/Docker/">#Docker</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/GSSBlog/2023/10/30/6.0docker%E9%83%A8%E7%BD%B2%E7%AE%80%E5%8D%95%E6%9C%8D%E5%8A%A1/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Docker部署常规服务</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2023/10/30/8.1docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88%E9%99%84%E5%BD%951/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">详细说明哈希槽增加节点分配机制</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;评论
+    </div>
+    
+
+        
+            
+ 
+    <div id="waline"></div>
+    <script type="module"  data-swup-reload-script>
+        import { init } from '/GSSBlog/js/libs/waline.mjs';
+
+        function loadWaline() {
+            init({
+                el: '#waline',
+                serverURL: 'https://example.example.com',
+                lang: 'zh-CN',
+                dark: 'body[class~="dark-mode"]',
+                requiredMeta: ['nick','mail'], // cannot customize by theme config, change it yourself
+            });
+        }
+
+        if ('true') {
+            const loadWalineTimeout = setTimeout(() => {
+                loadWaline();
+                clearTimeout(loadWalineTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadWaline);
+        }
+        
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">Docker部署redis集群</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E6%A1%88%E4%BE%8B"><span class="nav-text">分布式存储案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cluster-%E9%9B%86%E7%BE%A4-%E6%A8%A1%E5%BC%8F-docker%E7%89%88"><span class="nav-text">cluster(集群)模式-docker版</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E9%97%AE%E9%A2%98"><span class="nav-text">经典问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E4%B8%89%E4%B8%BB%E4%B8%89%E4%BB%8E%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="nav-text">Redis三主三从集群配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="nav-text">前置条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAredis%E5%AE%9E%E4%BE%8B"><span class="nav-text">创建redis实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E4%B8%BB%E4%BB%8E%E5%85%B3%E7%B3%BB"><span class="nav-text">构建主从关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81"><span class="nav-text">查看集群状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E5%AD%98%E5%82%A8"><span class="nav-text">读写存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E4%BF%A1%E6%81%AF"><span class="nav-text">查看集群信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E9%94%99%E5%88%87%E6%8D%A2%E8%BF%81%E7%A7%BB"><span class="nav-text">容错切换迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E6%89%A9%E5%AE%B9"><span class="nav-text">主从扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E7%BC%A9%E5%AE%B9"><span class="nav-text">主从缩容</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>
