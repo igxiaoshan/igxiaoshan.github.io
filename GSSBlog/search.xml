@@ -6103,4 +6103,81 @@ sudo systemctl restart docker
         <tag>MySQL</tag>
       </tags>
   </entry>
+  <entry>
+    <title>SpringBoot2基础入门</title>
+    <url>/GSSBlog/2023/10/31/1.SpringBoot2%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h2 id="SpringBoot2入门"><a href="#SpringBoot2入门" class="headerlink" title="SpringBoot2入门"></a>SpringBoot2入门</h2><blockquote>
+<p>系统配置要求</p>
+<ul>
+<li>JDK 8 +</li>
+<li>Maven 3.3+</li>
+<li>Idea 2019.+</li>
+</ul>
+</blockquote>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="code"><pre><span class="line">## Maven配置</span><br><span class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">  <span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">id</span>&gt;</span>jdk-1.8<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">jdk</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">jdk</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">maven.compiler.compilerVersion</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.compilerVersion</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line"></span><br><span class="line">## 配置Maven厂库,JDK编译版本</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="Ddmo-HelloWorld"><a href="#Ddmo-HelloWorld" class="headerlink" title="Ddmo-HelloWorld"></a>Ddmo-HelloWorld</h3><ul>
+<li>引入依赖</li>
+</ul>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment">## pom文件</span></span><br><span class="line">    <span class="string">&lt;groupId&gt;org.igsshan&lt;/groupId&gt;</span></span><br><span class="line">    <span class="string">&lt;artifactId&gt;springbootbasic&lt;/artifactId&gt;</span></span><br><span class="line">    <span class="string">&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&lt;parent&gt;</span></span><br><span class="line">        <span class="string">&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span></span><br><span class="line">        <span class="string">&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span></span><br><span class="line">        <span class="string">&lt;version&gt;2.3.4.RELEASE&lt;/version&gt;</span></span><br><span class="line">    <span class="string">&lt;/parent&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&lt;properties&gt;</span></span><br><span class="line">        <span class="string">&lt;java.version&gt;8&lt;/java.version&gt;</span></span><br><span class="line">        <span class="string">&lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;</span></span><br><span class="line">        <span class="string">&lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;</span></span><br><span class="line">        <span class="string">&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span></span><br><span class="line">    <span class="string">&lt;/properties&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&lt;dependencies&gt;</span></span><br><span class="line">        <span class="string">&lt;dependency&gt;</span></span><br><span class="line">            <span class="string">&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span></span><br><span class="line">            <span class="string">&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span></span><br><span class="line">        <span class="string">&lt;/dependency&gt;</span></span><br><span class="line">    <span class="string">&lt;/dependencies&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>主程序</li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// main主程序</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(HelloWorldApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>业务层</li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// controller</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldController</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@GetMapping(&quot;hello&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sayHelloWorld</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello SpringBoot2!&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>配置层</li>
+</ul>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment">## application.yml</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">	<span class="attr">port:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>测试</li>
+</ul>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="code"><pre><span class="line">// 启动main方法</span><br><span class="line"></span><br><span class="line">// 请求路径</span><br><span class="line">http://localhost:8080/hello</span><br><span class="line"></span><br><span class="line">// 返回结果</span><br><span class="line">hello SpringBoot2!</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>简化部署</li>
+</ul>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>将项目打包成<code>jar</code>包,在服务器运行</p>
+<p><code>jar -java path/hello.jar</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 服务启动</span></span><br><span class="line"><span class="built_in">nohup</span> java -jar `<span class="built_in">pwd</span>`/app.jar &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">## 服务停机</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;current java pid is: `jps|grep app|awk -F &#x27; &#x27; &#x27;&#123;print <span class="variable">$1</span>&#125;&#x27;`&quot;</span></span><br><span class="line"><span class="built_in">kill</span> -9 `jps|grep app|awk -F <span class="string">&#x27; &#x27;</span> <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>`</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注意 :</p>
+<p>使用<code>cmd</code>命令<code>springboot</code>,会出现启动失败的情况</p>
+<p>可以修改配置,取消方法: &#96;右击cmd控制台窗口标题区区域打开[选项]取消勾选[快速编辑模式]</p>
+</blockquote>
+<h2 id="SpringBoot2配置"><a href="#SpringBoot2配置" class="headerlink" title="SpringBoot2配置"></a>SpringBoot2配置</h2><h3 id="依赖管理"><a href="#依赖管理" class="headerlink" title="依赖管理"></a>依赖管理</h3><ul>
+<li>父项目依赖管理</li>
+</ul>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 依赖管理 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 他的父项目 --&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 几乎声明了所有开发中常用的依赖的版本号,自动版本仲裁机制 --&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>starter 场景启动器</li>
+</ul>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>SpringBoot2</category>
+        <category>Basic</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot2</tag>
+      </tags>
+  </entry>
 </search>
