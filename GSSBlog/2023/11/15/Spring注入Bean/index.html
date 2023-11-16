@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/11/15/spring注入bean/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="Spring Bean 的 Full 和 Lite模式 官网文献: https:&#x2F;&#x2F;docs.spring.io&#x2F;spring-framework&#x2F;reference&#x2F;core&#x2F;beans&#x2F;java&#x2F;basic-concepts.html     Spring中都是bean,使用不同的注解标记,常见标记配置类bean的注解有 @Configuration, @Component, @Compone">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Bean Full vs Lite">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/11/15/Spring%E6%B3%A8%E5%85%A5Bean/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="Spring Bean 的 Full 和 Lite模式 官网文献: https:&#x2F;&#x2F;docs.spring.io&#x2F;spring-framework&#x2F;reference&#x2F;core&#x2F;beans&#x2F;java&#x2F;basic-concepts.html     Spring中都是bean,使用不同的注解标记,常见标记配置类bean的注解有 @Configuration, @Component, @Compone">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://igxiaoshan.github.io/GSSBlog/images/spring/springbeanfullvslitemode.png">
+<meta property="article:published_time" content="2023-11-15T07:59:06.415Z">
+<meta property="article:modified_time" content="2023-11-15T11:06:15.508Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://igxiaoshan.github.io/GSSBlog/images/spring/springbeanfullvslitemode.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Spring Bean Full vs Lite -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">Spring Bean Full vs Lite</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-11-15 15:59:06</span>
+        <span class="mobile">2023-11-15 15:59:06</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-11-15 19:06:15</span>
+            <span class="mobile">2023-11-15 19:06:15</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Spring/">Spring</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/Spring/">Spring</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.9k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="Spring-Bean-的-Full-和-Lite模式"><a href="#Spring-Bean-的-Full-和-Lite模式" class="headerlink" title="Spring Bean 的 Full 和 Lite模式"></a>Spring Bean 的 Full 和 Lite模式</h2><blockquote>
+<p>官网文献: <a class="link"   target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/reference/core/beans/java/basic-concepts.html" >https://docs.spring.io/spring-framework/reference/core/beans/java/basic-concepts.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/spring/springbeanfullvslitemode.png"
+                     
+                ></p>
+<blockquote>
+<p>Spring中都是bean,使用不同的注解标记,常见标记配置类bean的注解有</p>
+<p><code>@Configuration</code>, <code>@Component</code>, <code>@ComponentScan</code>, <code>@Import</code>, <code>@ImportResource</code></p>
+</blockquote>
+<h2 id="Full-vs-Lite"><a href="#Full-vs-Lite" class="headerlink" title="Full vs Lite"></a>Full vs Lite</h2><blockquote>
+<p>根据文档可以了解到</p>
+<ul>
+<li>在一个方法上标记<code>@Bean</code>注解,并将该方法的返回值暴漏给Spring容器,在这种场景下,<code>@Bean</code>注解实际上就是一种通用的工厂方法机制</li>
+<li>当一个添加了<code>@Bean</code>注解的方法位于一个没有添加<code>@Configuration</code>注解的类里面时,那么这个添加了<code>@Bean</code>注解的方法在处理时就会按照<code>lite</code>模式来处理</li>
+<li>当一个Bean被声明在添加了<code>@Component</code>注解的类中,那么会按照<code>lite</code>模式来处理</li>
+<li>当一个Bean被声明在一个普通的类中时,会按照<code>lite</code>模式来处理</li>
+<li>在<code>lite</code>模式下,<code>@Bean</code>注解标记的方法最终不会被<code>CGLIB</code>进行代理,就是一个普通的工厂方法.因此,在<code>@Bean</code>标记的方法中,不能调用其他<code>@Bean</code>注解标记的方法.如果有需要,<code>可以通过方法参数注入所需要的Bean</code></li>
+<li>由于<code>lite</code>模式下并不会使用<code>CGLIB</code>,因此<code>@Bean</code>标记的方法可以是<code>final</code>类型的</li>
+<li>在大多场景下,在一个<code>@Configuration</code>注解标记的类中,使用<code>@Bean</code>注解向 Spring 容器注册一个 Bean,都是<code>full</code>模式</li>
+</ul>
+</blockquote>
+<p><strong>简单来说</strong></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. 类上标注有 @Component 注解 (@Service,@Controller注解上都有此方法)</span><br><span class="line">2. 类上标注有 @ComponentScan 注解</span><br><span class="line">3. 类上标注有 @Import 注解</span><br><span class="line">4. 类上标注有 @ImportResource 注解</span><br><span class="line">5. 若类上没有任何注解,但是类内方法存在 @Bean 注解</span><br><span class="line"></span><br><span class="line">以上,前提都是没有使用 @Configuration 注解;(在 Spring 5.2 之后,新增了 @Configuration 属性 proxyBeanMethods; 当 proxyBeanMethods(注意: 默认值为 TRUE) 值为 FLASE 时,也是属于 lite 模式的配置类 )</span><br><span class="line">上面列举的都可以称为配置类,属于 lite 模式的配置类</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="Full-模式"><a href="#Full-模式" class="headerlink" title="Full 模式"></a>Full 模式</h3><blockquote>
+<p><code>full</code>模式, 在一个配置类上添加<code>@Configuration</code>注解,且不添加任何额外属性,就是<code>full</code>模式</p>
+<p><code>full</code>模式最大的特点就是会给配置类通过<code>CGLIB</code>生成一个代理,所有被<code>@Bean</code>注解标记的方法都是通过代理方法进行调用</p>
+</blockquote>
+<p><strong>代码演示</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// =================== MyConfig配置类 ===================</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">user01</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// =================== 主启动类 ===================</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> SpringApplication.run(HelloWorldApplication.class, args);</span><br><span class="line">        <span class="type">MyConfig</span> <span class="variable">myConfig</span> <span class="operator">=</span> applicationContext.getBean(MyConfig.class);</span><br><span class="line">        System.out.println(myConfig);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试结果: 输出 myConfig</span></span><br><span class="line">com.igsshan.springbootbasic.configs.MyConfig$$EnhancerBySpringCGLIB$$3cc6a4ab@127d7908</span><br><span class="line"><span class="comment">// 可以看出,最终输入的 MyConfig 实例,并不是原始的 MyConfig 对象,而是一个被代理的 MyConfig 对象</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>为什么要代理呢?</li>
+</ul>
+<blockquote>
+<p>看下面的案例,所实现的功能</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// =================== MyConfig配置类 ===================</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">user01</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setPet(tomCat());</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Pet <span class="title function_">tomCat</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Pet</span>(<span class="string">&quot;tom&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// =================== 主启动类 ===================</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> SpringApplication.run(HelloWorldApplication.class, args);</span><br><span class="line">        <span class="type">MyConfig</span> <span class="variable">myConfig</span> <span class="operator">=</span> applicationContext.getBean(MyConfig.class);</span><br><span class="line">        System.out.println(myConfig);</span><br><span class="line">		System.out.println(<span class="string">&quot;======================================================&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">User</span> <span class="variable">user01</span> <span class="operator">=</span> applicationContext.getBean(<span class="string">&quot;user01&quot;</span>, User.class);</span><br><span class="line">        <span class="type">Pet</span> <span class="variable">tom</span> <span class="operator">=</span> applicationContext.getBean(<span class="string">&quot;tom&quot;</span>, Pet.class);</span><br><span class="line">        System.out.println(<span class="string">&quot;用户的宠物：&quot;</span> + (user01.getPet() == tom));</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;======================================================&quot;</span>);</span><br><span class="line">        <span class="type">Pet</span> <span class="variable">tom01</span> <span class="operator">=</span> applicationContext.getBean(<span class="string">&quot;tom&quot;</span>, Pet.class);</span><br><span class="line"></span><br><span class="line">        <span class="type">Pet</span> <span class="variable">tom02</span> <span class="operator">=</span> applicationContext.getBean(<span class="string">&quot;tom&quot;</span>, Pet.class);</span><br><span class="line">        System.out.println(tom01);</span><br><span class="line">        System.out.println(<span class="string">&quot;组件：&quot;</span> + (tom01 == tom02));</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;======================================================&quot;</span>);</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> myConfig.user01();</span><br><span class="line">        <span class="type">User</span> <span class="variable">user1</span> <span class="operator">=</span> myConfig.user01();</span><br><span class="line">        System.out.println(user);</span><br><span class="line">        System.out.println(<span class="string">&quot;配置类user01方法：&quot;</span> + (user == user1));</span><br><span class="line">        System.out.println(<span class="string">&quot;======================================================&quot;</span>);</span><br><span class="line">        <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;测试时间: &quot;</span> + (end - start));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试结果: </span></span><br><span class="line">com.igsshan.springbootbasic.configs.MyConfig$$EnhancerBySpringCGLIB$$676c133b@3249a1ce</span><br><span class="line">======================================================</span><br><span class="line">用户的宠物：<span class="literal">true</span></span><br><span class="line">======================================================</span><br><span class="line">com.igsshan.springbootbasic.model.Pet@4dd94a58</span><br><span class="line">组件：<span class="literal">true</span></span><br><span class="line">======================================================</span><br><span class="line">com.igsshan.springbootbasic.model.User@2f4919b0</span><br><span class="line">配置类user01方法：<span class="literal">true</span></span><br><span class="line">======================================================</span><br><span class="line">测试时间: <span class="number">1388</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>结论</strong></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. full 模式下,user中pet对象和tomCat方法注入注入到 Spring 容器中的对象是同一个</span><br><span class="line">2. full 模式下,user对象调用tomCat()方法的时候,调用的是一个代理对象;在这个代理对象的tomCat()方法中,会首先去检查 Spring 容器中是否存在 Pet 对象;如果存在,则直接用 Spring 容器中的pet对象,就不会真正执行tomCat()方法而获取一个新的Pet对象了;如果 Spring 容器中不存在 Pet对象,才会创建新的 Pet对象</span><br><span class="line">3. full 模式下,由于要给当前类生成代理,然后去代理 @Bean 注解标记的方法;因此,这些 @Bean 注解标记的方法不能是 final 或者 private 类型的,因为 final 或者 private 类型的方法无法被重写,也就没法生成代理对象,如果添加了 final 或者 private 修饰符,会抛出异常( org.springframework.beans.factory.parsing.BeanDefinitionParsingException: Configuration problem: @Bean method &#x27;tomCat&#x27; must not be private or final; change the method&#x27;s modifiers to continue</span><br><span class="line">Offending resource: class path resource [com/igsshan/springbootbasic/configs/MyConfig.class] )</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="Lite-模式"><a href="#Lite-模式" class="headerlink" title="Lite 模式"></a>Lite 模式</h3><blockquote>
+<p>如何开启 <code>lite</code>模式</p>
+<p>除配置类上的 <code>@Configuration</code> 注解，或者去除之后添加 <code>@Component</code> 注解，或者使用<code>@ComponentScan</code>、<code>@ImportResource</code>、<code>@Import</code> 等注解标记类，那么最终都是 Lite 模式</p>
+</blockquote>
+<p><strong>代码演示</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// =================== MyConfig配置类 ===================</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//@Configuration</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">user01</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;小张&quot;</span>, <span class="number">19</span>);</span><br><span class="line">        <span class="comment">// user.setPet(tomCat());</span></span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">public</span> User <span class="title function_">user01</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;小张&quot;</span>, <span class="number">19</span>);</span><br><span class="line">        <span class="comment">// user.setPet(tomCat());</span></span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(&quot;tom&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> Pet <span class="title function_">tomCat</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Pet</span>(<span class="string">&quot;tom&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// =================== 主启动类 ===================</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> SpringApplication.run(HelloWorldApplication.class, args);</span><br><span class="line">        <span class="type">MyConfig</span> <span class="variable">myConfig</span> <span class="operator">=</span> applicationContext.getBean(MyConfig.class);</span><br><span class="line">        System.out.println(myConfig);</span><br><span class="line">		System.out.println(<span class="string">&quot;======================================================&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">User</span> <span class="variable">user01</span> <span class="operator">=</span> applicationContext.getBean(<span class="string">&quot;user01&quot;</span>, User.class);</span><br><span class="line">        <span class="type">Pet</span> <span class="variable">tom</span> <span class="operator">=</span> applicationContext.getBean(<span class="string">&quot;tom&quot;</span>, Pet.class);</span><br><span class="line">        System.out.println(<span class="string">&quot;用户的宠物：&quot;</span> + (user01.getPet() == tom));</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;======================================================&quot;</span>);</span><br><span class="line">        <span class="type">Pet</span> <span class="variable">tom01</span> <span class="operator">=</span> applicationContext.getBean(<span class="string">&quot;tom&quot;</span>, Pet.class);</span><br><span class="line"></span><br><span class="line">        <span class="type">Pet</span> <span class="variable">tom02</span> <span class="operator">=</span> applicationContext.getBean(<span class="string">&quot;tom&quot;</span>, Pet.class);</span><br><span class="line">        System.out.println(tom01);</span><br><span class="line">        System.out.println(<span class="string">&quot;组件：&quot;</span> + (tom01 == tom02));</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;======================================================&quot;</span>);</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> myConfig.user01();</span><br><span class="line">        <span class="type">User</span> <span class="variable">user1</span> <span class="operator">=</span> myConfig.user01();</span><br><span class="line">        System.out.println(user);</span><br><span class="line">        System.out.println(<span class="string">&quot;配置类user01方法：&quot;</span> + (user == user1));</span><br><span class="line">        System.out.println(<span class="string">&quot;======================================================&quot;</span>);</span><br><span class="line">        <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;测试时间: &quot;</span> + (end - start));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出结果: 输出 myConfig</span></span><br><span class="line">com.igsshan.springbootbasic.configs.MyConfig<span class="meta">@f6de586</span></span><br><span class="line">======================================================</span><br><span class="line">用户的宠物：<span class="literal">false</span></span><br><span class="line">======================================================</span><br><span class="line">com.igsshan.springbootbasic.model.Pet@5f2bd6d9</span><br><span class="line">组件：<span class="literal">true</span></span><br><span class="line">======================================================</span><br><span class="line">com.igsshan.springbootbasic.model.User@7c847072</span><br><span class="line">配置类user01方法：<span class="literal">false</span></span><br><span class="line">======================================================</span><br><span class="line">测试时间: <span class="number">1281</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>结论</strong></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. lite 模式下,配置类中的方法就是普通方法,可以是final类型,也可以是private</span><br><span class="line">2. lite 模式下,不需要通过 CGLIB 生成动态代理类,所以启动速度会快一些</span><br><span class="line">3. lite 模式下,一个 @Bean 方法调用另外一个 @Bean 方法,会导致同一个 Bean 被初始化两次</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><strong>full 模式</strong></p>
+<div class="highlight-container" data-rel="Text"><figure class="iseeu highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 配置类会被 CGLIB 增强(生成代理对象),放进 IOC 容器内的是代理</span><br><span class="line">2. 对于内部类是没有限制的: 可以是 full 模式或者 lite 模式</span><br><span class="line">3. 配置类内部可以通过方法调用来处理依赖,并且能够保证是同一个实例都指向 IOC 内的那个单例</span><br><span class="line">4. @Bean 方法不能被 private 或者 final 等进行修饰,因为代理类需要重写这个方法</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>lite 模式</strong></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 配置类本身不会被 CGLIB 增强,放进 IOC 容器内的就是类本身</span><br><span class="line">2. 对于内部类是没有限制的: 可以是 full 模式或者 lite 模式</span><br><span class="line">3. 配置类内部不能通过方法调用来处理依赖,否则每次生成的都是一个新的实例并非 IOC 容器内的单例</span><br><span class="line">4. 配置类就是一个普通类,所以 @Bean 方法可以使用 private 或者 final 修饰</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/Spring/">#Spring</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2023/11/14/Stream%E4%BD%BF%E7%94%A8/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Stream基础使用</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">Spring Bean Full vs Lite</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean-%E7%9A%84-Full-%E5%92%8C-Lite%E6%A8%A1%E5%BC%8F"><span class="nav-text">Spring Bean 的 Full 和 Lite模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Full-vs-Lite"><span class="nav-text">Full vs Lite</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Full-%E6%A8%A1%E5%BC%8F"><span class="nav-text">Full 模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lite-%E6%A8%A1%E5%BC%8F"><span class="nav-text">Lite 模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>
