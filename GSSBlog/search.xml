@@ -6234,7 +6234,17 @@ sudo systemctl restart docker
 <h6 id="ComponentScan-Import"><a href="#ComponentScan-Import" class="headerlink" title="@ComponentScan,@Import"></a><strong>@ComponentScan</strong>,<strong>@Import</strong></h6><div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="code"><pre><span class="line">注解说明:</span><br><span class="line">	@ComponentScan注解,主要是Spring IOC 容器在刷新的时候,会扫描对应包下标注了 @Component,@Configuration,@Controller,@Service,@Repository等注解的类,生成扫描到的类的Bean定义信息,最终都会保存到 BeanFactory 中的 BeanDefinitionMap 中</span><br></pre></td></tr></table></figure></div>
 
 <blockquote>
-<p><a href="">@ComponentScan注解原理</a></p>
+<p><a href="/GSSBlog/2023/11/16/Spring%E5%8C%85%E6%89%AB%E6%8F%8F%E6%B3%A8%E8%A7%A3@ComponentScan/index.html">@ComponentScan注解原理</a></p>
+</blockquote>
+<blockquote>
+<p><code>@Import</code>给容器中自动创建出指定的类型的组件,默认组件的名字就是全类名</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Import(&#123;User.class, DBHelper.class&#125;)</span></span><br><span class="line"><span class="meta">@Configuration(proxyBeanMethods = false)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyConfig</span> &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// @Import注解自动从类中的 无参构造 创建一个实例注册到 IOC 容器中,容器中默认的id名为类的全限定名: user类就是 com.igsshan.bean.User</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h6 id="Conditional"><a href="#Conditional" class="headerlink" title="@Conditional"></a><strong>@Conditional</strong></h6><blockquote>
+<p>条件装配: 满足<code>Contidional</code>指定的条件,则进行条件注入</p>
 </blockquote>
 ]]></content>
       <categories>
