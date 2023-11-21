@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/11/21/spring条件注入注解@conditional/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="@Conditional注解详解入门介绍1234567891011121314151617181920212223242526272829&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 源码 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;package org.springframework.context.annotation;import java.lang.annotation.Documented;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring 条件注入注解 @Conditional">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/11/21/Spring%E6%9D%A1%E4%BB%B6%E6%B3%A8%E5%85%A5%E6%B3%A8%E8%A7%A3@Conditional/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="@Conditional注解详解入门介绍1234567891011121314151617181920212223242526272829&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 源码 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;package org.springframework.context.annotation;import java.lang.annotation.Documented;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-21T03:25:39.833Z">
+<meta property="article:modified_time" content="2023-11-21T10:45:20.993Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Spring 条件注入注解 @Conditional -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">Spring 条件注入注解 @Conditional</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-11-21 11:25:39</span>
+        <span class="mobile">2023-11-21 11:25:39</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-11-21 18:45:20</span>
+            <span class="mobile">2023-11-21 18:45:20</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Spring/">Spring</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/Spring/">Spring</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.7k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>19 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h1 id="Conditional注解详解"><a href="#Conditional注解详解" class="headerlink" title="@Conditional注解详解"></a><code>@Conditional</code>注解详解</h1><h2 id="入门介绍"><a href="#入门介绍" class="headerlink" title="入门介绍"></a>入门介绍</h2><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">===================== 源码 ====================</span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> org.springframework.context.annotation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Documented;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;    </span><br><span class="line">    </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Phillip Webb</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Sam Brannen</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 4.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> Condition</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.TYPE, ElementType.METHOD&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Conditional &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * All &#123;<span class="doctag">@link</span> Condition&#125; classes that must &#123;<span class="doctag">@linkplain</span> Condition#matches match&#125;</span></span><br><span class="line"><span class="comment">	 * in order for the component to be registered.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;? <span class="keyword">extends</span> <span class="title class_">Condition</span>&gt;[] value();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p><code>@Conditional</code>注解是从<code>Spring 4.0</code>版本引入;来源于<code>spring-context</code>包下;</p>
+<p><code>@Conditional</code>中文是<code>条件</code>的意思,它的作用是<code>按照一定条件进行判断,满足条件给容器中注入Bean</code></p>
+</blockquote>
+<h2 id="注解说明"><a href="#注解说明" class="headerlink" title="注解说明"></a>注解说明</h2><blockquote>
+<p><code>@Conditional</code>只有一个参数,并且这个参数要求是继承<code>Condition</code>类,而且参数是个数组,可以传多个值.</p>
+<p><code>@Condition</code>类是一个<code>函数式接口(只有一个方法的接口被称为函数式接口)</code>.<code>matches</code>方法就是比较方法,如果为<code>true</code>则注入,反之,如果为<code>false</code>则不注入</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">==================== 源码 ===================</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Phillip Webb</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 4.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> ConfigurationCondition</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> Conditional</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> ConditionContext</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Condition</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Determine if the condition matches.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> context the condition context</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> metadata the metadata of the &#123;<span class="doctag">@link</span> org.springframework.core.type.AnnotationMetadata class&#125;</span></span><br><span class="line"><span class="comment">	 * or &#123;<span class="doctag">@link</span> org.springframework.core.type.MethodMetadata method&#125; being checked</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> &#123;<span class="doctag">@code</span> true&#125; if the condition matches and the component can be registered,</span></span><br><span class="line"><span class="comment">	 * or &#123;<span class="doctag">@code</span> false&#125; to veto the annotated component&#x27;s registration</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="type">boolean</span> <span class="title function_">matches</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="Conditional注解扩展"><a href="#Conditional注解扩展" class="headerlink" title="@Conditional注解扩展"></a>@Conditional注解扩展</h2><blockquote>
+<p>除了<code>@Conditional</code>注解外,<code>springboot</code>通过<code>@Conditional</code>注解扩展了很多注解;如</p>
+<p><code>@ConditionalOnBean</code>,<code>@ConditionalOnClass</code>,<code>@ConditionalOnMissingBean</code> ….</p>
+</blockquote>
+<h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><h3 id="自定义一个Condition实现类"><a href="#自定义一个Condition实现类" class="headerlink" title="自定义一个Condition实现类"></a>自定义一个Condition实现类</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 15:33</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyCondition</span> <span class="keyword">implements</span> <span class="title class_">Condition</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">matches</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span> &#123;</span><br><span class="line">        <span class="type">Environment</span> <span class="variable">environment</span> <span class="operator">=</span> context.getEnvironment();</span><br><span class="line">        <span class="type">String</span> <span class="variable">property</span> <span class="operator">=</span> environment.getProperty(<span class="string">&quot;condition.isOpen&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Boolean.parseBoolean(property);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="自定义一个实体类"><a href="#自定义一个实体类" class="headerlink" title="自定义一个实体类"></a>自定义一个实体类</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 15:36</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestBeanUser</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;TestBeanUser .........&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="编写配置类-注解使用在类上"><a href="#编写配置类-注解使用在类上" class="headerlink" title="编写配置类(注解使用在类上)"></a>编写配置类(注解使用在类上)</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 15:36</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Conditional(MyCondition.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> TestBeanUser <span class="title function_">user1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TestBeanUser</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="编写配置文件"><a href="#编写配置文件" class="headerlink" title="编写配置文件"></a>编写配置文件</h3><div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">condition:</span></span><br><span class="line">  <span class="attr">isOpen:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="编写启动类"><a href="#编写启动类" class="headerlink" title="编写启动类"></a>编写启动类</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 14:23</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionalApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">run</span> <span class="operator">=</span> SpringApplication.run(ConditionalApplication.class, args);</span><br><span class="line">        String[] beanDefinitionNames = run.getBeanDefinitionNames();</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (String beanName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;beanName &quot;</span> + beanName);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">user1</span> <span class="operator">=</span> run.containsBean(<span class="string">&quot;user1&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;容器中user1组件：&quot;</span> + user1);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">conditionConfig</span> <span class="operator">=</span> run.containsBean(<span class="string">&quot;conditionConfig&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;容器中conditionConfig组件：&quot;</span> + conditionConfig);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">===================</span><br><span class="line">容器中user1组件：<span class="literal">true</span></span><br><span class="line">容器中conditionConfig组件：<span class="literal">true</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="注解使用在方法上"><a href="#注解使用在方法上" class="headerlink" title="(注解使用在方法上)"></a>(注解使用在方法上)</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 15:36</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Conditional(MyCondition.class)</span></span><br><span class="line">    <span class="keyword">public</span> TestBeanUser <span class="title function_">user1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TestBeanUser</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>**运行结果 **</p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">===================</span><br><span class="line">容器中user1组件：<span class="literal">true</span></span><br><span class="line">容器中conditionConfig组件：<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 同样可以满足条件使Bean定义信息注入到IOC容器中</span></span><br></pre></td></tr></table></figure></div>
+
+<h2 id="Conditional多条件"><a href="#Conditional多条件" class="headerlink" title="@Conditional多条件"></a>@Conditional多条件</h2><blockquote>
+<p><a href="#%E6%B3%A8%E8%A7%A3%E8%AF%B4%E6%98%8E">前面提到</a><code>@Conditional</code>注解可以接收一个<code>Class</code>数组,存在多条件类的情况</p>
+</blockquote>
+<p><strong>测试: 第一个Conditon实现类中<code>matches</code>方法返回false (只用于测试)</strong></p>
+<h3 id="第二个Condition实现类"><a href="#第二个Condition实现类" class="headerlink" title="第二个Condition实现类"></a>第二个Condition实现类</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 15:51</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ObstinateCondition</span> <span class="keyword">implements</span> <span class="title class_">Condition</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">matches</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="配置类改写"><a href="#配置类改写" class="headerlink" title="配置类改写"></a>配置类改写</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 15:36</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Conditional(&#123;MyCondition.class, ObstinateCondition.class&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> TestBeanUser <span class="title function_">user1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TestBeanUser</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="测试结果-1"><a href="#测试结果-1" class="headerlink" title="测试结果"></a>测试结果</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">===================</span><br><span class="line">容器中user1组件：<span class="literal">false</span></span><br><span class="line">容器中conditionConfig组件：<span class="literal">true</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>结论</strong></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">当,多个条件中,其中任何一个条件为 false 则不注入</span><br><span class="line">全部条件为 true 则注入</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="注解扩展"><a href="#注解扩展" class="headerlink" title="注解扩展"></a>注解扩展</h2><blockquote>
+<p><a href="#@Conditional%E6%B3%A8%E8%A7%A3%E6%89%A9%E5%B1%95">前面说到</a><code>springboot</code>官方对<code>@Conditional</code>注解有进行扩展</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/spring-projects/spring-boot/tree/main/spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/condition"><code>官方源码</code>:</a></p>
+</blockquote>
+<h3 id="ConditionalOnClass"><a href="#ConditionalOnClass" class="headerlink" title="@ConditionalOnClass"></a><code>@ConditionalOnClass</code></h3><blockquote>
+<p>该注解,主要是判断是否存在这个类文件,如果存在则表示满足条件,可以注入到容器当中</p>
+</blockquote>
+<p><strong>源码</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Phillip Webb</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.0.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target(&#123; ElementType.TYPE, ElementType.METHOD &#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Conditional(OnClassCondition.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ConditionalOnClass &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The classes that must be present. Since this annotation is parsed by loading class</span></span><br><span class="line"><span class="comment">	 * bytecode, it is safe to specify classes here that may ultimately not be on the</span></span><br><span class="line"><span class="comment">	 * classpath, only if this annotation is directly on the affected component and</span></span><br><span class="line"><span class="comment">	 * &lt;b&gt;not&lt;/b&gt; if this annotation is used as a composed, meta-annotation. In order to</span></span><br><span class="line"><span class="comment">	 * use this annotation as a meta-annotation, only use the &#123;<span class="doctag">@link</span> #name&#125; attribute.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the classes that must be present</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;?&gt;[] value() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The classes names that must be present.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class names that must be present.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] name() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>用法用例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 15:36</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnClass(value = MyConfig.class)</span></span><br><span class="line">    <span class="keyword">public</span> TestBeanUser <span class="title function_">user1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TestBeanUser</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==================== 或者 =========================</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnClass(name = &quot;com.igsshan.springbootconditional.conifg.MyConfig&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> TestBeanUser <span class="title function_">user1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TestBeanUser</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注意: 使用 &#x27;name&#x27; 属性值,必须是全类名,方法名不能满足</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="ConditionalOnMissingClass"><a href="#ConditionalOnMissingClass" class="headerlink" title="@ConditionalOnMissingClass"></a><code>@ConditionalOnMissingClass</code></h3><blockquote>
+<p><code>@ConditionalOnMissingClass</code>只有一个<code>value</code>属性.它和<code>@ConditionalOnClass</code>功能相反;</p>
+<p><code>@ConditionalOnClass</code>是<code>class</code>存在为<code>true</code>;</p>
+<p><code>@ConditionalOnMissingClass</code>是<code>class</code>不存在为<code>true</code>;<code>true</code>注入容器,<code>false</code>不注入容器</p>
+</blockquote>
+<p><strong>源码</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Dave Syer</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.0.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target(&#123; ElementType.TYPE, ElementType.METHOD &#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Conditional(OnClassCondition.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ConditionalOnMissingClass &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The names of the classes that must not be present.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the names of the classes that must not be present</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] value() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>用法</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 15:36</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingClass(value = &quot;com.igsshan.springbootconditional.conifg.MyConfig&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> TestBeanUser <span class="title function_">user1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TestBeanUser</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="ConditionalOnBean"><a href="#ConditionalOnBean" class="headerlink" title="@ConditionalOnBean"></a><code>@ConditionalOnBean</code></h3><blockquote>
+<p><code>Bean</code>存在的时候注入,不存在的时候不注入</p>
+</blockquote>
+<p><strong>源码</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Phillip Webb</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.0.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target(&#123; ElementType.TYPE, ElementType.METHOD &#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Conditional(OnBeanCondition.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ConditionalOnBean &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The class types of beans that should be checked. The condition matches when beans</span></span><br><span class="line"><span class="comment">	 * of all classes specified are contained in the &#123;<span class="doctag">@link</span> BeanFactory&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class types of beans to check</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;?&gt;[] value() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The class type names of beans that should be checked. The condition matches when</span></span><br><span class="line"><span class="comment">	 * beans of all classes specified are contained in the &#123;<span class="doctag">@link</span> BeanFactory&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class type names of beans to check</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] type() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The annotation type decorating a bean that should be checked. The condition matches</span></span><br><span class="line"><span class="comment">	 * when all of the annotations specified are defined on beans in the</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@link</span> BeanFactory&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class-level annotation types to check</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;? <span class="keyword">extends</span> <span class="title class_">Annotation</span>&gt;[] annotation() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The names of beans to check. The condition matches when all of the bean names</span></span><br><span class="line"><span class="comment">	 * specified are contained in the &#123;<span class="doctag">@link</span> BeanFactory&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the names of beans to check</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] name() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Strategy to decide if the application context hierarchy (parent contexts) should be</span></span><br><span class="line"><span class="comment">	 * considered.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the search strategy</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	SearchStrategy <span class="title function_">search</span><span class="params">()</span> <span class="keyword">default</span> SearchStrategy.ALL;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Additional classes that may contain the specified bean types within their generic</span></span><br><span class="line"><span class="comment">	 * parameters. For example, an annotation declaring &#123;<span class="doctag">@code</span> value=Name.class&#125; and</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> parameterizedContainer=NameRegistration.class&#125; would detect both</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> Name&#125; and &#123;<span class="doctag">@code</span> NameRegistration&lt;Name&gt;&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the container types</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@since</span> 2.1.0</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;?&gt;[] parameterizedContainer() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>用法用例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 14:31</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;tom&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> User1 <span class="title function_">userTom1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User1</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnBean(User1.class)</span></span><br><span class="line">    <span class="keyword">public</span> User2 <span class="title function_">jerry</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User2</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>启动类</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 14:23</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionalApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">run</span> <span class="operator">=</span> SpringApplication.run(ConditionalApplication.class, args);</span><br><span class="line">        String[] beanDefinitionNames = run.getBeanDefinitionNames();</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (String beanName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;beanName &quot;</span> + beanName);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">jerry</span> <span class="operator">=</span> run.containsBean(<span class="string">&quot;jerry&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;容器中jerry组件：&quot;</span> + jerry);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>测试结果</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">beanName tom</span><br><span class="line">===================</span><br><span class="line">容器中jerry组件：<span class="literal">true</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>测试结论</strong></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当,User1对象被注入到容器时,下面 User2也才会注入进去</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="配置类中Bean注入优先级问题"><a href="#配置类中Bean注入优先级问题" class="headerlink" title="配置类中Bean注入优先级问题"></a>配置类中Bean注入优先级问题</h4><blockquote>
+<p>上面的测试,都是基于同一个配置类中的条件注入;</p>
+<p>如果此时,我新创建一个<code>MyConfigTest</code>类,将原来<code>MyConfig</code>配置类中的<code>User1</code>bean信息转移到<code>MyConfigTest</code>配置类中</p>
+</blockquote>
+<p><strong>演示代码</strong></p>
+<ul>
+<li><code>MyConfig</code></li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 14:31</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注释掉 bean定义</span></span><br><span class="line"><span class="comment">//    @Bean</span></span><br><span class="line"><span class="comment">//    public User1 userTom1() &#123;</span></span><br><span class="line"><span class="comment">//        return new User1();</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnBean(User1.class)</span></span><br><span class="line">    <span class="keyword">public</span> User2 <span class="title function_">jerry</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User2</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>MyConfigTest</code></li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 17:05</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyConfigTest</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> User1 <span class="title function_">userTom1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User1</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>启动类不变</li>
+<li>测试结果</li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">beanName userTom1</span><br><span class="line">===================</span><br><span class="line">容器中jerry组件：<span class="literal">false</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>引入疑问和解决方法</li>
+</ul>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">由于 Bean 加载的优先级不用,可能导致 User2 在需要注入判断条件的时候, User1 此时还没有成功注入;等到 User2 判断容器中没有该实例,为 false 不注入,之后; User1 才成功注入到容器中</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<h3 id="解决方案1-修改Bean加载的优先级"><a href="#解决方案1-修改Bean加载的优先级" class="headerlink" title="解决方案1: 修改Bean加载的优先级"></a><code>解决方案1</code>: 修改Bean加载的优先级</h3></blockquote>
+<ul>
+<li>在<code>MyConfigTest</code>中添加<code>@Order</code>提升加载的优先级</li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Order(Ordered.HIGHEST_PRECEDENCE)</span> <span class="comment">//最高优先级</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在<code>MyConfig</code>中添加<code>@Order</code>降低加载的优先级</li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Order(Ordered.LOWEST_PRECEDENCE)</span> <span class="comment">//最高优先级</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>测试结果</li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">beanName userTom1</span><br><span class="line">===================</span><br><span class="line">容器中jerry组件：<span class="literal">false</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>发现: 通过修改Bean加载的优先级并不能避免这个问题;此方法不通</p>
+</blockquote>
+<blockquote>
+<h3 id="解决方案2-控制配置类加载顺序"><a href="#解决方案2-控制配置类加载顺序" class="headerlink" title="解决方案2: 控制配置类加载顺序"></a><code>解决方案2</code>: 控制配置类加载顺序</h3></blockquote>
+<blockquote>
+<p>方案一测试结论可以发现: bean加载按照名称顺序加载的 (可以自行测试: 编写一个测试的配置类,让其名称顺序高于’MyConfig’类)</p>
+<p>开发中却不太合适,每次刻意修改类名称来控制bean加载顺序</p>
+<p>不过; springboot提供了方案</p>
+</blockquote>
+<h5 id="AutoConfigureBefore和-AutoConfigureAfter-来控制配置类加载顺序"><a href="#AutoConfigureBefore和-AutoConfigureAfter-来控制配置类加载顺序" class="headerlink" title="**@AutoConfigureBefore和@AutoConfigureAfter**来控制配置类加载顺序"></a>**<code>@AutoConfigureBefore</code>和<code>@AutoConfigureAfter</code>**来控制配置类加载顺序</h5><p><strong>用法用例</strong></p>
+<ul>
+<li><p>在<code>MyConfigTest</code>类上加上<code>@AutoConfigureBefore(MyConfig.class)</code></p>
+<ul>
+<li><strong>该注解的意思是: 在 MyConfig 实例化之前加载</strong></li>
+</ul>
+<p>要让<code>@AutoConfigureBefore</code>生效,还需要在<code>META-INF/spring.factories</code>文件中添加配置</p>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\</span><br><span class="line">  com.igsshan.springbootconditional.conifg.MyConfigTest,\</span><br><span class="line">  com.igsshan.springbootconditional.conifg.MyConfig</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 17:05</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@AutoConfigureBefore(MyConfig.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyConfigTest</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> User1 <span class="title function_">userTom1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User1</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>META-INF&#x2F;spring.factories文件</p>
+</blockquote>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\</span><br><span class="line">  com.igsshan.springbootconditional.conifg.MyConfigTest,\</span><br><span class="line">  com.igsshan.springbootconditional.conifg.MyConfig</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>测试结果</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">beanName userTom1</span><br><span class="line">===================</span><br><span class="line">容器中jerry组件：<span class="literal">false</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>成功解决 Bean 加载顺序的问题</p>
+</blockquote>
+<h3 id="ConditionalOnMissingBean"><a href="#ConditionalOnMissingBean" class="headerlink" title="@ConditionalOnMissingBean"></a><code>@ConditionalOnMissingBean</code></h3><blockquote>
+<p><code>Bean</code>不存在的时候注入,存在的时候不注入;用法与<code>@ConditionalOnBean</code>相反</p>
+</blockquote>
+<p><strong>源码</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Phillip Webb</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Andy Wilkinson</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.0.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target(&#123; ElementType.TYPE, ElementType.METHOD &#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Conditional(OnBeanCondition.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ConditionalOnMissingBean &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The class types of beans that should be checked. The condition matches when no bean</span></span><br><span class="line"><span class="comment">	 * of each class specified is contained in the &#123;<span class="doctag">@link</span> BeanFactory&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class types of beans to check</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;?&gt;[] value() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The class type names of beans that should be checked. The condition matches when no</span></span><br><span class="line"><span class="comment">	 * bean of each class specified is contained in the &#123;<span class="doctag">@link</span> BeanFactory&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class type names of beans to check</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] type() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The class types of beans that should be ignored when identifying matching beans.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class types of beans to ignore</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@since</span> 1.2.5</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;?&gt;[] ignored() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The class type names of beans that should be ignored when identifying matching</span></span><br><span class="line"><span class="comment">	 * beans.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class type names of beans to ignore</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@since</span> 1.2.5</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] ignoredType() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The annotation type decorating a bean that should be checked. The condition matches</span></span><br><span class="line"><span class="comment">	 * when each annotation specified is missing from all beans in the</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@link</span> BeanFactory&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class-level annotation types to check</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;? <span class="keyword">extends</span> <span class="title class_">Annotation</span>&gt;[] annotation() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The names of beans to check. The condition matches when each bean name specified is</span></span><br><span class="line"><span class="comment">	 * missing in the &#123;<span class="doctag">@link</span> BeanFactory&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the names of beans to check</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] name() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Strategy to decide if the application context hierarchy (parent contexts) should be</span></span><br><span class="line"><span class="comment">	 * considered.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the search strategy</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	SearchStrategy <span class="title function_">search</span><span class="params">()</span> <span class="keyword">default</span> SearchStrategy.ALL;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Additional classes that may contain the specified bean types within their generic</span></span><br><span class="line"><span class="comment">	 * parameters. For example, an annotation declaring &#123;<span class="doctag">@code</span> value=Name.class&#125; and</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> parameterizedContainer=NameRegistration.class&#125; would detect both</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> Name&#125; and &#123;<span class="doctag">@code</span> NameRegistration&lt;Name&gt;&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the container types</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@since</span> 2.1.0</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;?&gt;[] parameterizedContainer() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>用法用例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 14:25</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnMissingBean(value = User.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionalConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;user01&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> User1 <span class="title function_">user01</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User1</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p><code>@ConditionalOnMissingBean</code>表示,如果容器里面没有<code>User</code>的实例,就会向容器中注入一个<code>User1</code>的实例对象(不管注入的是什么对象,哪怕是原对象也可以)</p>
+</blockquote>
+<p><strong>注意:</strong></p>
+<blockquote>
+<p><code>@ConditionalOnMissingBean</code>和<code>@ConditionalOnBean</code>使用的时候,都可以不添加属性;当不添加任何属性的时候,就是判断<code>当前注入的类型</code></p>
+<p><code>@ConditionalOnMissingBean</code>是判断当没有当前类型的时候进行注入</p>
+<p><code>@ConditionalOnBean</code>是判断如果有当前类型的则注入</p>
+</blockquote>
+<p><strong>用法用例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 14:31</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;tom&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">tom</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnBean(User1.class)</span></span><br><span class="line">    <span class="keyword">public</span> User2 <span class="title function_">jerry</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User2</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;user3&quot;)</span></span><br><span class="line">    <span class="meta">@ConditionalOnBean</span></span><br><span class="line">    <span class="keyword">public</span> User2 <span class="title function_">user3</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User2</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;user33&quot;)</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">    <span class="keyword">public</span> User3 <span class="title function_">user33</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User3</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Bean(name = &quot;user4&quot;)</span></span><br><span class="line">    <span class="meta">@ConditionalOnBean</span></span><br><span class="line">    <span class="keyword">public</span> User4 <span class="title function_">user4</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User4</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>启动类</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 14:23</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionalApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">run</span> <span class="operator">=</span> SpringApplication.run(ConditionalApplication.class, args);</span><br><span class="line">        String[] beanDefinitionNames = run.getBeanDefinitionNames();</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (String beanName : beanDefinitionNames) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;beanName &quot;</span> + beanName);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">jerry</span> <span class="operator">=</span> run.containsBean(<span class="string">&quot;jerry&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;容器中jerry组件：&quot;</span> + jerry);</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">user3</span> <span class="operator">=</span> run.containsBean(<span class="string">&quot;user3&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;容器中user3组件：&quot;</span> + user3);</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">user33</span> <span class="operator">=</span> run.containsBean(<span class="string">&quot;user33&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;容器中user33组件：&quot;</span> + user33);</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">user4</span> <span class="operator">=</span> run.containsBean(<span class="string">&quot;user4&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;容器中user4组件：&quot;</span> + user4);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>测试结果</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">===================</span><br><span class="line">容器中jerry组件：<span class="literal">true</span></span><br><span class="line">===================</span><br><span class="line">容器中user3组件：<span class="literal">true</span></span><br><span class="line">===================</span><br><span class="line">容器中user33组件：<span class="literal">true</span></span><br><span class="line">===================</span><br><span class="line">容器中user4组件：<span class="literal">false</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="ConditionalOnProperty"><a href="#ConditionalOnProperty" class="headerlink" title="@ConditionalOnProperty"></a><code>@ConditionalOnProperty</code></h3><blockquote>
+<p><code>@ConditionalOnProperty</code>主要用于通过和<code>springboot</code>中的<code>application</code>配置文件搭配使用;通过配置来管理配置bean</p>
+</blockquote>
+<p><strong>源码</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Maciej Walkowiak</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Stephane Nicoll</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Phillip Webb</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(&#123; ElementType.TYPE, ElementType.METHOD &#125;)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Conditional(OnPropertyCondition.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ConditionalOnProperty &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Alias for &#123;<span class="doctag">@link</span> #name()&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the names</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] value() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * A prefix that should be applied to each property. The prefix automatically ends</span></span><br><span class="line"><span class="comment">	 * with a dot if not specified. A valid prefix is defined by one or more words</span></span><br><span class="line"><span class="comment">	 * separated with dots (e.g. &#123;<span class="doctag">@code</span> &quot;acme.system.feature&quot;&#125;).</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the prefix</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String <span class="title function_">prefix</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The name of the properties to test. If a prefix has been defined, it is applied to</span></span><br><span class="line"><span class="comment">	 * compute the full key of each property. For instance if the prefix is</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> app.config&#125; and one value is &#123;<span class="doctag">@code</span> my-value&#125;, the full key would be</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> app.config.my-value&#125;</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;</span></span><br><span class="line"><span class="comment">	 * Use the dashed notation to specify each property, that is all lower case with a &quot;-&quot;</span></span><br><span class="line"><span class="comment">	 * to separate words (e.g. &#123;<span class="doctag">@code</span> my-long-property&#125;).</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the names</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] name() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The string representation of the expected value for the properties. If not</span></span><br><span class="line"><span class="comment">	 * specified, the property must &lt;strong&gt;not&lt;/strong&gt; be equal to &#123;<span class="doctag">@code</span> false&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the expected value</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String <span class="title function_">havingValue</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Specify if the condition should match if the property is not set. Defaults to</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> false&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> if should match if the property is missing</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="type">boolean</span> <span class="title function_">matchIfMissing</span><span class="params">()</span> <span class="keyword">default</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>用法用例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 18:31</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnProperty(prefix = &quot;condition.user&quot;, name = &#123;&quot;open&quot;&#125;, havingValue = &quot;true&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyPropertyConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;user5&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> User5 <span class="title function_">user5</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User5</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>配置文件</strong></p>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">condition:</span></span><br><span class="line">  <span class="attr">user:</span></span><br><span class="line">    <span class="attr">open:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>启动类</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : igsshan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2023/11/21 14:23</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionalApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ConfigurableApplicationContext</span> <span class="variable">run</span> <span class="operator">=</span> SpringApplication.run(ConditionalApplication.class, args);</span><br><span class="line">        String[] beanDefinitionNames = run.getBeanDefinitionNames();</span><br><span class="line">        System.out.println(<span class="string">&quot;===================&quot;</span>);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">user5</span> <span class="operator">=</span> run.containsBean(<span class="string">&quot;user5&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;容器中user5组件：&quot;</span> + user5);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>测试结果</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">beanName user5</span><br><span class="line">===================</span><br><span class="line">容器中user5组件：<span class="literal">true</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="其他注解"><a href="#其他注解" class="headerlink" title="其他注解"></a>其他注解</h3><ul>
+<li><code>@ConditionOnJava</code>: 运行指定的<code>Java</code>版本才会加载 <code>Bean</code></li>
+<li><code>@ConditionOnWebApplication</code>和<code>@ConditionOnNotWebApplication</code>: 运行在(不在)<code>web</code>应用中才会加载这个<code>Bean</code></li>
+<li><code>@ConditionOnCloudPlatform</code>: 运行在指定的云平台上才会加载指定的 <code>Bean</code></li>
+<li><code>@ConditionOnJndi</code>: 指定的资源通过<code>JNDI</code>加载后才加载 <code>Bean</code></li>
+<li><code>@ConditionOnSingleCandidate(UserService.class)</code>: 表示容器中只有一个<code>UserService</code>类型的<code>Bean</code>才生效</li>
+<li><code>@ConditionOnResource</code>: 指定的静态资源文件存在才会加载指定的<code>Bean</code></li>
+<li><code>@ConditionOnExpression(&quot;$&#123;test.express&#125; == true &quot;)</code>: 通过<code>spring</code>提供的<code>spEL</code>表达式灵活配置,方表达式为<code>true</code>的时候,才会加载指定的<code>Bean</code></li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/Spring/">#Spring</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2023/11/16/Spring%E5%8C%85%E6%89%AB%E6%8F%8F%E6%B3%A8%E8%A7%A3@ComponentScan/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Spring 包扫描注解 @ComponentScan</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">Spring 条件注入注解 @Conditional</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Conditional%E6%B3%A8%E8%A7%A3%E8%AF%A6%E8%A7%A3"><span class="nav-text">@Conditional注解详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E9%97%A8%E4%BB%8B%E7%BB%8D"><span class="nav-text">入门介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E8%AF%B4%E6%98%8E"><span class="nav-text">注解说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conditional%E6%B3%A8%E8%A7%A3%E6%89%A9%E5%B1%95"><span class="nav-text">@Conditional注解扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="nav-text">使用案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AACondition%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-text">自定义一个Condition实现类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="nav-text">自定义一个实体类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E9%85%8D%E7%BD%AE%E7%B1%BB-%E6%B3%A8%E8%A7%A3%E4%BD%BF%E7%94%A8%E5%9C%A8%E7%B1%BB%E4%B8%8A"><span class="nav-text">编写配置类(注解使用在类上)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">编写配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E5%90%AF%E5%8A%A8%E7%B1%BB"><span class="nav-text">编写启动类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="nav-text">测试结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E4%BD%BF%E7%94%A8%E5%9C%A8%E6%96%B9%E6%B3%95%E4%B8%8A"><span class="nav-text">(注解使用在方法上)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conditional%E5%A4%9A%E6%9D%A1%E4%BB%B6"><span class="nav-text">@Conditional多条件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AACondition%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-text">第二个Condition实现类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%B1%BB%E6%94%B9%E5%86%99"><span class="nav-text">配置类改写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C-1"><span class="nav-text">测试结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E6%89%A9%E5%B1%95"><span class="nav-text">注解扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ConditionalOnClass"><span class="nav-text">@ConditionalOnClass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConditionalOnMissingClass"><span class="nav-text">@ConditionalOnMissingClass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConditionalOnBean"><span class="nav-text">@ConditionalOnBean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%881-%E4%BF%AE%E6%94%B9Bean%E5%8A%A0%E8%BD%BD%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7"><span class="nav-text">解决方案1: 修改Bean加载的优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%882-%E6%8E%A7%E5%88%B6%E9%85%8D%E7%BD%AE%E7%B1%BB%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F"><span class="nav-text">解决方案2: 控制配置类加载顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConditionalOnMissingBean"><span class="nav-text">@ConditionalOnMissingBean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConditionalOnProperty"><span class="nav-text">@ConditionalOnProperty</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%B3%A8%E8%A7%A3"><span class="nav-text">其他注解</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>
