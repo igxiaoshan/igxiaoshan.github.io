@@ -7030,7 +7030,7 @@ sudo systemctl restart docker
 </li>
 </ul>
 <blockquote>
-<p><a href=""><code>properties</code>与<code>yml</code>加载顺序</a></p>
+<p><a href="/GSSBlog/2023/12/07/SpringBoot%E4%B8%AD%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/index.html"><code>properties</code>与<code>yml</code>加载顺序</a></p>
 </blockquote>
 ]]></content>
       <categories>
@@ -7079,10 +7079,12 @@ sudo systemctl restart docker
 <p>启动端口为:<code>7071</code>;配置文件<code>前缀</code>相同的情况下,<code>优先级高的配置覆盖优先级低的配置</code></p>
 </blockquote>
 <h3 id="验证结论二"><a href="#验证结论二" class="headerlink" title="验证结论二"></a>验证结论二</h3><blockquote>
-<p>先决条件</p>
 <ul>
+<li>先决条件<ul>
 <li>准备<code>bootstrap.properties</code>和<code>application.properties</code>配置文件</li>
 <li>采用端口验证</li>
+</ul>
+</li>
 </ul>
 </blockquote>
 <div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment">### bootstrap.properties</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">7071</span></span><br></pre></td></tr></table></figure></div>
@@ -7096,10 +7098,12 @@ sudo systemctl restart docker
 <p>启动端口为:<code>9091</code>;不同前缀的<code>properties</code>配置文件中存在相同配置时,优先加载<code>bootstrap</code>但是会被<code>application</code>中的配置<code>覆盖</code></p>
 </blockquote>
 <h3 id="验证结论三"><a href="#验证结论三" class="headerlink" title="验证结论三"></a>验证结论三</h3><blockquote>
-<p>先决条件</p>
 <ul>
+<li>先决条件<ul>
 <li>准备<code>bootstrap.properties</code>,<code>bootstrap.yml</code>,<code>application.properties</code>,<code>application.yml</code>配置文件</li>
 <li>采用端口验证</li>
+</ul>
+</li>
 </ul>
 </blockquote>
 <div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment">### bootstrap.properties</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">7071</span></span><br></pre></td></tr></table></figure></div>
