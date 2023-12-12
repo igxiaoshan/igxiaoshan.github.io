@@ -26,7 +26,7 @@
 <meta property="og:description" content="核心功能配置文件文件类型propertiesyaml基本用法  key: value kv之间有空格 大小写敏感 缩进不允许使用tab, 只允许空格 缩进的空格数不重要, 只要相同层级的元素左对齐即可 &#39;#&#39;表示注释 字符串无需加引号, 如果要加,一些特殊字符会被转义 如果字符串是一串数字,该数字以’零’开头,必须加上’引号’,不然会被解析成八进制 转义如同: System.out">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-07T02:23:55.605Z">
-<meta property="article:modified_time" content="2023-12-07T06:59:46.325Z">
+<meta property="article:modified_time" content="2023-12-11T10:19:45.243Z">
 <meta property="article:author" content="igxiaoshan">
 <meta property="article:tag" content="SpringBoot2">
 <meta name="twitter:card" content="summary">
@@ -340,8 +340,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2023-12-07 14:59:46</span>
-            <span class="mobile">2023-12-07 14:59:46</span>
+            <span class="desktop">2023-12-11 18:19:45</span>
+            <span class="mobile">2023-12-11 18:19:45</span>
             <span class="hover-info">更新</span>
         </span>
     
@@ -389,7 +389,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>155 字</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>316 字</span>
         </span>
     
     
@@ -429,6 +429,108 @@
 <blockquote>
 <p><a href="/GSSBlog/2023/12/07/SpringBoot%E4%B8%AD%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/index.html"><code>properties</code>与<code>yml</code>加载顺序</a></p>
 </blockquote>
+<p><strong>数据类型</strong></p>
+<ul>
+<li><code>date</code>,<code>boolean</code>,<code>string</code>,<code>number</code>,<code>null</code></li>
+<li><code>map</code>,<code>hash</code>,<code>set</code>,<code>object</code></li>
+</ul>
+<p><strong>示例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;igsshan&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> Boolean enabled;</span><br><span class="line">    <span class="keyword">private</span> Date birth;</span><br><span class="line">    <span class="keyword">private</span> Pet pet;</span><br><span class="line">    <span class="keyword">private</span> String[] interests;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; animal;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; score;</span><br><span class="line">    <span class="keyword">private</span> Set&lt;Double&gt; salarys;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, List&lt;Pet&gt;&gt; allPets;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Pet</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Double weight;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">igsshan:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">张三</span></span><br><span class="line">  <span class="attr">age:</span> <span class="number">18</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">birth:</span> <span class="number">1998</span><span class="string">/07/19</span> <span class="number">12</span><span class="string">:12:12</span></span><br><span class="line">  <span class="attr">pet:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">tomcat</span></span><br><span class="line">    <span class="attr">weight:</span> <span class="number">23.8</span></span><br><span class="line">  <span class="attr">interests:</span> [<span class="string">羽毛球</span>,<span class="string">乒乓球</span>]</span><br><span class="line">  <span class="attr">animal:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">tom</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">jerry</span></span><br><span class="line">  <span class="attr">score:</span></span><br><span class="line">    <span class="attr">english:</span></span><br><span class="line">      <span class="attr">first:</span> <span class="number">30</span></span><br><span class="line">      <span class="attr">second:</span> <span class="number">40</span></span><br><span class="line">      <span class="attr">third:</span> <span class="number">50</span></span><br><span class="line">    <span class="attr">math:</span> [<span class="number">120</span>,<span class="number">150</span>,<span class="number">200</span>]</span><br><span class="line">    <span class="attr">chinese:</span> &#123;<span class="attr">first:</span> <span class="number">128</span>,<span class="attr">second:</span> <span class="number">369</span>&#125;</span><br><span class="line">  <span class="attr">salarys:</span> [<span class="number">3999</span>,<span class="number">4999.98</span>,<span class="number">5999.99</span>]</span><br><span class="line">  <span class="attr">allPets:</span></span><br><span class="line">    <span class="attr">sick:</span></span><br><span class="line">      <span class="bullet">-</span> &#123;<span class="attr">name:</span> <span class="string">tom</span>&#125;</span><br><span class="line">      <span class="bullet">-</span> &#123;<span class="attr">name:</span> <span class="string">jerry</span>,<span class="attr">weight:</span> <span class="number">33</span>&#125;</span><br><span class="line">    <span class="attr">health:</span> [&#123;<span class="attr">name:</span> <span class="string">mario</span>,<span class="attr">weight:</span> <span class="number">44</span>&#125;]</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         </div>
 

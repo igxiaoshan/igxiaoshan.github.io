@@ -26,7 +26,7 @@
 <meta property="og:description" content="SpringBoot配置优先级和配置覆盖 bootstrap(.properties&#x2F;.yml) 文件是SpringBoot的默认配置文件,它的加载时间相比较于application(.properties&#x2F;.yml)更早 application(.properties&#x2F;.yml)和bootstrap(.properties&#x2F;.yml)都是SpringBoot的默认配">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-07T03:18:52.274Z">
-<meta property="article:modified_time" content="2023-12-07T07:03:34.603Z">
+<meta property="article:modified_time" content="2023-12-12T08:08:09.397Z">
 <meta property="article:author" content="igxiaoshan">
 <meta property="article:tag" content="SpringBoot2">
 <meta name="twitter:card" content="summary">
@@ -340,8 +340,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2023-12-07 15:03:34</span>
-            <span class="mobile">2023-12-07 15:03:34</span>
+            <span class="desktop">2023-12-12 16:08:09</span>
+            <span class="mobile">2023-12-12 16:08:09</span>
             <span class="hover-info">更新</span>
         </span>
     
@@ -389,12 +389,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>717 字</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.1k 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>2 分钟</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>4 分钟</span>
         </span>
     
     
@@ -489,6 +489,65 @@
 <blockquote>
 <p>启动端口为:<code>9091</code>;当同一个配置属性在四个配置文件中都存在,<code>application.properties</code>的配置<code>一定</code>会覆盖其他配置文件</p>
 </blockquote>
+<h2 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h2><h3 id="SpringBoot-的多环境配置"><a href="#SpringBoot-的多环境配置" class="headerlink" title="SpringBoot 的多环境配置"></a>SpringBoot 的多环境配置</h3><blockquote>
+<p>在<code>SpringBoot</code>中,使用<code>application.profiles.active</code>属性来指定激活的环境</p>
+<p>当启动 Spring Boot 应用程序时,Spring Boot 会加载 <code>application.yml</code>文件,以及所有<code>application-&#123;profile&#125;.yml</code>命名的配置文件</p>
+</blockquote>
+<blockquote>
+<p>在<code>application.profiles.active=prod</code>的情况下; Spring Boot 会加载<code>application.yml</code>和<code>application-prod.yml</code>两个配置文件.</p>
+<p>这两个配置文件中的所有属性都会被加载,如果存在相同的属性,则<code>application-prod.yml</code>中的属性会覆盖<code>application.yml</code>中的属性</p>
+</blockquote>
+<p><strong>SpringBoot多环境配置原理</strong></p>
+<ul>
+<li>首先加载<code>application.yml</code>文件</li>
+<li>然后加载所有以<code>application-&#123;profile&#125;.yml</code>命名的配置文件,其中<code>&#123;profile&#125;</code>是激活的环境</li>
+<li>最后,将所有配置文件中的属性合并成一个属性集合.如果存在相同的属性,则<code>&#123;profile&#125;</code>中的属性会覆盖<code>application.yml</code>中的属性</li>
+</ul>
+<blockquote>
+<p>因此,在<code>application.profiles.active=prod</code>的情况下,<code>application.yml</code>和<code>application-prod.yml</code>两个配置都会被加载,如果存在相同的属性,则<code>application-prod.yml</code>中的属性会覆盖<code>application.yml</code>中的属性</p>
+</blockquote>
+<p><strong>举例说明</strong></p>
+<blockquote>
+<ul>
+<li>先决条件<ul>
+<li>准备<code>application.yml</code>和<code>application-prod.yml</code>两个文件</li>
+<li>采用端口验证</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### application.yml</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### application-prod.yml</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">9090</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>当<code>application.profiles.active=prod</code></p>
+</blockquote>
+<p><strong>结论</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SpringBoot应用程序启动的端口号是9090</span></span><br><span class="line">INFO <span class="number">10652</span> --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on <span class="title function_">port</span><span class="params">(s)</span>: <span class="number">9090</span> (http) with context path <span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         </div>
 
@@ -538,7 +597,7 @@
     <div class="post-toc">
         <div class="toc-title">此页目录</div>
         <div class="page-title">Properties与Yaml加载顺序</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot%E9%85%8D%E7%BD%AE%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E9%85%8D%E7%BD%AE%E8%A6%86%E7%9B%96"><span class="nav-text">SpringBoot配置优先级和配置覆盖</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7"><span class="nav-text">优先级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%A6%86%E7%9B%96"><span class="nav-text">配置覆盖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E9%AA%8C%E8%AF%81"><span class="nav-text">代码验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E8%AE%BA%E4%B8%80"><span class="nav-text">验证结论一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E8%AE%BA%E4%BA%8C"><span class="nav-text">验证结论二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E8%AE%BA%E4%B8%89"><span class="nav-text">验证结论三</span></a></li></ol></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot%E9%85%8D%E7%BD%AE%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E9%85%8D%E7%BD%AE%E8%A6%86%E7%9B%96"><span class="nav-text">SpringBoot配置优先级和配置覆盖</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7"><span class="nav-text">优先级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%A6%86%E7%9B%96"><span class="nav-text">配置覆盖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E9%AA%8C%E8%AF%81"><span class="nav-text">代码验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E8%AE%BA%E4%B8%80"><span class="nav-text">验证结论一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E8%AE%BA%E4%BA%8C"><span class="nav-text">验证结论二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E8%AE%BA%E4%B8%89"><span class="nav-text">验证结论三</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%8A%A0"><span class="nav-text">附加</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringBoot-%E7%9A%84%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-text">SpringBoot 的多环境配置</span></a></li></ol></li></ol></li></ol>
 
     </div>
 </div>
