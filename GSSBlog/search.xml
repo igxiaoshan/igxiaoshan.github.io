@@ -7061,97 +7061,62 @@ sudo systemctl restart docker
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-]]></content>
+<h2 id="Web开发"><a href="#Web开发" class="headerlink" title="Web开发"></a>Web开发</h2><blockquote>
+<p><a class="link"   href="https://docs.spring.io/spring-boot/docs/current/reference/html/web.html#web.servlet.spring-mvc" >官方文献 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<h3 id="Spring-MVC-Auto-configuration"><a href="#Spring-MVC-Auto-configuration" class="headerlink" title="Spring MVC Auto-configuration"></a>Spring MVC Auto-configuration</h3><p>Spring Boot provides auto-configuration for Spring MVC that works well with most applications. It replaces the need for <code>@EnableWebMvc</code> and the two cannot be used together. In addition to Spring MVC’s defaults, the auto-configuration provides the following features:</p>
+<ul>
+<li>Inclusion of <code>ContentNegotiatingViewResolver</code> and <code>BeanNameViewResolver</code> beans.<ul>
+<li>包含<code>内容协商视图解析器</code>和<code>BeanName视图解析器</code></li>
+</ul>
+</li>
+<li>Support for serving static resources, including support for WebJars (covered <a class="link"   href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#web.servlet.spring-mvc.static-content" >later in this document <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>).<ul>
+<li>支持提供静态资源,包含对 WebJars的支持</li>
+</ul>
+</li>
+<li>Automatic registration of <code>Converter</code>, <code>GenericConverter</code>, and <code>Formatter</code> beans.<ul>
+<li>自动注册<code>Converter</code>,<code>GenericConverter</code>和<code>Formatter</code></li>
+</ul>
+</li>
+<li>Support for <code>HttpMessageConverters</code> (covered <a class="link"   href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#web.servlet.spring-mvc.message-converters" >later in this document <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>).<ul>
+<li>支持<code>HttpMessageConverters</code></li>
+</ul>
+</li>
+<li>Automatic registration of <code>MessageCodesResolver</code> (covered <a class="link"   href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#web.servlet.spring-mvc.message-codes" >later in this document <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>).<ul>
+<li>自动注册<code>MessageCodesResvoler</code></li>
+</ul>
+</li>
+<li>Static <code>index.html</code> support.<ul>
+<li>支持静态<code>index.html</code>页面</li>
+</ul>
+</li>
+<li>Automatic use of a <code>ConfigurableWebBindingInitializer</code> bean (covered <a class="link"   href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#web.servlet.spring-mvc.binding-initializer" >later in this document <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>).<ul>
+<li>自动使用<code>ConfigurableWebBindingInitializer</code></li>
+</ul>
+</li>
+</ul>
+<p>If you want to keep those Spring Boot MVC customizations and make more <a class="link"   href="https://docs.spring.io/spring-framework/reference/6.1/web/webmvc.html" >MVC customizations <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> (interceptors, formatters, view controllers, and other features), you can add your own <code>@Configuration</code> class of type <code>WebMvcConfigurer</code> but <strong>without</strong> <code>@EnableWebMvc</code>.</p>
+<ul>
+<li><blockquote>
+<p>不使用<code>EnableWebMvc</code>注解. 使用<code>Configuration</code>+<code>WebConfigurer</code>自定义规则</p>
+</blockquote>
+</li>
+</ul>
+<p>If you want to provide custom instances of <code>RequestMappingHandlerMapping</code>, <code>RequestMappingHandlerAdapter</code>, or <code>ExceptionHandlerExceptionResolver</code>, and still keep the Spring Boot MVC customizations, you can declare a bean of type <code>WebMvcRegistrations</code> and use it to provide custom instances of those components. The custom instances will be subject to further initialization and configuration by Spring MVC. To participate in, and if desired, override that subsequent processing, a <code>WebMvcConfigurer</code> should be used.</p>
+<ul>
+<li><blockquote>
+<p>声明<code>WebMvcRegistrations</code>改变默认底层组件</p>
+</blockquote>
+</li>
+</ul>
+<p>If you do not want to use the auto-configuration and want to take complete control of Spring MVC, add your own <code>@Configuration</code> annotated with <code>@EnableWebMvc</code>. Alternatively, add your own <code>@Configuration</code>-annotated <code>DelegatingWebMvcConfiguration</code> as described in the Javadoc of <code>@EnableWebMvc</code>.</p>
+<ul>
+<li><blockquote>
+<p>使用<code>@EnableMvc</code>+<code>@Configuration</code>+<code>DelegatingWebMvcConfiguration</code>全面接管 SpringMvc</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="静态资源访问"><a href="#静态资源访问" class="headerlink" title="静态资源访问"></a>静态资源访问</h4>]]></content>
       <categories>
         <category>SpringBoot2</category>
         <category>Basic</category>
