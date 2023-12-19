@@ -7272,4 +7272,134 @@ sudo systemctl restart docker
         <tag>SpringBoot2</tag>
       </tags>
   </entry>
+  <entry>
+    <title>SpringBoot2整合Evnet And Listener</title>
+    <url>/GSSBlog/2023/12/19/1.SpringBoot%E6%95%B4%E5%90%88Event%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="SpringBoot整合Evnet-And-Listener"><a href="#SpringBoot整合Evnet-And-Listener" class="headerlink" title="SpringBoot整合Evnet And Listener"></a>SpringBoot整合Evnet And Listener</h1><blockquote>
+<p>Spring 事件机制使用<code>观察者模式</code>来传递事件和消息.</p>
+<p>使用<code>ApplicationEvent</code>类来发布事件,使用<code>ApplicationListener</code>接口来监听事件</p>
+<p>当事件发生时,所有注册的<code>ApplicationListener</code>都会得到消息.</p>
+<p>事件用于在松耦合的组件之间交换信息,由于发布者和订阅者之间没有直接耦合,因此可以在不影响发布者的情况下修改订阅者,反之亦然.</p>
+</blockquote>
+<p><a href="/GSSBlog/2023/12/19/ApplicationContext%E5%92%8CApplicationEventPublisher%E5%8F%91%E5%B8%83%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%8C%BA%E5%88%AB/index.html">Spring中使用不同方法发布事件</a></p>
+]]></content>
+      <categories>
+        <category>SpringBoot2</category>
+        <category>Basic</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot2</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot2 Event publisher</title>
+    <url>/GSSBlog/2023/12/19/ApplicationContext%E5%92%8CApplicationEventPublisher%E5%8F%91%E5%B8%83%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h1 id="SpringBoot-Event-Publisher"><a href="#SpringBoot-Event-Publisher" class="headerlink" title="SpringBoot Event Publisher"></a>SpringBoot Event Publisher</h1><blockquote>
+<p><code>ApplicationContext</code>和<code>ApplicationEventPublisher</code>都是作为<code>event</code>事件的发布方法,他们之间的区别在哪呢</p>
+</blockquote>
+<h2 id="两者差异对照表"><a href="#两者差异对照表" class="headerlink" title="两者差异对照表"></a>两者差异对照表</h2><table>
+<thead>
+<tr>
+<th>区别</th>
+<th>ApplicationContext</th>
+<th>ApplicationEventPublisher</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>返回值</td>
+<td>void</td>
+<td>ApplicationEvent</td>
+</tr>
+<tr>
+<td>使用场景</td>
+<td>一般用于在ApplicationContext中发布事件</td>
+<td>一般用于在任意位置发布事件</td>
+</tr>
+<tr>
+<td>优势</td>
+<td>可以直接使用 ApplicationContext 对象,无需额外获取 ApplicationEventPublisher 对象</td>
+<td>可以灵活控制事件的传播方式</td>
+</tr>
+<tr>
+<td>发布主体</td>
+<td>事件发布主体是 ApplicationContext</td>
+<td>发布事件的主体是任何实现了 ApplicationEventPublisher 接口的对象</td>
+</tr>
+<tr>
+<td>发布事件范围</td>
+<td>默认会将事件发布给所有注册了该事件类型的监听器</td>
+<td>可以指定发布事件的范围,可以是单个监听器,多个监听器,也可以是所有监听器</td>
+</tr>
+<tr>
+<td>发布事件的异步性</td>
+<td>默认是同步发布事件,即时间发布完毕后,才会继续执行后续逻辑</td>
+<td>可以指定发布事件的异步性,可以是同步发布事件,也可以是异步发布事件</td>
+</tr>
+</tbody></table>
+<h2 id="扩展ApplicationEventPublisher的使用"><a href="#扩展ApplicationEventPublisher的使用" class="headerlink" title="扩展ApplicationEventPublisher的使用"></a>扩展<code>ApplicationEventPublisher</code>的使用</h2><ul>
+<li><h3 id="ApplicationEventPublisher-publishEvent发布事件范围"><a href="#ApplicationEventPublisher-publishEvent发布事件范围" class="headerlink" title="ApplicationEventPublisher.publishEvent发布事件范围"></a><code>ApplicationEventPublisher.publishEvent</code>发布事件范围</h3></li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">ApplicationEventPublisher</span> <span class="variable">publisher</span> <span class="operator">=</span> ... ;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发布事件给所有监听器</span></span><br><span class="line">publisher.publishEvent(<span class="keyword">new</span> <span class="title class_">MyEvent</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发布事件给单个监听器</span></span><br><span class="line">publisher.publishEvent(<span class="keyword">new</span> <span class="title class_">MyEvent</span>() , myListener);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发布事件给多个监听器</span></span><br><span class="line">Set&lt;ApplicationListener&gt; listeners = ... ;</span><br><span class="line">publisher.publishEvent(<span class="keyword">new</span> <span class="title class_">MyEvent</span>() , listeners);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><h3 id="ApplicationEventPublisher-publishEvent发布事件的异步性"><a href="#ApplicationEventPublisher-publishEvent发布事件的异步性" class="headerlink" title="ApplicationEventPublisher.publishEvent发布事件的异步性"></a><code>ApplicationEventPublisher.publishEvent</code>发布事件的异步性</h3></li>
+</ul>
+<blockquote>
+<p>同步事件可能导致发布事件的线程在所有监听器完成前被阻塞</p>
+<p>而异步事件,发布事件的线程不会等待所有监听器执行完毕,而是继续执行后续操作;监听器的执行将在后台线程中进行,从而不影响发布事件的线程</p>
+</blockquote>
+<p><strong>Event事件</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyEvent</span> <span class="keyword">extends</span> <span class="title class_">ApplicationEvent</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Create a new &#123;<span class="doctag">@code</span> ApplicationEvent&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> source the object on which the event initially occurred or with</span></span><br><span class="line"><span class="comment">     *               which the event is associated (never &#123;<span class="doctag">@code</span> null&#125;)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MyEvent</span><span class="params">(Object source, String message)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(source);</span><br><span class="line">        <span class="built_in">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getMessage</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 同步事件</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyAsyncEvent</span> <span class="keyword">extends</span> <span class="title class_">MyEvent</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Create a new &#123;<span class="doctag">@code</span> ApplicationEvent&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> source  the object on which the event initially occurred or with</span></span><br><span class="line"><span class="comment">     *                which the event is associated (never &#123;<span class="doctag">@code</span> null&#125;)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MyAsyncEvent</span><span class="params">(Object source, String message)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(source, message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 异步事件</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MySyncEvent</span> <span class="keyword">extends</span> <span class="title class_">MyEvent</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Create a new &#123;<span class="doctag">@code</span> ApplicationEvent&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> source  the object on which the event initially occurred or with</span></span><br><span class="line"><span class="comment">     *                which the event is associated (never &#123;<span class="doctag">@code</span> null&#125;)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MySyncEvent</span><span class="params">(Object source, String message)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(source, message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="事件发布"><a href="#事件发布" class="headerlink" title="事件发布"></a><strong>事件发布</strong></h4><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyEventPublisher</span> <span class="keyword">implements</span> <span class="title class_">ApplicationEventPublisherAware</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ApplicationEventPublisher eventPublisher;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setApplicationEventPublisher</span><span class="params">(ApplicationEventPublisher applicationEventPublisher)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.eventPublisher = applicationEventPublisher;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 同步发布事件</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">publishSyncEvent</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        <span class="type">MySyncEvent</span> <span class="variable">mySyncEvent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MySyncEvent</span>(<span class="built_in">this</span>, message);</span><br><span class="line">        eventPublisher.publishEvent(mySyncEvent);</span><br><span class="line">        System.out.println(<span class="string">&quot;After publishing synchronous event&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 异步发布事件</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">publishAsyncEvent</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        <span class="type">MyAsyncEvent</span> <span class="variable">myAsyncEvent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyAsyncEvent</span>(<span class="built_in">this</span>, message);</span><br><span class="line">        eventPublisher.publishEvent(myAsyncEvent);</span><br><span class="line">        System.out.println(<span class="string">&quot;After publishing asynchronous event&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 后续可以自己改造成 spring 容器管理 Bean注入Event</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>事件监听</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyEventListener</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleSyncEvent</span><span class="params">(MySyncEvent event)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Handling synchronous event: &quot;</span> + event.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Async</span></span><br><span class="line">    <span class="meta">@EventListener</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleAsyncEvent</span><span class="params">(MyAsyncEvent event)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Handling asynchronous event: &quot;</span> + event.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>测试 案例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListenerController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MyEventPublisher myEventPublisher;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/syncPush&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">syncPush</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">latch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">1</span>);</span><br><span class="line">        myEventPublisher.publishSyncEvent(<span class="string">&quot;同步消息&quot;</span>);</span><br><span class="line">        latch.await(<span class="number">5</span>, TimeUnit.SECONDS);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/asyncPush&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">asyncPush</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">latch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">1</span>);</span><br><span class="line">        myEventPublisher.publishAsyncEvent(<span class="string">&quot;异步消息&quot;</span>);</span><br><span class="line">        latch.await(<span class="number">5</span>, TimeUnit.SECONDS);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>SpringBoot2</category>
+        <category>Basic</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot2</tag>
+      </tags>
+  </entry>
 </search>

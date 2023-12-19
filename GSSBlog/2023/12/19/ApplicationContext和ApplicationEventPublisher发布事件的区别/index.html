@@ -13,20 +13,20 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/12/07/springboot中配置文件加载顺序/"/>
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/12/19/applicationcontext和applicationeventpublisher发布事件的区别/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="SpringBoot配置优先级和配置覆盖 bootstrap(.properties&#x2F;.yml) 文件是SpringBoot的默认配置文件,它的加载时间相比较于application(.properties&#x2F;.yml)更早 application(.properties&#x2F;.yml)和bootstrap(.properties&#x2F;.yml)都是SpringBoot的默认配">
+        <meta name="description" content="SpringBoot Event Publisher ApplicationContext和ApplicationEventPublisher都是作为event事件的发布方法,他们之间的区别在哪呢  两者差异对照表   区别 ApplicationContext ApplicationEventPublisher    返回值 void ApplicationEvent   使用场景 一般用于在A">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Properties与Yaml加载顺序">
-<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/12/07/SpringBoot%E4%B8%AD%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/index.html">
+<meta property="og:title" content="SpringBoot2 Event publisher">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/12/19/ApplicationContext%E5%92%8CApplicationEventPublisher%E5%8F%91%E5%B8%83%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%8C%BA%E5%88%AB/index.html">
 <meta property="og:site_name" content="igxiaoshan&#39;s Blog">
-<meta property="og:description" content="SpringBoot配置优先级和配置覆盖 bootstrap(.properties&#x2F;.yml) 文件是SpringBoot的默认配置文件,它的加载时间相比较于application(.properties&#x2F;.yml)更早 application(.properties&#x2F;.yml)和bootstrap(.properties&#x2F;.yml)都是SpringBoot的默认配">
+<meta property="og:description" content="SpringBoot Event Publisher ApplicationContext和ApplicationEventPublisher都是作为event事件的发布方法,他们之间的区别在哪呢  两者差异对照表   区别 ApplicationContext ApplicationEventPublisher    返回值 void ApplicationEvent   使用场景 一般用于在A">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-12-07T03:18:52.274Z">
-<meta property="article:modified_time" content="2023-12-12T08:08:09.397Z">
+<meta property="article:published_time" content="2023-12-19T02:23:04.938Z">
+<meta property="article:modified_time" content="2023-12-19T06:54:22.744Z">
 <meta property="article:author" content="igxiaoshan">
 <meta property="article:tag" content="SpringBoot2">
 <meta name="twitter:card" content="summary">
@@ -41,7 +41,7 @@
     
     <title>
         
-            Properties与Yaml加载顺序 -
+            SpringBoot2 Event publisher -
         
         igxiaoshan&#39;s Blog
     </title>
@@ -311,7 +311,7 @@
 
         <div class="article-title">
             
-                <h1 class="article-title-regular">Properties与Yaml加载顺序</h1>
+                <h1 class="article-title-regular">SpringBoot2 Event publisher</h1>
             
             </div>
             
@@ -333,15 +333,15 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2023-12-07 11:18:52</span>
-        <span class="mobile">2023-12-07 11:18:52</span>
+        <span class="desktop">2023-12-19 10:23:04</span>
+        <span class="mobile">2023-12-19 10:23:04</span>
         <span class="hover-info">创建</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2023-12-12 16:08:09</span>
-            <span class="mobile">2023-12-12 16:08:09</span>
+            <span class="desktop">2023-12-19 14:54:22</span>
+            <span class="mobile">2023-12-19 14:54:22</span>
             <span class="hover-info">更新</span>
         </span>
     
@@ -389,12 +389,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.1k 字</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>826 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>4 分钟</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>3 分钟</span>
         </span>
     
     
@@ -413,118 +413,82 @@
 
 
         <div class="article-content markdown-body">
-            <h1 id="SpringBoot配置优先级和配置覆盖"><a href="#SpringBoot配置优先级和配置覆盖" class="headerlink" title="SpringBoot配置优先级和配置覆盖"></a>SpringBoot配置优先级和配置覆盖</h1><blockquote>
-<p><code>bootstrap</code>(.properties&#x2F;.yml) 文件是<code>SpringBoot</code>的<code>默认配置文件</code>,它的<code>加载时间相比较于application(.properties/.yml)更早</code></p>
-<p><code>application</code>(.properties&#x2F;.yml)和<code>bootstrap</code>(.properties&#x2F;.yml)都是<code>SpringBoot</code>的默认配置文件,不同的是定位不同</p>
-<p><code>bootstrap</code>是<code>系统级别</code>的参数配置,这些参数<code>一般是不变动的</code></p>
-<p><code>application</code>是<code>应用级别</code>的参数配置</p>
+            <h1 id="SpringBoot-Event-Publisher"><a href="#SpringBoot-Event-Publisher" class="headerlink" title="SpringBoot Event Publisher"></a>SpringBoot Event Publisher</h1><blockquote>
+<p><code>ApplicationContext</code>和<code>ApplicationEventPublisher</code>都是作为<code>event</code>事件的发布方法,他们之间的区别在哪呢</p>
 </blockquote>
-<h2 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h2><blockquote>
-<p>在<code>同一级目录下</code>,会比较前缀 <code>bootstrap</code>,<code>application</code>, 其中<code>bootstrap</code>比<code>application</code>的优先级高; 其次比较后缀<code>.properties</code>,<code>.yml</code>,其中<code>.properties</code>比<code>.yml</code>优先级高</p>
-<p><code>bootstrap.properties &gt; bootstrap.yml &gt; application.properties &gt; application.yml</code></p>
-</blockquote>
-<h2 id="配置覆盖"><a href="#配置覆盖" class="headerlink" title="配置覆盖"></a>配置覆盖</h2><ul>
-<li>当同一个配置属性在<code>bootstrap.properties</code>和<code>bootstrap.yml</code>文件中都存在时,<code>properties</code>中的配置会被加载,而忽略<code>yml</code>中的配置<code>(即优先级高的配置覆盖优先级低的配置)</code>; 不同配置则互补. 此处<code>application</code>中<code>.properties</code>和<code>.yml</code>同理</li>
-<li>当同一个配置属性在<code>bootstrap</code>和<code>application</code>文件中都存在时,虽然优先级会加载<code>bootstrap</code>,但是会被<code>application</code>中的配置覆盖,此时则变成了<code>低优先级覆盖高优先级的配置</code></li>
-<li>当同一个配置属性在<code>bootstrap.properties</code>,<code>bootstrap.yml</code>,<code>application.properties</code>,<code>application.yml</code>中都存在时,<code>application.properties</code>里的配置文件<code>一定会覆盖</code>其他配置文件;首先<code>遵循第二点</code>;虽然<code>bootstrap</code>会被优先加载,但是会被<code>application</code>中的配置覆盖;此时就剩下<code>application.properties</code>和<code>application.yml</code>配置文件,此时<code>遵循第一点</code>(即优先级高的配置覆盖优先级低的配置);所以<code>application.properties</code>的配置会覆盖掉其他配置文件</li>
+<h2 id="两者差异对照表"><a href="#两者差异对照表" class="headerlink" title="两者差异对照表"></a>两者差异对照表</h2><table>
+<thead>
+<tr>
+<th>区别</th>
+<th>ApplicationContext</th>
+<th>ApplicationEventPublisher</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>返回值</td>
+<td>void</td>
+<td>ApplicationEvent</td>
+</tr>
+<tr>
+<td>使用场景</td>
+<td>一般用于在ApplicationContext中发布事件</td>
+<td>一般用于在任意位置发布事件</td>
+</tr>
+<tr>
+<td>优势</td>
+<td>可以直接使用 ApplicationContext 对象,无需额外获取 ApplicationEventPublisher 对象</td>
+<td>可以灵活控制事件的传播方式</td>
+</tr>
+<tr>
+<td>发布主体</td>
+<td>事件发布主体是 ApplicationContext</td>
+<td>发布事件的主体是任何实现了 ApplicationEventPublisher 接口的对象</td>
+</tr>
+<tr>
+<td>发布事件范围</td>
+<td>默认会将事件发布给所有注册了该事件类型的监听器</td>
+<td>可以指定发布事件的范围,可以是单个监听器,多个监听器,也可以是所有监听器</td>
+</tr>
+<tr>
+<td>发布事件的异步性</td>
+<td>默认是同步发布事件,即时间发布完毕后,才会继续执行后续逻辑</td>
+<td>可以指定发布事件的异步性,可以是同步发布事件,也可以是异步发布事件</td>
+</tr>
+</tbody></table>
+<h2 id="扩展ApplicationEventPublisher的使用"><a href="#扩展ApplicationEventPublisher的使用" class="headerlink" title="扩展ApplicationEventPublisher的使用"></a>扩展<code>ApplicationEventPublisher</code>的使用</h2><ul>
+<li><h3 id="ApplicationEventPublisher-publishEvent发布事件范围"><a href="#ApplicationEventPublisher-publishEvent发布事件范围" class="headerlink" title="ApplicationEventPublisher.publishEvent发布事件范围"></a><code>ApplicationEventPublisher.publishEvent</code>发布事件范围</h3></li>
 </ul>
-<h2 id="代码验证"><a href="#代码验证" class="headerlink" title="代码验证"></a>代码验证</h2><h3 id="验证结论一"><a href="#验证结论一" class="headerlink" title="验证结论一"></a>验证结论一</h3><blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ApplicationEventPublisher</span> <span class="variable">publisher</span> <span class="operator">=</span> ... ;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发布事件给所有监听器</span></span><br><span class="line">publisher.publishEvent(<span class="keyword">new</span> <span class="title class_">MyEvent</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发布事件给单个监听器</span></span><br><span class="line">publisher.publishEvent(<span class="keyword">new</span> <span class="title class_">MyEvent</span>() , myListener);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发布事件给多个监听器</span></span><br><span class="line">Set&lt;ApplicationListener&gt; listeners = ... ;</span><br><span class="line">publisher.publishEvent(<span class="keyword">new</span> <span class="title class_">MyEvent</span>() , listeners);</span><br></pre></td></tr></table></figure></div>
+
 <ul>
-<li>先决条件<ul>
-<li>准备<code>bootstrap.properties</code>和<code>bootstrap.yml</code>配置文件</li>
-<li>采用端口验证</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### bootstrap.properties</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">7071</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### bootstrap.yml</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">7070</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="highlight-container" data-rel="Console"><figure class="iseeu highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO 16724 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 7071 (http) with context path &#x27;&#x27;</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>结论</strong></p>
-<blockquote>
-<p>启动端口为:<code>7071</code>;配置文件<code>前缀</code>相同的情况下,<code>优先级高的配置覆盖优先级低的配置</code></p>
-</blockquote>
-<h3 id="验证结论二"><a href="#验证结论二" class="headerlink" title="验证结论二"></a>验证结论二</h3><blockquote>
-<ul>
-<li>先决条件<ul>
-<li>准备<code>bootstrap.properties</code>和<code>application.properties</code>配置文件</li>
-<li>采用端口验证</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### bootstrap.properties</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">7071</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### application.properties</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">9091</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="highlight-container" data-rel="Console"><figure class="iseeu highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO 17812 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9091 (http) with context path &#x27;&#x27;</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>结论</strong></p>
-<blockquote>
-<p>启动端口为:<code>9091</code>;不同前缀的<code>properties</code>配置文件中存在相同配置时,优先加载<code>bootstrap</code>但是会被<code>application</code>中的配置<code>覆盖</code></p>
-</blockquote>
-<h3 id="验证结论三"><a href="#验证结论三" class="headerlink" title="验证结论三"></a>验证结论三</h3><blockquote>
-<ul>
-<li>先决条件<ul>
-<li>准备<code>bootstrap.properties</code>,<code>bootstrap.yml</code>,<code>application.properties</code>,<code>application.yml</code>配置文件</li>
-<li>采用端口验证</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### bootstrap.properties</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">7071</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### bootstrap.yml</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">7070</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### application.properties</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">9091</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### application.yml</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">9090</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="highlight-container" data-rel="Console"><figure class="iseeu highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO 10652 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9091 (http) with context path &#x27;&#x27;</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>结论</strong></p>
-<blockquote>
-<p>启动端口为:<code>9091</code>;当同一个配置属性在四个配置文件中都存在,<code>application.properties</code>的配置<code>一定</code>会覆盖其他配置文件</p>
-</blockquote>
-<h2 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h2><h3 id="SpringBoot-的多环境配置"><a href="#SpringBoot-的多环境配置" class="headerlink" title="SpringBoot 的多环境配置"></a>SpringBoot 的多环境配置</h3><blockquote>
-<p>在<code>SpringBoot</code>中,使用<code>application.profiles.active</code>属性来指定激活的环境</p>
-<p>当启动 Spring Boot 应用程序时,Spring Boot 会加载 <code>application.yml</code>文件,以及所有<code>application-&#123;profile&#125;.yml</code>命名的配置文件</p>
-</blockquote>
-<blockquote>
-<p>在<code>application.profiles.active=prod</code>的情况下; Spring Boot 会加载<code>application.yml</code>和<code>application-prod.yml</code>两个配置文件.</p>
-<p>这两个配置文件中的所有属性都会被加载,如果存在相同的属性,则<code>application-prod.yml</code>中的属性会覆盖<code>application.yml</code>中的属性</p>
-</blockquote>
-<p><strong>SpringBoot多环境配置原理</strong></p>
-<ul>
-<li>首先加载<code>application.yml</code>文件</li>
-<li>然后加载所有以<code>application-&#123;profile&#125;.yml</code>命名的配置文件,其中<code>&#123;profile&#125;</code>是激活的环境</li>
-<li>最后,将所有配置文件中的属性合并成一个属性集合.如果存在相同的属性,则<code>&#123;profile&#125;</code>中的属性会覆盖<code>application.yml</code>中的属性</li>
+<li><h3 id="ApplicationEventPublisher-publishEvent发布事件的异步性"><a href="#ApplicationEventPublisher-publishEvent发布事件的异步性" class="headerlink" title="ApplicationEventPublisher.publishEvent发布事件的异步性"></a><code>ApplicationEventPublisher.publishEvent</code>发布事件的异步性</h3></li>
 </ul>
 <blockquote>
-<p>因此,在<code>application.profiles.active=prod</code>的情况下,<code>application.yml</code>和<code>application-prod.yml</code>两个配置都会被加载,如果存在相同的属性,则<code>application-prod.yml</code>中的属性会覆盖<code>application.yml</code>中的属性</p>
+<p>同步事件可能导致发布事件的线程在所有监听器完成前被阻塞</p>
+<p>而异步事件,发布事件的线程不会等待所有监听器执行完毕,而是继续执行后续操作;监听器的执行将在后台线程中进行,从而不影响发布事件的线程</p>
 </blockquote>
-<p><strong>举例说明</strong></p>
-<blockquote>
-<ul>
-<li>先决条件<ul>
-<li>准备<code>application.yml</code>和<code>application-prod.yml</code>两个文件</li>
-<li>采用端口验证</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### application.yml</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure></div>
+<p><strong>Event事件</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyEvent</span> <span class="keyword">extends</span> <span class="title class_">ApplicationEvent</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Create a new &#123;<span class="doctag">@code</span> ApplicationEvent&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> source the object on which the event initially occurred or with</span></span><br><span class="line"><span class="comment">     *               which the event is associated (never &#123;<span class="doctag">@code</span> null&#125;)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MyEvent</span><span class="params">(Object source, String message)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(source);</span><br><span class="line">        <span class="built_in">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getMessage</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 同步事件</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyAsyncEvent</span> <span class="keyword">extends</span> <span class="title class_">MyEvent</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Create a new &#123;<span class="doctag">@code</span> ApplicationEvent&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> source  the object on which the event initially occurred or with</span></span><br><span class="line"><span class="comment">     *                which the event is associated (never &#123;<span class="doctag">@code</span> null&#125;)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MyAsyncEvent</span><span class="params">(Object source, String message)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(source, message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 异步事件</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MySyncEvent</span> <span class="keyword">extends</span> <span class="title class_">MyEvent</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Create a new &#123;<span class="doctag">@code</span> ApplicationEvent&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> source  the object on which the event initially occurred or with</span></span><br><span class="line"><span class="comment">     *                which the event is associated (never &#123;<span class="doctag">@code</span> null&#125;)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> message</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MySyncEvent</span><span class="params">(Object source, String message)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(source, message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### application-prod.yml</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">9090</span></span><br></pre></td></tr></table></figure></div>
 
-<blockquote>
-<p>当<code>application.profiles.active=prod</code></p>
-</blockquote>
-<p><strong>结论</strong></p>
-<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SpringBoot应用程序启动的端口号是9090</span></span><br><span class="line">INFO <span class="number">10652</span> --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on <span class="title function_">port</span><span class="params">(s)</span>: <span class="number">9090</span> (http) with context path <span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure></div>
+
+<h4 id="事件发布"><a href="#事件发布" class="headerlink" title="事件发布"></a><strong>事件发布</strong></h4><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyEventPublisher</span> <span class="keyword">implements</span> <span class="title class_">ApplicationEventPublisherAware</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ApplicationEventPublisher eventPublisher;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setApplicationEventPublisher</span><span class="params">(ApplicationEventPublisher applicationEventPublisher)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.eventPublisher = applicationEventPublisher;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 同步发布事件</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">publishSyncEvent</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        <span class="type">MySyncEvent</span> <span class="variable">mySyncEvent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MySyncEvent</span>(<span class="built_in">this</span>, message);</span><br><span class="line">        eventPublisher.publishEvent(mySyncEvent);</span><br><span class="line">        System.out.println(<span class="string">&quot;After publishing synchronous event&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 异步发布事件</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">publishAsyncEvent</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        <span class="type">MyAsyncEvent</span> <span class="variable">myAsyncEvent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyAsyncEvent</span>(<span class="built_in">this</span>, message);</span><br><span class="line">        eventPublisher.publishEvent(myAsyncEvent);</span><br><span class="line">        System.out.println(<span class="string">&quot;After publishing asynchronous event&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 后续可以自己改造成 spring 容器管理 Bean注入Event</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>事件监听</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyEventListener</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@EventListener</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleSyncEvent</span><span class="params">(MySyncEvent event)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Handling synchronous event: &quot;</span> + event.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Async</span></span><br><span class="line">    <span class="meta">@EventListener</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleAsyncEvent</span><span class="params">(MyAsyncEvent event)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Handling asynchronous event: &quot;</span> + event.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>测试 案例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListenerController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MyEventPublisher myEventPublisher;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/syncPush&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">syncPush</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">latch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">1</span>);</span><br><span class="line">        myEventPublisher.publishSyncEvent(<span class="string">&quot;同步消息&quot;</span>);</span><br><span class="line">        latch.await(<span class="number">5</span>, TimeUnit.SECONDS);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/asyncPush&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">asyncPush</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">CountDownLatch</span> <span class="variable">latch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">1</span>);</span><br><span class="line">        myEventPublisher.publishAsyncEvent(<span class="string">&quot;异步消息&quot;</span>);</span><br><span class="line">        latch.await(<span class="number">5</span>, TimeUnit.SECONDS);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
 
 
 
@@ -568,29 +532,14 @@
         
             <div class="article-nav">
                 
-                    <div class="article-prev">
-                        <a class="prev"
-                        rel="prev"
-                        href="/GSSBlog/2023/12/19/1.SpringBoot%E6%95%B4%E5%90%88Event%E4%BD%BF%E7%94%A8/"
-                        >
-                            <span class="left arrow-icon flex justify-center items-center">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">SpringBoot2整合Evnet And Listener</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next">
                         <a class="next"
                         rel="next"
-                        href="/GSSBlog/2023/12/07/2.SpringBoot2%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/"
+                        href="/GSSBlog/2023/12/19/1.SpringBoot%E6%95%B4%E5%90%88Event%E4%BD%BF%E7%94%A8/"
                         >
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">SpringBoot2核心技术</span>
+                                <span class="post-nav-title-item">SpringBoot2整合Evnet And Listener</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex justify-center items-center">
@@ -611,8 +560,8 @@
             <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">此页目录</div>
-        <div class="page-title">Properties与Yaml加载顺序</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot%E9%85%8D%E7%BD%AE%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E9%85%8D%E7%BD%AE%E8%A6%86%E7%9B%96"><span class="nav-text">SpringBoot配置优先级和配置覆盖</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7"><span class="nav-text">优先级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%A6%86%E7%9B%96"><span class="nav-text">配置覆盖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E9%AA%8C%E8%AF%81"><span class="nav-text">代码验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E8%AE%BA%E4%B8%80"><span class="nav-text">验证结论一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E8%AE%BA%E4%BA%8C"><span class="nav-text">验证结论二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BB%93%E8%AE%BA%E4%B8%89"><span class="nav-text">验证结论三</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%8A%A0"><span class="nav-text">附加</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringBoot-%E7%9A%84%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-text">SpringBoot 的多环境配置</span></a></li></ol></li></ol></li></ol>
+        <div class="page-title">SpringBoot2 Event publisher</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot-Event-Publisher"><span class="nav-text">SpringBoot Event Publisher</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E8%80%85%E5%B7%AE%E5%BC%82%E5%AF%B9%E7%85%A7%E8%A1%A8"><span class="nav-text">两者差异对照表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95ApplicationEventPublisher%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">扩展ApplicationEventPublisher的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationEventPublisher-publishEvent%E5%8F%91%E5%B8%83%E4%BA%8B%E4%BB%B6%E8%8C%83%E5%9B%B4"><span class="nav-text">ApplicationEventPublisher.publishEvent发布事件范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationEventPublisher-publishEvent%E5%8F%91%E5%B8%83%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%BC%82%E6%AD%A5%E6%80%A7"><span class="nav-text">ApplicationEventPublisher.publishEvent发布事件的异步性</span></a></li></ol></li></ol></li></ol>
 
     </div>
 </div>
