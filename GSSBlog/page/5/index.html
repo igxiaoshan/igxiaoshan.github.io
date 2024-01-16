@@ -382,20 +382,20 @@
                 <div class="author flex flex-col justify-center my-2.5 mx-0">
                     <div class="name">igxiaoshan</div>
                     
-                        <div class="label">Lv4</div>
+                        <div class="label">Lv5</div>
                     
                 </div>
                 <div class="statistics">
                     <a class="item" href="/GSSBlog/tags">
-                        <div class="number">16</div>
+                        <div class="number">18</div>
                         <div class="label">标签</div>
                     </a>
                     <a class="item" href="/GSSBlog/categories">
-                        <div class="number">23</div>
+                        <div class="number">25</div>
                         <div class="label">分类</div>
                     </a>
                     <a class="item" href="/GSSBlog/archives">
-                        <div class="number">62</div>
+                        <div class="number">74</div>
                         <div class="label">文章</div>
                     </a>
                 </div>
@@ -422,21 +422,102 @@
                 
 
                 <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/6.0docker%E9%83%A8%E7%BD%B2%E7%AE%80%E5%8D%95%E6%9C%8D%E5%8A%A1/">
-                        Docker部署常规服务
+                    <a href="/GSSBlog/2023/10/30/1.SQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/">
+                        MySQL查询优化
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        docker部署tomcat12345678910111213## 查找镜像docker search --limit 5 tomcat## 拉取镜像docker pull tomcat## 查看镜像docker images## 运行镜像docke...
+                        1.1添加索引1234567891011121314151617181920211.普通索引 添加INDEXALTER TABLE table_name ADD INDEX index_name ( column )下面演示下给user表的name字...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:44:55 GMT+0800">
+                
+                    2023-10-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/">MySQL</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/Introduction/">Introduction</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/GSSBlog/tags/MySQL/">MySQL</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/GSSBlog/2023/10/30/1.SQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/">阅读全文<span class="seo-reader-text">MySQL查询优化</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/GSSBlog/2023/10/30/6.fastdfs%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">
+                        Docker安装FastDFS
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 拉取镜像1docker pull morunchang/fastdfs
+
+
+使用 docker images查看是否成功
+
+2 运行tracker1docker run -d --name tracker --net=host morunchan...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:34:49 GMT+0800">
                 
                     2023-10-30
                 
@@ -467,394 +548,11 @@
                         <li>
                             
                             <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/GSSBlog/2023/10/30/6.0docker%E9%83%A8%E7%BD%B2%E7%AE%80%E5%8D%95%E6%9C%8D%E5%8A%A1/">阅读全文<span class="seo-reader-text">Docker部署常规服务</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/8.0docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4/">
-                        Docker部署redis集群
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        分布式存储案例cluster(集群)模式-docker版哈希槽分区进行亿级数据存储
-经典问题1~2亿条数据需要缓存,请问如何设计这个存储案例
-
-单机单台100%不可能,必须用分布式存储
-搭建redis分布式存储架构
-
-解决方案
-
-哈希取余分区
-
-
-
-...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
-                
-                    2023-10-30
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/GSSBlog/2023/10/30/8.0docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4/">阅读全文<span class="seo-reader-text">Docker部署redis集群</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/8.1docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88%E9%99%84%E5%BD%951/">
-                        详细说明哈希槽增加节点分配机制
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        哈希槽重新分配
-
-
-哈希槽重新分配1
-
-
-哈希槽重新分配2
-
-
-哈希槽重新分配3
-
-
-哈希槽重新分配4
-
-
-
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
-                
-                    2023-10-30
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/GSSBlog/2023/10/30/8.1docker%E9%83%A8%E7%BD%B2redis%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88%E9%99%84%E5%BD%951/">阅读全文<span class="seo-reader-text">详细说明哈希槽增加节点分配机制</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/9.docker%E8%A7%A3%E6%9E%90Dockerfile/">
-                        Dockerfile解析
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        
-Dockerfile用来构建docker镜像的文本文件,是有一条条构建镜像所需的指令和参数构成的脚本.
-
-
-架构图
-
-
-
-官网
-
-https://docs.docker.com/engine/reference/builder/ 
-
-
-
-Docke...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
-                
-                    2023-10-30
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/GSSBlog/2023/10/30/9.docker%E8%A7%A3%E6%9E%90Dockerfile/">阅读全文<span class="seo-reader-text">Dockerfile解析</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/Nexus%E5%AE%B9%E5%99%A8%E5%8C%96%E9%83%A8%E7%BD%B2/">
-                        Nexus容器化部署
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        nexus太浪费性能了,一般配置玩不动…..
-
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
-                
-                    2023-10-30
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/GSSBlog/categories/Mvn/">Mvn</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/GSSBlog/tags/Mvn/">Mvn</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/GSSBlog/2023/10/30/Nexus%E5%AE%B9%E5%99%A8%E5%8C%96%E9%83%A8%E7%BD%B2/">阅读全文<span class="seo-reader-text">Nexus容器化部署</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/VsCode%E9%A6%96%E6%AC%A1%E5%AE%89%E8%A3%85code/">
-                        VsCode首次安装code
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        
-问题的前提
-
-在首次安装node(安装node之后需要重启电脑)之后,使用npm install指令的时候遇到问题和处理方式
-
-
-首先
-
-
-首先需要配置node的镜像(默认使用官方镜像厂库,国内会超时)
-
-12345### 查看厂库配置npm co...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
-                
-                    2023-10-30
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/GSSBlog/categories/Vscode/">Vscode</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/GSSBlog/tags/Vscode/">Vscode</a>&nbsp;
                         </li>
                     
                         <li>
                             | 
-                            <a href="/GSSBlog/tags/Node/">Node</a>&nbsp;
+                            <a href="/GSSBlog/tags/FastDFS/">FastDFS</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -862,7 +560,7 @@ Docke...
         
     </div>
 
-    <a href="/GSSBlog/2023/10/30/VsCode%E9%A6%96%E6%AC%A1%E5%AE%89%E8%A3%85code/">阅读全文<span class="seo-reader-text">VsCode首次安装code</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/GSSBlog/2023/10/30/6.fastdfs%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">阅读全文<span class="seo-reader-text">Docker安装FastDFS</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -876,28 +574,24 @@ Docke...
                 
 
                 <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/NodeJS%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/">
-                        Node.js版本管理工具NVM
+                    <a href="/GSSBlog/2023/10/30/7.linux%E4%B8%ADset%E5%91%BD%E4%BB%A4/">
+                        Linux中set命令
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        
-nvm（全称：node.js version management），是一个nodejs的版本管理工具，为解决node.js各种版本存在不兼容问题，可以使用nvm工具快速安装和切换不同版本的node.js。
+                        常用set命令属性
+set -o 查看所有属性
 
-
-官网
-
-
-nvm下载地址：https...
+123456789101112131415161718192021222324252627282930313233343536373839404142434445464748[root@CentOs7...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:34:49 GMT+0800">
                 
                     2023-10-30
                 
@@ -912,7 +606,7 @@ nvm下载地址：https...
                     
                         
                         <li>
-                            <a href="/GSSBlog/categories/Node/">Node</a>&nbsp;
+                            <a href="/GSSBlog/categories/Linux/">Linux</a>&nbsp;
                         </li>
                     
                     
@@ -927,7 +621,7 @@ nvm下载地址：https...
                     
                         <li>
                             
-                            <a href="/GSSBlog/tags/Node/">Node</a>&nbsp;
+                            <a href="/GSSBlog/tags/Linux/">Linux</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -935,7 +629,7 @@ nvm下载地址：https...
         
     </div>
 
-    <a href="/GSSBlog/2023/10/30/NodeJS%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/">阅读全文<span class="seo-reader-text">Node.js版本管理工具NVM</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/GSSBlog/2023/10/30/7.linux%E4%B8%ADset%E5%91%BD%E4%BB%A4/">阅读全文<span class="seo-reader-text">Linux中set命令</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -945,33 +639,33 @@ nvm下载地址：https...
                 
 
                 
-                    
-                
 
-                
-                    <div id="home-article-thumbnail" class="relative h-[150px] overflow-hidden rounded-t-[10.8px] md:rounded-t-large -m-5 mb-3 sm:-m-6 sm:mb-4 md:-m-7 md:mb-5">
-                        <a href="/GSSBlog/2023/10/30/hello-world/">
-                            <img src="/GSSBlog/baner/test_banner.jpg" alt="Hello World" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
                 
 
                 <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/hello-world/">
-                        Hello World
+                    <a href="/GSSBlog/2023/10/30/5.2.nginx%E9%85%8D%E7%BD%AE%E5%91%BD%E4%BB%A4%E5%90%AF%E5%8A%A8/">
+                        Nginx使用配置
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        Welcome to Hexo ! This is your very first post. Check documentation  for more info. If you get any problems when using Hexo, ...
+                        
+自定义一个nginx启动,重启.停止的脚本
+
+123# 新增一个文件 在主服务文件中vi /etc/init.d/igsshan_nginx## igsshan_nginx 是自定义文件
+
+
+编写 igsshan_nginx 文件
+
+1234567...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:33:21 GMT+0800">
                 
                     2023-10-30
                 
@@ -986,65 +680,7 @@ nvm下载地址：https...
                     
                         
                         <li>
-                            <a href="/GSSBlog/categories/%E5%85%B6%E4%BB%96/">其他</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-    </div>
-
-    <a href="/GSSBlog/2023/10/30/hello-world/">阅读全文<span class="seo-reader-text">Hello World</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/mvn%E6%8C%87%E4%BB%A4%E9%83%A8%E7%BD%B2%E5%88%B0%E8%BF%9C%E7%A8%8B/">
-                        Maven部署jar包到远程厂库Nexus
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        
-Maven官方文档
-
-将本地jar打包成pom推送到远程厂库
-123456789101112131415161718192021222324252627282930### install 官方指令mvn install:install-file -...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
-                
-                    2023-10-30
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/GSSBlog/categories/Mvn/">Mvn</a>&nbsp;
+                            <a href="/GSSBlog/categories/Nginx/">Nginx</a>&nbsp;
                         </li>
                     
                     
@@ -1059,7 +695,7 @@ Maven官方文档
                     
                         <li>
                             
-                            <a href="/GSSBlog/tags/Mvn/">Mvn</a>&nbsp;
+                            <a href="/GSSBlog/tags/Nginx/">Nginx</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1067,7 +703,7 @@ Maven官方文档
         
     </div>
 
-    <a href="/GSSBlog/2023/10/30/mvn%E6%8C%87%E4%BB%A4%E9%83%A8%E7%BD%B2%E5%88%B0%E8%BF%9C%E7%A8%8B/">阅读全文<span class="seo-reader-text">Maven部署jar包到远程厂库Nexus</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/GSSBlog/2023/10/30/5.2.nginx%E9%85%8D%E7%BD%AE%E5%91%BD%E4%BB%A4%E5%90%AF%E5%8A%A8/">阅读全文<span class="seo-reader-text">Nginx使用配置</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -1081,25 +717,24 @@ Maven官方文档
                 
 
                 <h3 class="home-article-title">
-                    <a href="/GSSBlog/2023/10/30/1.0docker%E5%85%A5%E9%97%A8/">
-                        Docker入门
+                    <a href="/GSSBlog/2023/10/30/5.3.nginx%E4%BB%A3%E7%90%86%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90/">
+                        Nginx加载静态资源
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        前提条件
-目前,ContOS仅发行版本中的内核支持Docker;Docker运行在CentOS 7 (64-bit)上
-要求系统为 64 位,Linux系统内核版本为3.8以上
+                        加载静态图片
+编辑 nginx.conf
 
-1234567## 查看服务内核### uname命令用于打印当前系统...
+1234567891011121314 server &#123;      listen       80;      server_name  localhost;location /image &#1...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:33:21 GMT+0800">
                 
                     2023-10-30
                 
@@ -1114,7 +749,7 @@ Maven官方文档
                     
                         
                         <li>
-                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
+                            <a href="/GSSBlog/categories/Nginx/">Nginx</a>&nbsp;
                         </li>
                     
                     
@@ -1129,7 +764,7 @@ Maven官方文档
                     
                         <li>
                             
-                            <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
+                            <a href="/GSSBlog/tags/Nginx/">Nginx</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1137,7 +772,349 @@ Maven官方文档
         
     </div>
 
-    <a href="/GSSBlog/2023/10/30/1.0docker%E5%85%A5%E9%97%A8/">阅读全文<span class="seo-reader-text">Docker入门</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/GSSBlog/2023/10/30/5.3.nginx%E4%BB%A3%E7%90%86%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90/">阅读全文<span class="seo-reader-text">Nginx加载静态资源</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/GSSBlog/2023/10/30/5.1.nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">
+                        Nginx安装与使用
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        linux下以jar包安装nginx1234# 安装之前检查是否有安装过nginx find-name nginx 1find -name nginx
+
+12# 查看nginx进程ps -C nginx -o pid
+
+12## 下载安装包(最好在自...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:32:35 GMT+0800">
+                
+                    2023-10-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Nginx/">Nginx</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/GSSBlog/tags/Nginx/">Nginx</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/GSSBlog/2023/10/30/5.1.nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">阅读全文<span class="seo-reader-text">Nginx安装与使用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/GSSBlog/2023/10/30/4.nginx%E4%BB%8B%E7%BB%8D/">
+                        Nginx介绍
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        
+Nginx是一款高性能的http 服务器&#x2F;反向代理服务器及电子邮件（IMAP&#x2F;POP3）代理服务器。由俄罗斯的程序设计师Igor Sysoev所开发，官方测试nginx能够支撑5万并发链接(tomcat 500)，并且cpu、内...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:31:53 GMT+0800">
+                
+                    2023-10-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Nginx/">Nginx</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/GSSBlog/tags/Nginx/">Nginx</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/GSSBlog/2023/10/30/4.nginx%E4%BB%8B%E7%BB%8D/">阅读全文<span class="seo-reader-text">Nginx介绍</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/GSSBlog/2023/10/30/3.vagrant-configure/">
+                        Vagrant网络配置
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        
+修改网络 连接外网
+
+12345678910111213141516171819202122232425# 进入到文件配置目录cd /etc/sysconfig/network-scripts# 查看 ip 在那个网卡ip addr 结果: eth...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:30:36 GMT+0800">
+                
+                    2023-10-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Vagrant/">Vagrant</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/GSSBlog/tags/Vagrant/">Vagrant</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/GSSBlog/2023/10/30/3.vagrant-configure/">阅读全文<span class="seo-reader-text">Vagrant网络配置</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/GSSBlog/2023/10/30/2.linux%E4%B8%8B%E5%AE%89%E8%A3%85jdk/">
+                        Linux配置JDK
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1在oracle官网上下载jdk linux版本 64位安装包
+
+2.上传安装包到&#x2F;opt&#x2F;software目录下3.解压安装包并移动到&#x2F;opt&#x2F;app&#x2F;jdk目录下4.配置环境变量12345678v...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:29:27 GMT+0800">
+                
+                    2023-10-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Linux/">Linux</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/GSSBlog/tags/Linux/">Linux</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/GSSBlog/2023/10/30/2.linux%E4%B8%8B%E5%AE%89%E8%A3%85jdk/">阅读全文<span class="seo-reader-text">Linux配置JDK</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/GSSBlog/2023/10/30/1.linux%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">
+                        Linux网络配置
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1.配置网络12# 修改网卡配置vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+12345678910111213141516171819# 修改文件内容TYPE=EthernetPROXY_METHOD...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Oct 30 2023 10:28:00 GMT+0800">
+                
+                    2023-10-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Linux/">Linux</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/GSSBlog/tags/Linux/">Linux</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/GSSBlog/2023/10/30/1.linux%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">阅读全文<span class="seo-reader-text">Linux网络配置</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -1146,7 +1123,7 @@ Maven官方文档
 
     <div class="home-paginator">
         <div class="paginator">
-    <a class="extend prev" rel="prev" href="/GSSBlog/page/4/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/GSSBlog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/GSSBlog/page/3/">3</a><a class="page-number" href="/GSSBlog/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/GSSBlog/page/6/">6</a><a class="page-number" href="/GSSBlog/page/7/">7</a><a class="extend next" rel="next" href="/GSSBlog/page/6/"><i class="fa-regular fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/GSSBlog/page/4/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/GSSBlog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/GSSBlog/page/3/">3</a><a class="page-number" href="/GSSBlog/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/GSSBlog/page/6/">6</a><a class="page-number" href="/GSSBlog/page/7/">7</a><a class="page-number" href="/GSSBlog/page/8/">8</a><a class="extend next" rel="next" href="/GSSBlog/page/6/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
 
     </div>
@@ -1171,7 +1148,7 @@ Maven官方文档
               <span>2022</span>
               -
             
-            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
         </div>
         
             <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

@@ -26,7 +26,7 @@
 <meta property="og:description" content="前提条件 目前,ContOS仅发行版本中的内核支持Docker;Docker运行在CentOS 7 (64-bit)上 要求系统为 64 位,Linux系统内核版本为3.8以上  1234567## 查看服务内核### uname命令用于打印当前系统相关信息（内核版本号、硬件架构、主机名称和操作系统类型等）。[root@CentOS7_001 ~]# cat &#x2F;etc&#x2F;redhat-release">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-10-30T01:10:29.808Z">
-<meta property="article:modified_time" content="2023-10-30T01:10:29.808Z">
+<meta property="article:modified_time" content="2024-01-16T01:29:33.161Z">
 <meta property="article:author" content="igxiaoshan">
 <meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary">
@@ -326,7 +326,7 @@
                     <div class="author flex items-center">
                         <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
                         
-                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
                         
                     </div>
                     <div class="meta-info">
@@ -340,8 +340,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2023-10-30 09:10:29</span>
-            <span class="mobile">2023-10-30 09:10:29</span>
+            <span class="desktop">2024-01-16 09:29:33</span>
+            <span class="mobile">2024-01-16 09:29:33</span>
             <span class="hover-info">更新</span>
         </span>
     
@@ -379,7 +379,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>390 字</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>377 字</span>
         </span>
     
     
@@ -414,84 +414,43 @@
 </blockquote>
 <ul>
 <li><p>1.确定CentOS7以上版本</p>
-<ul>
-<li><blockquote>
-<pre><code class="sh">cat /etc/redhat-release
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 2.卸载旧版本</span><br><span class="line"></span><br><span class="line"> - &gt; ```sh</span><br><span class="line">yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure></div>
-</code></pre>
-</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/redhat-release</span><br></pre></td></tr></table></figure></div>
 </li>
-</ul>
+<li><p>2.卸载旧版本</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker \</span><br><span class="line">               docker-client \</span><br><span class="line">               docker-client-latest \</span><br><span class="line">               docker-common \</span><br><span class="line">               docker-latest \</span><br><span class="line">               docker-latest-logrotate \</span><br><span class="line">               docker-logrotate \</span><br><span class="line">               docker-engine</span><br></pre></td></tr></table></figure></div>
 </li>
 <li><p>3.yum安装gcc相关</p>
-<ul>
-<li><p>确定能连通外网,可在线下载</p>
-</li>
-<li><blockquote>
-<pre><code class="sh">yum install -y gcc
-
-yum install -y gcc-c++
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 4.安装需要的软件包</span><br><span class="line"></span><br><span class="line"> - &gt; ```sh</span><br><span class="line">yum install -y yum-utils</span><br></pre></td></tr></table></figure></div>
-</code></pre>
+<blockquote>
+<p>确定能连通外网,可在线下载</p>
 </blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install -y gcc</span><br><span class="line"></span><br><span class="line">yum install -y gcc-c++</span><br></pre></td></tr></table></figure></div>
 </li>
-</ul>
+<li><p>4.安装需要的软件包</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils</span><br></pre></td></tr></table></figure></div>
 </li>
 <li><p>5.设置setble镜像仓库</p>
-<ul>
-<li><p>注意</p>
-<ul>
-<li><blockquote>
-<p>官网: yum-config-manager –add-repo <a class="link"   target="_blank" rel="noopener" href="https://download.docker.com/linux/centos/docker-ce.repo" >https://download.docker.com/linux/centos/docker-ce.repo <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p>使用风险: 网络不通导致失败</p>
+<blockquote>
+<p>注意</p>
 </blockquote>
-</li>
-<li><blockquote>
-<p>推荐: · yum-config-manager –add-repo <a class="link"   target="_blank" rel="noopener" href="http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo" >http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p>优势: 国内环境,网络快</p>
-</blockquote>
-</li>
-</ul>
-</li>
-</ul>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">官网: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"></span><br><span class="line">使用风险: 网络不通导致失败</span><br><span class="line"></span><br><span class="line">推荐: yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"></span><br><span class="line">优势: 国内环境,网络快</span><br></pre></td></tr></table></figure></div>
 </li>
 <li><p>6.更新yum软件包索引</p>
-<ul>
-<li><blockquote>
-<pre><code class="sh">yum makecache fast
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 7.安装Docker CE</span><br><span class="line"></span><br><span class="line"> - &gt; ```sh</span><br><span class="line">yum install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure></div>
-</code></pre>
-</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum makecache fast</span><br></pre></td></tr></table></figure></div>
 </li>
-</ul>
+<li><p>7.安装Docker CE</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure></div>
 </li>
 <li><p>8.启动Docker</p>
-<ul>
-<li><blockquote>
-<pre><code class="sh">systemctl start docker
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 9.测试</span><br><span class="line"></span><br><span class="line"> - &gt; ```sh</span><br><span class="line">docker version</span><br><span class="line"></span><br><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure></div>
-</code></pre>
-</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure></div>
 </li>
-</ul>
+<li><p>9.测试</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br><span class="line"></span><br><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure></div>
 </li>
 <li><p>10.配置阿里云加速</p>
-<ul>
-<li><blockquote>
-<pre><code class="sh">sudo mkdir -p /etc/docker
-sudo tee /etc/docker/daemon.json &lt;&lt;-&#39;EOF&#39;
-&#123;
-  &quot;registry-mirrors&quot;: [&quot;https://lljn1hsm.mirror.aliyuncs.com&quot;]
-&#125;
-EOF
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 11.卸载Docker</span><br><span class="line"></span><br><span class="line"> - &gt; ```sh</span><br><span class="line">systemctl stop docker</span><br><span class="line"></span><br><span class="line">sudo yum remove docker-ce docker-ce-cli containerd.io docker-ce-rootless-extras</span><br><span class="line"></span><br><span class="line">rm -rf /var/lib/docker</span><br><span class="line">rm -rf /var/lib/containerd</span><br></pre></td></tr></table></figure></div>
-</code></pre>
-</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> -p /etc/docker</span><br><span class="line">sudo <span class="built_in">tee</span> /etc/docker/daemon.json &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://lljn1hsm.mirror.aliyuncs.com&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure></div>
 </li>
-</ul>
-</li>
+<li><p>11.卸载Docker</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop docker</span><br><span class="line"></span><br><span class="line">sudo yum remove docker-ce docker-ce-cli containerd.io docker-ce-rootless-extras</span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> -rf /var/lib/docker</span><br><span class="line"><span class="built_in">rm</span> -rf /var/lib/containerd</span><br></pre></td></tr></table></figure></div></li>
 </ul>
 
         </div>
@@ -585,7 +544,7 @@ sudo systemctl restart docker
               <span>2022</span>
               -
             
-            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
         </div>
         
             <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

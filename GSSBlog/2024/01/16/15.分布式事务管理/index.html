@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2024/01/16/15.分布式事务管理/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="本地事务事务的基本性质 数据库的四个特性: 原子性(atomicity) ,一致性(consistency) ,隔离性(lsolation) ,持久性(durabilily)   原子性: 一系列操作整体不可拆分,要么同时成功,要么同时失败 一致性: 数据在事务的前后,业务整体一致 隔离性: 事务之间相互隔离 持久性: 一旦事务成功,数据一定会落盘在数据库  在以往的单体应用中,我们多个业务操作使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot2分布式事务管理">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2024/01/16/15.%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="本地事务事务的基本性质 数据库的四个特性: 原子性(atomicity) ,一致性(consistency) ,隔离性(lsolation) ,持久性(durabilily)   原子性: 一系列操作整体不可拆分,要么同时成功,要么同时失败 一致性: 数据在事务的前后,业务整体一致 隔离性: 事务之间相互隔离 持久性: 一旦事务成功,数据一定会落盘在数据库  在以往的单体应用中,我们多个业务操作使">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-16T02:07:38.541Z">
+<meta property="article:modified_time" content="2024-01-16T02:10:24.726Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="SpringBoot2">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            SpringBoot2分布式事务管理 -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">SpringBoot2分布式事务管理</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-01-16 10:07:38</span>
+        <span class="mobile">2024-01-16 10:07:38</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-01-16 10:10:24</span>
+            <span class="mobile">2024-01-16 10:10:24</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/SpringBoot2/">SpringBoot2</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/SpringBoot2/Apply/">Apply</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/SpringBoot2/">SpringBoot2</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>12 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="本地事务"><a href="#本地事务" class="headerlink" title="本地事务"></a>本地事务</h2><h3 id="事务的基本性质"><a href="#事务的基本性质" class="headerlink" title="事务的基本性质"></a>事务的基本性质</h3><blockquote>
+<p>数据库的四个特性: 原子性(atomicity) ,一致性(consistency) ,隔离性(lsolation) ,持久性(durabilily)</p>
+</blockquote>
+<ul>
+<li>原子性: 一系列操作整体不可拆分,要么同时成功,要么同时失败</li>
+<li>一致性: 数据在事务的前后,业务整体一致</li>
+<li>隔离性: 事务之间相互隔离</li>
+<li>持久性: 一旦事务成功,数据一定会落盘在数据库</li>
+</ul>
+<p>在以往的单体应用中,我们多个业务操作使用同一条连接操作不同的数据库表,一旦有异常,很容易整体回滚.</p>
+<h3 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h3><ul>
+<li>read uncommitted (读未提交)<ul>
+<li>该隔离级别的事务会读到其它未提交事务的数据,此现象也称为脏读</li>
+</ul>
+</li>
+<li>read committed(读已提交)<ul>
+<li>一个事务可以读取到另一个已提交的事务,多次读取会造成不一样的结果,此现象称为不可重复读问题.oracle和sql server 的默认隔离级别</li>
+</ul>
+</li>
+<li>repaatable read(可重复读)<ul>
+<li>该隔离级别是mysql默认的隔离级别,在同一个事务里,select的结果是事务开始的时间点的状态,因此,同样的select操作读到的结果会是一致的,但是,会有幻读的现象.mysql的innoDB引擎可以通过next-key locks 机制来避免幻读</li>
+</ul>
+</li>
+<li>serializable(序列化)<ul>
+<li>该隔离级别下的事务都是串行顺序执行的,mysql 数据的InnoDB 引擎会给读操作隐式加一把读共享锁,从而避免了脏读,不可重复读和幻读的问题</li>
+</ul>
+</li>
+</ul>
+<h3 id="事务的传播行为"><a href="#事务的传播行为" class="headerlink" title="事务的传播行为"></a>事务的传播行为</h3><p>1、<strong>PROPAGATION_REQUIRED</strong>：如果当前没有事务，就创建一个新事务，如果当前存在事务，</p>
+<p>就加入该事务，该设置是最常用的设置。 </p>
+<p>2、<strong>PROPAGATION_SUPPORTS</strong>：支持当前事务，如果当前存在事务，就加入该事务，如果当 </p>
+<p>前不存在事务，就以非事务执行。 </p>
+<p>3、<strong>PROPAGATION_MANDATORY</strong>：支持当前事务，如果当前存在事务，就加入该事务，如果 </p>
+<p>当前不存在事务，就抛出异常。 </p>
+<p>4、<strong>PROPAGATION_REQUIRES_NEW</strong>：创建新事务，无论当前存不存在事务，都创建新事务。 </p>
+<p>5、<strong>PROPAGATION_NOT_SUPPORTED</strong>：以非事务方式执行操作，如果当前存在事务，就把当 </p>
+<p>前事务挂起。 </p>
+<p>6、<strong>PROPAGATION_NEVER</strong>：以非事务方式执行，如果当前存在事务，则抛出异常。 </p>
+<p>7、<strong>PROPAGATION_NESTED</strong>：如果当前存在事务，则在嵌套事务内执行。如果当前没有事务， </p>
+<p>则执行与 PROPAGATION_REQUIRED 类似的操作。</p>
+<blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span> <span class="comment">// 事务注解的使用</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional(isolation = Isolation.READ_COMMITTED)</span>  <span class="comment">// 设置事务隔离级别</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional(propagation = Propagation.REQUIRED)</span>  <span class="comment">// 事务的传播行为</span></span><br></pre></td></tr></table></figure></div>
+</blockquote>
+<h3 id="事务里面的坑"><a href="#事务里面的坑" class="headerlink" title="事务里面的坑"></a>事务里面的坑</h3><blockquote>
+<p>在同一个类里面，编写两个方法，内部调用的时候，会导致事务设置失效。原因是没有用到代理对象的缘故。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 解决方法</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 导入 spring-boot-starter-aop : 引入了 aspectj</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> <span class="meta">@EnableTransactionManagement(proxyTargetClass = true)</span></span><br><span class="line">    </span><br><span class="line"><span class="number">3.</span> <span class="meta">@EnableAspectJAutoProxy(exposeProxy=true)</span> 开启aspectj 动态代理功能,默认是jdk自动代理,以后所有的动态代理都是aspectj创建的</span><br><span class="line">    </span><br><span class="line"><span class="number">4.</span> AopContext.currentProxy() 调用方法</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><h3 id="CAP定理"><a href="#CAP定理" class="headerlink" title="CAP定理"></a>CAP定理</h3><ul>
+<li>一致性 (Consistency)<ul>
+<li>在分布式系统中的所有数据备份,在同一时刻是否同样的值, (等同于所有节点访问同一份最新的数据副本)</li>
+</ul>
+</li>
+<li>可用性 (Availability)<ul>
+<li>在集群中一部分节点故障后,集群整体是否还能响应客户端的读写请求,( 对数据更新具备高可用性)</li>
+</ul>
+</li>
+<li>分区容错性 (Partition tolerance)<ul>
+<li>大多数分布式系统都分布在多个子网络,每个网络就叫做一个区(partition) .分区容错的意思是,区间通行可能失败.</li>
+</ul>
+</li>
+</ul>
+<p>CAP原则,这三个要素最多只能同时实现两点,不可能三者兼顾.</p>
+<blockquote>
+<p>分布式系统中实现一致性的算法有：raft算法、paxos</p>
+<p><a class="link"   target="_blank" rel="noopener" href="http://thesecretlivesofdata.com/raft/" >http://thesecretlivesofdata.com/raft/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<h4 id="raft算法"><a href="#raft算法" class="headerlink" title="raft算法"></a>raft算法</h4><p>心跳机制和数据复制保持数据的一致性</p>
+<h4 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h4><p>对于多数大型互联网应用的场景，主机众多、部署分散，而且现在的集群规模越来越大，所 </p>
+<p>以节点故障、网络故障是常态，而且要保证服务可用性达到 99.99999%（N 个 9），即保证 </p>
+<p>P 和 A，舍弃 C。</p>
+<h3 id="BASE理论"><a href="#BASE理论" class="headerlink" title="BASE理论"></a>BASE理论</h3><p>是对 CAP 理论的延伸,思想是即使无法做到强一致性 (CAP的一致性就是强一致性),但可以采用适当的采取弱一致性,即最终一致性.</p>
+<h4 id="BASE-是指"><a href="#BASE-是指" class="headerlink" title="BASE 是指"></a>BASE 是指</h4><ul>
+<li>基本可用 ( basically available)<ul>
+<li>基本可用是指分布式系统在出现故障的时候,允许损失部分可用性(例如响应时间,功能上的可用性),允许损失部分可用性.需要注意的是,基本可用绝不等价于系统不可用<ul>
+<li>响应时间上的损失: 正常情况下搜索引擎需要在0.5秒之内返回给用户响应查询结果,但是由于故障(比如系统部分机房发生断电或者断网故障),查询结果的响应时间增加到1-2秒</li>
+<li>功能上的损失: 购物网站在购物高峰时期(如双十一),为了保护系统的稳定性,部分消费者可能会被引导到一个降级页面</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>软状态 ( soft state )<ul>
+<li>软状态是指允许系统存在中间状态,而该中间状态不会影响系统整体可用性.分布式存储中一般一份数据会有多个副本,允许不同副本同步的延时就是软状态的体现.mysql replication的异步复制也是一种体现</li>
+</ul>
+</li>
+<li>最终一致性 (eventual consistency)<ul>
+<li>最终一致性是指系统中的所有数据副本经过一定时间后,最终能够达到一致的状态.弱一致性和强一致性相反,最终一致性是弱一致性的一种特殊情况.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>强一致性、弱一致性、最终一致性</p>
+<p>从客户端角度,多进程并发访问时,更新过的数据在不同进程如何获取的不同策略,决定了不同的一致性.</p>
+<p>对于关系型数据库,要求更新过的数据能被后续的访问都能看到,这是<strong>强一致性</strong>,如果能容忍后续的部分或者全部访问不到,则是<strong>弱一致性</strong>,如果经过一段时间后要求能访问到更新后的数据,则是<strong>最终一致性</strong>.</p>
+</blockquote>
+<h3 id="分布式事务方案"><a href="#分布式事务方案" class="headerlink" title="分布式事务方案"></a>分布式事务方案</h3><h4 id="2PC-模式"><a href="#2PC-模式" class="headerlink" title="2PC 模式"></a>2PC 模式</h4><p>数据库支持的 2PC【2 phase commit 二阶提交】，又叫做 XA Transactions。 </p>
+<p>MySQL 从 5.5 版本开始支持，SQL Server 2005 开始支持，Oracle 7 开始支持。 </p>
+<p>其中，XA 是一个两阶段提交协议，该协议分为以下两个阶段： </p>
+<p>第一阶段：事务协调器要求每个涉及到事务的数据库预提交(precommit)此操作，并反映是 </p>
+<p>否可以提交. </p>
+<p>第二阶段：事务协调器要求每个数据库提交数据。 </p>
+<p>其中，如果有任何一个数据库否决此次提交，那么所有数据库都会被要求回滚它们在此事务 </p>
+<p>中的那部分信息。</p>
+<ul>
+<li><p>XA 协议比较简单，而且一旦商业数据库实现了 XA 协议，使用分布式事务的成本也比较 低。 </p>
+</li>
+<li><p>XA 性能不理想，特别是在交易下单链路，往往并发量很高，XA 无法满足高并发场景 </p>
+</li>
+<li><p>XA 目前在商业数据库支持的比较理想，在 mysql 数据库中支持的不太理想，mysql 的 XA 实现，没有记录 prepare 阶段日志，主备切换回导致主库与备库数据不一致。 </p>
+</li>
+<li><p>许多 nosql 也没有支持 XA，这让 XA 的应用场景变得非常狭隘。 </p>
+</li>
+<li><p>也有 3PC，引入了超时机制（无论协调者还是参与者，在向对方发送请求后，若长时间 未收到回应则做出相应处理）</p>
+</li>
+</ul>
+<h4 id="柔性事务-TCC-事务补偿型方案"><a href="#柔性事务-TCC-事务补偿型方案" class="headerlink" title="柔性事务-TCC 事务补偿型方案"></a>柔性事务-TCC 事务补偿型方案</h4><p>刚性事务：遵循 ACID 原则，强一致性。 </p>
+<p>柔性事务：遵循 BASE 理论，最终一致性； </p>
+<p>与刚性事务不同，柔性事务允许一定时间内，不同节点的数据不一致，但要求最终一致</p>
+<p>一阶段 prepare 行为：调用 自定义 的 prepare 逻辑。 </p>
+<p>二阶段 commit 行为：调用 自定义 的 commit 逻辑。 </p>
+<p>二阶段 rollback 行为：调用 自定义 的 rollback 逻辑。 </p>
+<p>所谓 TCC 模式，是指支持把 自定义 的分支事务纳入到全局事务的管理中</p>
+<h4 id="柔性事务-最大努力通知型方案"><a href="#柔性事务-最大努力通知型方案" class="headerlink" title="柔性事务-最大努力通知型方案"></a>柔性事务-最大努力通知型方案</h4><p>按规律进行通知，不保证数据一定能通知成功，但会提供可查询操作接口进行核对。这种 </p>
+<p>方案主要用在与第三方系统通讯时，比如：调用微信或支付宝支付后的支付结果通知。这种 </p>
+<p>方案也是结合 MQ 进行实现，例如：通过 MQ 发送 http 请求，设置最大通知次数。达到通 </p>
+<p>知次数后即不再通知。 </p>
+<p>案例：银行通知、商户通知等（各大交易业务平台间的商户通知：多次通知、查询校对、对 </p>
+<p>账文件），支付宝的支付成功异步回调</p>
+<p>柔性事务-可靠消息+最终一致性方案（异步确保型）</p>
+<h4 id="柔性事务-可靠消息-最终一致性方案-异步确保型"><a href="#柔性事务-可靠消息-最终一致性方案-异步确保型" class="headerlink" title="柔性事务 -可靠消息 + 最终一致性方案 ( 异步确保型)"></a>柔性事务 -可靠消息 + 最终一致性方案 ( 异步确保型)</h4><p>实现：业务处理服务在业务事务提交之前，向实时消息服务请求发送消息，实时消息服务只 </p>
+<p>记录消息数据，而不是真正的发送。业务处理服务在业务事务提交之后，向实时消息服务确 </p>
+<p>认发送。只有在得到确认发送指令后，实时消息服务才会真正发送。</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">防止消息丢失： </span><br><span class="line"><span class="comment">/*** 1、做好消息确认机制（pulisher，consumer【手动 ack】） * 2、每一个发送的消息都在数据库做好记录。定期将失败的消息再次发送一 遍*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `mq_message` ( </span><br><span class="line">    `message_id` <span class="type">char</span>(<span class="number">32</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>, </span><br><span class="line">    `content` text, </span><br><span class="line">    `to_exchane` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>, </span><br><span class="line">    `routing_key` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>, </span><br><span class="line">    `class_type` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>, </span><br><span class="line">    `message_status` <span class="type">int</span>(<span class="number">1</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;0-新建 1-已发送 2-错误抵达 3-已抵达&#x27;</span>, 		`create_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>, </span><br><span class="line">    `update_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>, </span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (`message_id`) </span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="分布式解决方案-seata的使用"><a href="#分布式解决方案-seata的使用" class="headerlink" title="分布式解决方案 seata的使用"></a>分布式解决方案 seata的使用</h2><blockquote>
+<p>springcloud alibaba seata 官方文档</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://seata.io/zh-cn/docs/overview/what-is-seata.html" >https://seata.io/zh-cn/docs/overview/what-is-seata.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<h3 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h3><ul>
+<li><p>创建 UNDO_LOG 表</p>
+<ul>
+<li>seata AT 模式需要 UNDO_LOG 表</li>
+</ul>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 注意此处0.3.0+ 增加唯一索引 ux_undo_log</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `undo_log` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  `branch_id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `xid` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `context` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `rollback_info` longblob <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `log_status` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `log_created` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `log_modified` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `ext` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `ux_undo_log` (`xid`,`branch_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">1</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>启动Seata Server服务</p>
+<ul>
+<li>从 <a class="link"   target="_blank" rel="noopener" href="https://github.com/seata/seata/releases" >https://github.com/seata/seata/releases <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>,下载服务器 ( seata - server )软件包</li>
+</ul>
+</li>
+<li><p>项目整合</p>
+<ul>
+<li>引入依赖</li>
+</ul>
+<div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&lt;dependency&gt;</span></span><br><span class="line">		<span class="attr">&lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;</span></span><br><span class="line">		<span class="attr">&lt;artifactId&gt;spring-cloud-starter-alibaba-seata&lt;/artifactId&gt;</span></span><br><span class="line"><span class="attr">&lt;/dependency&gt;</span></span><br><span class="line">        </span><br><span class="line"><span class="attr">//</span> <span class="string">根据引入依赖中 seata-all-1.3.0 版本确定seata-server版本</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>解压-配置conf-启动服务</p>
+<ul>
+<li>修改 registry.conf文件中 registry . type &#x3D; “nacos” , 并配置nacos 连接地址</li>
+<li>修改 registry.conf文件中 config . type &#x3D; “nacos” ,并创建配置(将conf文件下的file.conf文件可以全部搬到nacos配置中心)</li>
+</ul>
+</li>
+<li><p>想要所有用到分布式事务的微服务使用 srata ,要使用 DataSourceProxy代理自己的数据源</p>
+<ul>
+<li><p>每个微服务都必须导入</p>
+</li>
+<li><pre><code class="java">@Configuration
+public class MySeataConfig &#123;
+
+    @Autowired
+    DataSourceProperties dataSourceProperties;
+
+
+    @Bean
+    public DataSource dataSource(DataSourceProperties dataSourceProperties)&#123;
+        HikariDataSource dataSource = dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+        if (StringUtils.hasText(dataSourceProperties.getName())) &#123;
+            dataSource.setPoolName(dataSourceProperties.getName());
+        &#125;
+        return new DataSourceProxy(dataSource);
+    &#125;
+&#125;
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 在方法上加入 @GlobalTransactional 注解,开启分布式事务</span><br><span class="line"></span><br><span class="line">#### **`注意`**</span><br><span class="line"></span><br><span class="line">#### 坑：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">// 报错信息</span><br><span class="line">ERROR 8384 --- [           main] i.s.c.r.netty.NettyClientChannelManager  : Failed to get available servers: endpoint format should like ip:port</span><br><span class="line"></span><br><span class="line">java.lang.IllegalArgumentException: endpoint format should like ip:port</span><br></pre></td></tr></table></figure></div>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<p>需要配置</p>
+<div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">service</span> <span class="string">&#123;</span></span><br><span class="line"><span class="comment">  #vgroup-&gt;rgroup</span></span><br><span class="line">  <span class="attr">vgroupMapping.order-service-seata-service-group</span> = <span class="string">&quot;default&quot;</span></span><br><span class="line"><span class="comment">  #only support single node</span></span><br><span class="line">  <span class="attr">default.grouplist</span> = <span class="string">&quot;127.0.0.1:8091&quot;</span></span><br><span class="line"><span class="comment">  #degrade current not support</span></span><br><span class="line">  <span class="attr">enableDegrade</span> = <span class="string">false</span></span><br><span class="line"><span class="comment">  #disable</span></span><br><span class="line">  <span class="attr">disable</span> = <span class="string">false</span></span><br><span class="line"><span class="comment">  #unit ms,s,m,h,d represents milliseconds, seconds, minutes, hours, days, default permanent</span></span><br><span class="line">  <span class="attr">max.commit.retry.timeout</span> = <span class="string">&quot;-1&quot;</span></span><br><span class="line">  <span class="attr">max.rollback.retry.timeout</span> = <span class="string">&quot;-1&quot;</span></span><br><span class="line"><span class="attr">&#125;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>启动多个项目时还是可能有问题，需要统一指定 <code>tx-service-group</code> ，根据官方文档，可以通过 <code>application.yml</code> 中添加如下配置</p>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">alibaba:</span></span><br><span class="line">      <span class="attr">seata:</span></span><br><span class="line">        <span class="attr">tx-service-group:</span> <span class="string">seven-seata-service-group</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<p><code>注意</code>: 默认下载是没有service这个配置的.需要手动引入,文档地址:<a class="link"   target="_blank" rel="noopener" href="https://github.com/seata/seata-samples/blob/master/doc/quick-integration-with-spring-cloud.md" >https://github.com/seata/seata-samples/blob/master/doc/quick-integration-with-spring-cloud.md <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><strong><code>注意</code></strong></p>
+<blockquote>
+<p>seata部署到服务器端,需要在yml配置服务器地址,才能连接的上</p>
+</blockquote>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">myapp</span></span><br><span class="line">    </span><br><span class="line"><span class="attr">seata:</span></span><br><span class="line">  <span class="attr">service:</span></span><br><span class="line">    <span class="attr">grouplist:</span> <span class="comment">## 这是一个list,可以配置多个</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.56</span><span class="number">.101</span><span class="string">:8091</span></span><br></pre></td></tr></table></figure></div>
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/SpringBoot2/">#SpringBoot2</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/GSSBlog/2024/01/16/17.Spring%E4%B9%8B%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC%E4%B8%8E%E5%8F%91%E5%B8%83/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Spring之事件监听与发布</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2024/01/16/1.SpringBoot%E6%95%B4%E5%90%88RabbitMQ/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">SpringBoot整合RabbitMQ</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">SpringBoot2分布式事务管理</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E4%BA%8B%E5%8A%A1"><span class="nav-text">本地事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8"><span class="nav-text">事务的基本性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-text">事务的隔离级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E4%BC%A0%E6%92%AD%E8%A1%8C%E4%B8%BA"><span class="nav-text">事务的传播行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E9%87%8C%E9%9D%A2%E7%9A%84%E5%9D%91"><span class="nav-text">事务里面的坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="nav-text">分布式事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CAP%E5%AE%9A%E7%90%86"><span class="nav-text">CAP定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BASE%E7%90%86%E8%AE%BA"><span class="nav-text">BASE理论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E6%96%B9%E6%A1%88"><span class="nav-text">分布式事务方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-seata%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">分布式解决方案 seata的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="nav-text">使用步骤</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>

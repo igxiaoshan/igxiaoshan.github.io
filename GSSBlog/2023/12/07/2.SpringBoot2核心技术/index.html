@@ -26,7 +26,7 @@
 <meta property="og:description" content="核心功能配置文件文件类型propertiesyaml基本用法  key: value kv之间有空格 大小写敏感 缩进不允许使用tab, 只允许空格 缩进的空格数不重要, 只要相同层级的元素左对齐即可 &#39;#&#39;表示注释 字符串无需加引号, 如果要加,一些特殊字符会被转义 如果字符串是一串数字,该数字以’零’开头,必须加上’引号’,不然会被解析成八进制 转义如同: System.out">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-07T02:23:55.605Z">
-<meta property="article:modified_time" content="2023-12-15T03:52:29.091Z">
+<meta property="article:modified_time" content="2023-12-26T02:45:34.127Z">
 <meta property="article:author" content="igxiaoshan">
 <meta property="article:tag" content="SpringBoot2">
 <meta name="twitter:card" content="summary">
@@ -326,7 +326,7 @@
                     <div class="author flex items-center">
                         <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
                         
-                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
                         
                     </div>
                     <div class="meta-info">
@@ -340,8 +340,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2023-12-15 11:52:29</span>
-            <span class="mobile">2023-12-15 11:52:29</span>
+            <span class="desktop">2023-12-26 10:45:34</span>
+            <span class="mobile">2023-12-26 10:45:34</span>
             <span class="hover-info">更新</span>
         </span>
     
@@ -420,8 +420,8 @@
 <li><code>缩进不允许使用tab, 只允许空格</code></li>
 <li><code>缩进的空格数不重要, 只要相同层级的元素左对齐即可</code></li>
 <li><code>&#39;#&#39;表示注释</code></li>
-<li><code>字符串无需加引号, 如果要加,一些特殊字符会被转义</code><ul>
-<li>如果字符串是一串数字,该数字以’零’开头,必须加上’引号’,不然会被解析成八进制</li>
+<li><h3 id="字符串无需加引号-如果要加-一些特殊字符会被转义"><a href="#字符串无需加引号-如果要加-一些特殊字符会被转义" class="headerlink" title="字符串无需加引号, 如果要加,一些特殊字符会被转义"></a><code>字符串无需加引号, 如果要加,一些特殊字符会被转义</code></h3><ul>
+<li><h3 id="如果字符串是一串数字-该数字以’零’开头-必须加上’引号’-不然会被解析成八进制"><a href="#如果字符串是一串数字-该数字以’零’开头-必须加上’引号’-不然会被解析成八进制" class="headerlink" title="如果字符串是一串数字,该数字以’零’开头,必须加上’引号’,不然会被解析成八进制"></a>如果字符串是一串数字,该数字以’零’开头,必须加上’引号’,不然会被解析成八进制</h3></li>
 <li>转义如同: <code>System.out.println(&quot;name\nage&quot;);</code>其中<code>\n</code>就会被转义成<code>换行</code></li>
 </ul>
 </li>
@@ -560,7 +560,7 @@
     <div class="post-toc">
         <div class="toc-title">此页目录</div>
         <div class="page-title">SpringBoot2核心技术</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-text">核心功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="nav-text">文件类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web%E5%BC%80%E5%8F%91"><span class="nav-text">Web开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-MVC-Auto-configuration"><span class="nav-text">Spring MVC Auto-configuration</span></a></li></ol></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-text">核心功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="nav-text">文件类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%97%A0%E9%9C%80%E5%8A%A0%E5%BC%95%E5%8F%B7-%E5%A6%82%E6%9E%9C%E8%A6%81%E5%8A%A0-%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E4%BC%9A%E8%A2%AB%E8%BD%AC%E4%B9%89"><span class="nav-text">字符串无需加引号, 如果要加,一些特殊字符会被转义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%98%AF%E4%B8%80%E4%B8%B2%E6%95%B0%E5%AD%97-%E8%AF%A5%E6%95%B0%E5%AD%97%E4%BB%A5%E2%80%99%E9%9B%B6%E2%80%99%E5%BC%80%E5%A4%B4-%E5%BF%85%E9%A1%BB%E5%8A%A0%E4%B8%8A%E2%80%99%E5%BC%95%E5%8F%B7%E2%80%99-%E4%B8%8D%E7%84%B6%E4%BC%9A%E8%A2%AB%E8%A7%A3%E6%9E%90%E6%88%90%E5%85%AB%E8%BF%9B%E5%88%B6"><span class="nav-text">如果字符串是一串数字,该数字以’零’开头,必须加上’引号’,不然会被解析成八进制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web%E5%BC%80%E5%8F%91"><span class="nav-text">Web开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-MVC-Auto-configuration"><span class="nav-text">Spring MVC Auto-configuration</span></a></li></ol></li></ol></li></ol>
 
     </div>
 </div>
@@ -588,7 +588,7 @@
               <span>2022</span>
               -
             
-            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
         </div>
         
             <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

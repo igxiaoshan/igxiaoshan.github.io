@@ -13,19 +13,22 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/categories/springboot/"/>
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2024/01/16/10.性能监控与压力测试/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="凌晨四点半，海棠花未眠">
-<meta property="og:type" content="website">
-<meta property="og:title" content="igxiaoshan&#39;s Blog">
-<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/categories/SpringBoot/index.html">
+        <meta name="description" content="性能监控,JDK自带工具jconsole 与 jvisualvm  jvisualvm 相当于是 jconsole 的升级版,推荐使用   使用jvisualvm  12# 在dos窗口,直接输入 jvisualvm 进入检测工具# 运行起程序,选择要监控的程序   jvisualvm 能干什么 监控内存泄露，跟踪垃圾回收，执行时内存、cpu 分析，线程分析..   安装插件方便查看 gc 在工">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JMeter">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2024/01/16/10.%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E4%B8%8E%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/index.html">
 <meta property="og:site_name" content="igxiaoshan&#39;s Blog">
-<meta property="og:description" content="凌晨四点半，海棠花未眠">
+<meta property="og:description" content="性能监控,JDK自带工具jconsole 与 jvisualvm  jvisualvm 相当于是 jconsole 的升级版,推荐使用   使用jvisualvm  12# 在dos窗口,直接输入 jvisualvm 进入检测工具# 运行起程序,选择要监控的程序   jvisualvm 能干什么 监控内存泄露，跟踪垃圾回收，执行时内存、cpu 分析，线程分析..   安装插件方便查看 gc 在工">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-16T02:02:12.659Z">
+<meta property="article:modified_time" content="2024-01-16T02:03:04.749Z">
 <meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="工具">
 <meta name="twitter:card" content="summary">
     
     
@@ -38,7 +41,7 @@
     
     <title>
         
-            分类: SpringBoot -
+            JMeter -
         
         igxiaoshan&#39;s Blog
     </title>
@@ -189,7 +192,7 @@
                         
                             <li class="navbar-item">
                                 <!-- Menu -->
-                                <a class="active" 
+                                <a class="" 
                                     href="/GSSBlog/categories"  >
                                     
                                         
@@ -272,7 +275,7 @@
             
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group active" 
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
                         href="/GSSBlog/categories"  >
                              
                                 
@@ -303,44 +306,276 @@
             <div class="main-content">
 
                 
-                    <div class="category-container">
-    <div class="category-name">
-        <i class="fa-solid fa-folder"></i>&nbsp;SpringBoot
-    </div>
-    <div class="category-post-list">
-        
+                    <div class="post-page-container">
+    <div class="article-content-container">
 
-<div class="archive-list-container">
-    
-        <section class="archive-item">
-            <div class="archive-item-header">
-                <span class="archive-year">2023</span>
-                <span class="archive-year-post-count">[1]</span>
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">JMeter</h1>
+            
             </div>
-            <ul class="article-list">
-              
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-01-16 10:02:12</span>
+        <span class="mobile">2024-01-16 10:02:12</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-01-16 10:03:04</span>
+            <span class="mobile">2024-01-16 10:03:04</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
                 
                     
-                    <li class="article-item" date-is='12-21'>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/%E5%B7%A5%E5%85%B7/">工具</a>&nbsp;
+                        </li>
+                    
+                    
                 
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/%E5%B7%A5%E5%85%B7/JMeter/">JMeter</a>&nbsp;
+                        </li>
+                    
+                    
                 
-                    <a href="/GSSBlog/2023/12/21/1.SpringBoot%E6%95%B4%E5%90%88Mybatis-plus/">
-                        <span class="article-title">SpringBoot整合Mybatis-plus</span>
-                    </a>
-                
-              
             </ul>
-        </section>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/%E5%B7%A5%E5%85%B7/">工具</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.7k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>6 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
     
 </div>
 
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <blockquote>
+<p>性能监控,JDK自带工具jconsole 与 jvisualvm </p>
+<p>jvisualvm 相当于是 jconsole 的升级版,推荐使用</p>
+</blockquote>
+<ul>
+<li>使用jvisualvm</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在dos窗口,直接输入 jvisualvm 进入检测工具</span></span><br><span class="line"><span class="comment"># 运行起程序,选择要监控的程序</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>jvisualvm 能干什么<ul>
+<li>监控内存泄露，跟踪垃圾回收，执行时内存、cpu 分析，线程分析..</li>
+</ul>
+</li>
+<li>安装插件方便查看 gc<ul>
+<li>在工具 -&gt;插件 -&gt; vmGC<ul>
+<li>注意:在升级插件的时候,jvisualvm插件路径必须跟本机jdk版本对应<ul>
+<li>打开网址 <a class="link"   target="_blank" rel="noopener" href="https://visualvm.github.io/pluginscenters.html" >https://visualvm.github.io/pluginscenters.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> </li>
+<li>cmd 查看自己的 jdk 版本，找到对应的</li>
+<li>复制下面查询出来的链接。并重新设置上即可(必须是updates.xml.gz文件路径)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="压力测试"><a href="#压力测试" class="headerlink" title="压力测试"></a>压力测试</h1><blockquote>
+<p>使用压力测试，我们有希望找到很多种用其他测试方法更难发现的错误。有两种错误类型是: 内存泄漏，并发与同步。 </p>
+<p>有效的压力测试系统将应用以下这些关键条件:重复，并发，量级，随机变化。</p>
+</blockquote>
+<h2 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h2><ul>
+<li><p>响应时间（Response Time: RT） :响应时间指用户从客户端发起一个请求开始，到客户端接收到从服务器端返回的响应结束，整个过程所耗费的时间。 </p>
+</li>
+<li><p>HPS（Hits Per Second） ：每秒点击次数，单位是次&#x2F;秒。</p>
+</li>
+<li><p>TPS（Transaction per Second）：系统每秒处理交易数，单位是笔&#x2F;秒。 </p>
+</li>
+<li><p>QPS（Query per Second）：系统每秒处理查询次数，单位是次&#x2F;秒。 对于互联网业务中，如果某些业务有且仅有一个请求连接，那么 TPS&#x3D;QPS&#x3D;HPS，一 般情况下用 TPS 来衡量整个业务流程，用 QPS 来衡量接口查询次数，用 HPS 来表 示对服务器单击请求。无论 TPS、QPS、HPS,此指标是衡量系统处理能力非常重要的指标，越大越好，根据经 验，一般情况下：</p>
+<p>金融行业：1000TPS~50000TPS，不包括互联网化的活动 </p>
+<p>保险行业：100TPS~100000TPS，不包括互联网化的活动 </p>
+<p>制造行业：10TPS~5000TPS </p>
+<p>互联网电子商务：10000TPS~1000000TPS </p>
+<p>互联网中型网站：1000TPS~50000TPS </p>
+<p>互联网小型网站：500TPS~10000TPS </p>
+</li>
+<li><p>最大响应时间（Max Response Time） 指用户发出请求或者指令到系统做出反应（响应）的最大时间。</p>
+</li>
+<li><p>最少响应时间（Mininum ResponseTime） 指用户发出请求或者指令到系统做出反应（响应）的最少时间。 </p>
+</li>
+<li><p>90%响应时间（90% Response Time） 是指所有用户的响应时间进行排序，第 90%的响应时间。</p>
+</li>
+</ul>
+<p>从外部看，性能测试主要关注如下三个指标 </p>
+<p>吞吐量：每秒钟系统能够处理的请求数、任务数。 </p>
+<p>响应时间：服务处理一个请求或一个任务的耗时。 </p>
+<p>错误率：一批请求中结果出错的请求所占比例。</p>
+<h2 id="压测工具-JMeter"><a href="#压测工具-JMeter" class="headerlink" title="压测工具: JMeter"></a>压测工具: JMeter</h2><blockquote>
+<p>官网:</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://jmeter.apache.org/" >https://jmeter.apache.org/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<h3 id="JMeter使用"><a href="#JMeter使用" class="headerlink" title="JMeter使用"></a>JMeter使用</h3><blockquote>
+<p>下载zip压缩包解压–&gt;运行 jmeter.bat 即可</p>
+</blockquote>
+<blockquote>
+<p>JMeter 压测示例</p>
+</blockquote>
+<ul>
+<li>1.添加线程组<ul>
+<li>线程组参数详解： <ul>
+<li>线程数：虚拟用户数。一个虚拟用户占用一个进程或线程。设置多少虚拟用户数在这里也就是设置多少个线程数</li>
+<li>Ramp-Up Period(in seconds)准备时长：设置的虚拟用户数需要多长时间全部启动。如果线程数为 10，准备时长为 2，那么需要 2 秒钟启动 10 个线程，也就是每秒钟启动 5 个线程</li>
+<li>循环次数：每个线程发送请求的次数。如果线程数为 10，循环次数为 100，那么每个线 程发送 100 次请求。总请求数为 10*100&#x3D;1000 。如果勾选了“永远”，那么所有线程会 一直发送请求，一到选择停止运行脚本</li>
+<li>Delay Thread creation until needed：直到需要时延迟线程的创建</li>
+<li>调度器：设置线程组启动的开始时间和结束时间(配置调度器时，需要勾选循环次数为永远) </li>
+<li>持续时间（秒）：测试持续时间，会覆盖结束时间 </li>
+<li>启动延迟（秒）：测试延迟启动时间，会覆盖启动时间</li>
+<li>启动时间：测试启动时间，启动延迟会覆盖它。当启动时间已过，手动只需测试时当前时间也会覆盖它</li>
+<li>结束时间：测试结束时间，持续时间会覆盖它</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>2.添加 HTTP 请求</li>
+<li>3.添加监听器</li>
+<li>4.启动压测&amp;查看分析结果</li>
+</ul>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">分析结果:</span><br><span class="line">1.有错误率同开发确认，确定是否允许错误的发生或者错误率允许在多大的范围内； </span><br><span class="line">2.Throughput 吞吐量每秒请求的数大于并发数，则可以慢慢的往上面增加；若在压测的机 器性能很好的情况下，出现吞吐量小于并发数，说明并发数不能再增加了，可以慢慢的 往下减，找到最佳的并发数；</span><br><span class="line">3.压测结束，登陆相应的 web 服务器查看 CPU 等性能指标，进行数据的分析; </span><br><span class="line">4.最大的 tps，不断的增加并发数，加到 tps 达到一定值开始出现下降，那么那个值就是 最大的 tps。</span><br><span class="line">5.最大的并发数：最大的并发数和最大的 tps 是不同的概率，一般不断增加并发数，达到 一个值后，服务器出现请求超时，则可认为该值为最大的并发数。</span><br><span class="line">6.压测过程出现性能瓶颈，若压力机任务管理器查看到的 cpu、网络和 cpu 都正常，未达</span><br><span class="line">到 90%以上，则可以说明服务器有问题，压力机没有问题。</span><br><span class="line">7.影响性能考虑点包括： 数据库、应用程序、中间件（tomact、Nginx）、网络和操作系统等方面 </span><br><span class="line">8.首先考虑自己的应用属于 CPU 密集型还是 IO 密集型</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="JMeter-Address-Already-in-use-错误解决"><a href="#JMeter-Address-Already-in-use-错误解决" class="headerlink" title="JMeter Address Already in use 错误解决"></a>JMeter Address Already in use 错误解决</h3><p>windows 本身提供的端口访问机制的问题。 </p>
+<p>Windows 提供给 TCP&#x2F;IP 链接的端口为 1024-5000，并且要四分钟来循环回收他们。就导致我们在短时间内跑大量的请求时将端口占满了。</p>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.cmd 中，用 regedit 命令打开注册表 </span><br><span class="line">2.在 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters 下， </span><br><span class="line">	2.1 .右击 parameters，添加一个新的 DWORD，名字为 MaxUserPort </span><br><span class="line">	2.2 .然后双击 MaxUserPort，输入数值数据为 65534，基数选择十进制（如果是分布式运 行的话，控制机器和负载机器都需要这样操作哦） </span><br><span class="line">3. 修改配置完毕之后记得重启机器才会生效 </span><br><span class="line"></span><br><span class="line">https://support.microsoft.com/zh-cn/help/196271/when-you-try-to-connect-from-tcp-ports-grea ter-than-5000-you-receive-t </span><br><span class="line">TCPTimedWaitDelay：30</span><br></pre></td></tr></table></figure></div>
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/%E5%B7%A5%E5%85%B7/">#工具</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/GSSBlog/2024/01/16/1.SpringBoot%E6%95%B4%E5%90%88SpringCache/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">SpringBoot整合SpringCache</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2024/01/16/7.elasticsearch%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Elasticsearch安装与使用</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">JMeter</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95"><span class="nav-text">压力测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-text">性能指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%8B%E6%B5%8B%E5%B7%A5%E5%85%B7-JMeter"><span class="nav-text">压测工具: JMeter</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JMeter%E4%BD%BF%E7%94%A8"><span class="nav-text">JMeter使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JMeter-Address-Already-in-use-%E9%94%99%E8%AF%AF%E8%A7%A3%E5%86%B3"><span class="nav-text">JMeter Address Already in use 错误解决</span></a></li></ol></li></ol></li></ol>
+
     </div>
 </div>
-<div class="category-paginator">
-    <div class="paginator">
-    <span class="page-number current">1</span>
-</div>
-
+        </div>
+    
 </div>
 
 
@@ -363,7 +598,7 @@
               <span>2022</span>
               -
             
-            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
         </div>
         
             <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
@@ -396,6 +631,23 @@
         </div>
     </div>
 
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
     
 
     <div class="right-side-tools-container">
