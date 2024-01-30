@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2024/01/22/docker部署nacos/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="Docker部署Nacos 官网文档   准备数据库 sql脚本官方地址   12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker部署Nacos">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2024/01/22/Docker%E9%83%A8%E7%BD%B2Nacos/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="Docker部署Nacos 官网文档   准备数据库 sql脚本官方地址   12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-22T09:05:10.842Z">
+<meta property="article:modified_time" content="2024-01-30T09:06:11.686Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Nacos">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Docker部署Nacos -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">Docker部署Nacos</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-01-22 17:05:10</span>
+        <span class="mobile">2024-01-22 17:05:10</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-01-30 17:06:11</span>
+            <span class="mobile">2024-01-30 17:06:11</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/GSSBlog/tags/Nacos/">Nacos</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.6k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>14 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h1 id="Docker部署Nacos"><a href="#Docker部署Nacos" class="headerlink" title="Docker部署Nacos"></a>Docker部署Nacos</h1><blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://nacos.io/docs/v2/quickstart/quick-start-docker/" >官网文档 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<h2 id="准备数据库"><a href="#准备数据库" class="headerlink" title="准备数据库"></a>准备数据库</h2><blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/blob/master/config/src/main/resources/META-INF/nacos-db.sql" >sql脚本官方地址 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="comment">/*   数据库全名 = nacos_config   */</span></span><br><span class="line"><span class="comment">/*   表名称 = config_info   */</span></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `config_info` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;id&#x27;</span>,</span><br><span class="line">  `data_id` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;data_id&#x27;</span>,</span><br><span class="line">  `group_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `content` longtext <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;content&#x27;</span>,</span><br><span class="line">  `md5` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;md5&#x27;</span>,</span><br><span class="line">  `gmt_create` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">  `gmt_modified` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;修改时间&#x27;</span>,</span><br><span class="line">  `src_user` text COMMENT <span class="string">&#x27;source user&#x27;</span>,</span><br><span class="line">  `src_ip` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;source ip&#x27;</span>,</span><br><span class="line">  `app_name` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `tenant_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;租户字段&#x27;</span>,</span><br><span class="line">  `c_desc` <span class="type">varchar</span>(<span class="number">256</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `c_use` <span class="type">varchar</span>(<span class="number">64</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `effect` <span class="type">varchar</span>(<span class="number">64</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `type` <span class="type">varchar</span>(<span class="number">64</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `c_schema` text,</span><br><span class="line">  `encrypted_data_key` text <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;秘钥&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `uk_configinfo_datagrouptenant` (`data_id`,`group_id`,`tenant_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_bin COMMENT<span class="operator">=</span><span class="string">&#x27;config_info&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="comment">/*   数据库全名 = nacos_config   */</span></span><br><span class="line"><span class="comment">/*   表名称 = config_info_aggr   */</span></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `config_info_aggr` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;id&#x27;</span>,</span><br><span class="line">  `data_id` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;data_id&#x27;</span>,</span><br><span class="line">  `group_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;group_id&#x27;</span>,</span><br><span class="line">  `datum_id` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;datum_id&#x27;</span>,</span><br><span class="line">  `content` longtext <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;内容&#x27;</span>,</span><br><span class="line">  `gmt_modified` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;修改时间&#x27;</span>,</span><br><span class="line">  `app_name` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `tenant_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;租户字段&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `uk_configinfoaggr_datagrouptenantdatum` (`data_id`,`group_id`,`tenant_id`,`datum_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_bin COMMENT<span class="operator">=</span><span class="string">&#x27;增加租户字段&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="comment">/*   数据库全名 = nacos_config   */</span></span><br><span class="line"><span class="comment">/*   表名称 = config_info_beta   */</span></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `config_info_beta` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;id&#x27;</span>,</span><br><span class="line">  `data_id` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;data_id&#x27;</span>,</span><br><span class="line">  `group_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;group_id&#x27;</span>,</span><br><span class="line">  `app_name` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;app_name&#x27;</span>,</span><br><span class="line">  `content` longtext <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;content&#x27;</span>,</span><br><span class="line">  `beta_ips` <span class="type">varchar</span>(<span class="number">1024</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;betaIps&#x27;</span>,</span><br><span class="line">  `md5` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;md5&#x27;</span>,</span><br><span class="line">  `gmt_create` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">  `gmt_modified` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;修改时间&#x27;</span>,</span><br><span class="line">  `src_user` text COMMENT <span class="string">&#x27;source user&#x27;</span>,</span><br><span class="line">  `src_ip` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;source ip&#x27;</span>,</span><br><span class="line">  `tenant_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;租户字段&#x27;</span>,</span><br><span class="line">  `encrypted_data_key` text <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;秘钥&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `uk_configinfobeta_datagrouptenant` (`data_id`,`group_id`,`tenant_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_bin COMMENT<span class="operator">=</span><span class="string">&#x27;config_info_beta&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="comment">/*   数据库全名 = nacos_config   */</span></span><br><span class="line"><span class="comment">/*   表名称 = config_info_tag   */</span></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `config_info_tag` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;id&#x27;</span>,</span><br><span class="line">  `data_id` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;data_id&#x27;</span>,</span><br><span class="line">  `group_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;group_id&#x27;</span>,</span><br><span class="line">  `tenant_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;tenant_id&#x27;</span>,</span><br><span class="line">  `tag_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;tag_id&#x27;</span>,</span><br><span class="line">  `app_name` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;app_name&#x27;</span>,</span><br><span class="line">  `content` longtext <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;content&#x27;</span>,</span><br><span class="line">  `md5` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;md5&#x27;</span>,</span><br><span class="line">  `gmt_create` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">  `gmt_modified` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;修改时间&#x27;</span>,</span><br><span class="line">  `src_user` text COMMENT <span class="string">&#x27;source user&#x27;</span>,</span><br><span class="line">  `src_ip` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;source ip&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `uk_configinfotag_datagrouptenanttag` (`data_id`,`group_id`,`tenant_id`,`tag_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_bin COMMENT<span class="operator">=</span><span class="string">&#x27;config_info_tag&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="comment">/*   数据库全名 = nacos_config   */</span></span><br><span class="line"><span class="comment">/*   表名称 = config_tags_relation   */</span></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `config_tags_relation` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;id&#x27;</span>,</span><br><span class="line">  `tag_name` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;tag_name&#x27;</span>,</span><br><span class="line">  `tag_type` <span class="type">varchar</span>(<span class="number">64</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;tag_type&#x27;</span>,</span><br><span class="line">  `data_id` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;data_id&#x27;</span>,</span><br><span class="line">  `group_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;group_id&#x27;</span>,</span><br><span class="line">  `tenant_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;tenant_id&#x27;</span>,</span><br><span class="line">  `nid` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`nid`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `uk_configtagrelation_configidtag` (`id`,`tag_name`,`tag_type`),</span><br><span class="line">  KEY `idx_tenant_id` (`tenant_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_bin COMMENT<span class="operator">=</span><span class="string">&#x27;config_tag_relation&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="comment">/*   数据库全名 = nacos_config   */</span></span><br><span class="line"><span class="comment">/*   表名称 = group_capacity   */</span></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `group_capacity` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键ID&#x27;</span>,</span><br><span class="line">  `group_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;Group ID，空字符表示整个集群&#x27;</span>,</span><br><span class="line">  `quota` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;配额，0表示使用默认值&#x27;</span>,</span><br><span class="line">  `usage` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;使用量&#x27;</span>,</span><br><span class="line">  `max_size` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;单个配置大小上限，单位为字节，0表示使用默认值&#x27;</span>,</span><br><span class="line">  `max_aggr_count` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;聚合子配置最大个数，，0表示使用默认值&#x27;</span>,</span><br><span class="line">  `max_aggr_size` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;单个聚合数据的子配置大小上限，单位为字节，0表示使用默认值&#x27;</span>,</span><br><span class="line">  `max_history_count` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;最大变更历史数量&#x27;</span>,</span><br><span class="line">  `gmt_create` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">  `gmt_modified` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;修改时间&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `uk_group_id` (`group_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_bin COMMENT<span class="operator">=</span><span class="string">&#x27;集群、各Group容量信息表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="comment">/*   数据库全名 = nacos_config   */</span></span><br><span class="line"><span class="comment">/*   表名称 = his_config_info   */</span></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `his_config_info` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">64</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `nid` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  `data_id` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `group_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `app_name` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;app_name&#x27;</span>,</span><br><span class="line">  `content` longtext <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `md5` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `gmt_create` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span>,</span><br><span class="line">  `gmt_modified` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span>,</span><br><span class="line">  `src_user` text,</span><br><span class="line">  `src_ip` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `op_type` <span class="type">char</span>(<span class="number">10</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `tenant_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;租户字段&#x27;</span>,</span><br><span class="line">  `encrypted_data_key` text <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;秘钥&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`nid`),</span><br><span class="line">  KEY `idx_gmt_create` (`gmt_create`),</span><br><span class="line">  KEY `idx_gmt_modified` (`gmt_modified`),</span><br><span class="line">  KEY `idx_did` (`data_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_bin COMMENT<span class="operator">=</span><span class="string">&#x27;多租户改造&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="comment">/*   数据库全名 = nacos_config   */</span></span><br><span class="line"><span class="comment">/*   表名称 = tenant_capacity   */</span></span><br><span class="line"><span class="comment">/******************************************/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `tenant_capacity` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键ID&#x27;</span>,</span><br><span class="line">  `tenant_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;Tenant ID&#x27;</span>,</span><br><span class="line">  `quota` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;配额，0表示使用默认值&#x27;</span>,</span><br><span class="line">  `usage` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;使用量&#x27;</span>,</span><br><span class="line">  `max_size` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;单个配置大小上限，单位为字节，0表示使用默认值&#x27;</span>,</span><br><span class="line">  `max_aggr_count` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;聚合子配置最大个数&#x27;</span>,</span><br><span class="line">  `max_aggr_size` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;单个聚合数据的子配置大小上限，单位为字节，0表示使用默认值&#x27;</span>,</span><br><span class="line">  `max_history_count` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;最大变更历史数量&#x27;</span>,</span><br><span class="line">  `gmt_create` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">  `gmt_modified` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;2010-05-05 00:00:00&#x27;</span> COMMENT <span class="string">&#x27;修改时间&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `uk_tenant_id` (`tenant_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_bin COMMENT<span class="operator">=</span><span class="string">&#x27;租户容量信息表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `tenant_info` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;id&#x27;</span>,</span><br><span class="line">  `kp` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;kp&#x27;</span>,</span><br><span class="line">  `tenant_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">default</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;tenant_id&#x27;</span>,</span><br><span class="line">  `tenant_name` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">default</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;tenant_name&#x27;</span>,</span><br><span class="line">  `tenant_desc` <span class="type">varchar</span>(<span class="number">256</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;tenant_desc&#x27;</span>,</span><br><span class="line">  `create_source` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;create_source&#x27;</span>,</span><br><span class="line">  `gmt_create` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">  `gmt_modified` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;修改时间&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY `uk_tenant_info_kptenantid` (`kp`,`tenant_id`),</span><br><span class="line">  KEY `idx_tenant_id` (`tenant_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_bin COMMENT<span class="operator">=</span><span class="string">&#x27;tenant_info&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> users (</span><br><span class="line">  username <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">  password <span class="type">varchar</span>(<span class="number">500</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  enabled <span class="type">boolean</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> roles (</span><br><span class="line">  username <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  role <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">constraint</span> uk_username_role <span class="keyword">UNIQUE</span> (username,role)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> permissions (</span><br><span class="line">  role <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  resource <span class="type">varchar</span>(<span class="number">512</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  action <span class="type">varchar</span>(<span class="number">8</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">constraint</span> uk_role_permission <span class="keyword">UNIQUE</span> (role,resource,action)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> users (username, password, enabled) <span class="keyword">VALUES</span> (<span class="string">&#x27;nacos&#x27;</span>, <span class="string">&#x27;$2a$10$EuWPZHzz32dJN7jexM34MOeYirDdFAZm2kuWj7VEOJhhZkDrxfvUu&#x27;</span>, <span class="literal">TRUE</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> roles (username, role) <span class="keyword">VALUES</span> (<span class="string">&#x27;nacos&#x27;</span>, <span class="string">&#x27;ROLE_ADMIN&#x27;</span>);</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h2><h3 id="docker部署"><a href="#docker部署" class="headerlink" title="docker部署"></a>docker部署</h3><ul>
+<li>搜索镜像</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search docker</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>拉取镜像</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nacos/nacos-server:v2.2.3</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>查看镜像</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>配置相关配置文件</li>
+</ul>
+<div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># spring</span></span><br><span class="line"><span class="attr">server.servlet.contextPath</span>=<span class="string">$&#123;SERVER_SERVLET_CONTEXTPATH:/nacos&#125;</span></span><br><span class="line"><span class="attr">server.contextPath</span>=<span class="string">/nacos</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">$&#123;NACOS_APPLICATION_PORT:8848&#125;</span></span><br><span class="line"><span class="attr">server.tomcat.accesslog.max-days</span>=<span class="string">30</span></span><br><span class="line"><span class="attr">server.tomcat.accesslog.pattern</span>=<span class="string">%h %l %u %t &quot;%r&quot; %s %b %D %&#123;User-Agent&#125;i %&#123;Request-Source&#125;i</span></span><br><span class="line"><span class="attr">server.tomcat.accesslog.enabled</span>=<span class="string">$&#123;TOMCAT_ACCESSLOG_ENABLED:false&#125;</span></span><br><span class="line"><span class="attr">server.error.include-message</span>=<span class="string">ALWAYS</span></span><br><span class="line"><span class="comment"># default current work dir</span></span><br><span class="line"><span class="attr">server.tomcat.basedir</span>=<span class="string">file:.</span></span><br><span class="line"><span class="comment">#*************** Config Module Related Configurations ***************#</span></span><br><span class="line"><span class="comment">### Deprecated configuration property, it is recommended to use `spring.sql.init.platform` replaced.</span></span><br><span class="line"><span class="comment">#spring.datasource.platform=$&#123;SPRING_DATASOURCE_PLATFORM:&#125;</span></span><br><span class="line"><span class="attr">spring.sql.init.platform</span>=<span class="string">$&#123;SPRING_DATASOURCE_PLATFORM:&#125;</span></span><br><span class="line"><span class="attr">nacos.cmdb.dumpTaskInterval</span>=<span class="string">3600</span></span><br><span class="line"><span class="attr">nacos.cmdb.eventTaskInterval</span>=<span class="string">10</span></span><br><span class="line"><span class="attr">nacos.cmdb.labelTaskInterval</span>=<span class="string">300</span></span><br><span class="line"><span class="attr">nacos.cmdb.loadDataAtStart</span>=<span class="string">false</span></span><br><span class="line"><span class="attr">db.num</span>=<span class="string">$&#123;MYSQL_DATABASE_NUM:1&#125;</span></span><br><span class="line"><span class="comment">## Connect URL of DB:</span></span><br><span class="line"><span class="attr">db.url.0</span>=<span class="string">jdbc:mysql://192.168.116.128:3307/nacos_config?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=UTC</span></span><br><span class="line"><span class="attr">db.user</span>=<span class="string">root</span></span><br><span class="line"><span class="attr">db.password</span>=<span class="string">root</span></span><br><span class="line"><span class="comment">### The auth system to use, currently only &#x27;nacos&#x27; and &#x27;ldap&#x27; is supported:</span></span><br><span class="line"><span class="attr">nacos.core.auth.system.type</span>=<span class="string">$&#123;NACOS_AUTH_SYSTEM_TYPE:nacos&#125;</span></span><br><span class="line"><span class="comment">### worked when nacos.core.auth.system.type=nacos</span></span><br><span class="line"><span class="comment">### The token expiration in seconds:</span></span><br><span class="line"><span class="attr">nacos.core.auth.plugin.nacos.token.expire.seconds</span>=<span class="string">$&#123;NACOS_AUTH_TOKEN_EXPIRE_SECONDS:18000&#125;</span></span><br><span class="line"><span class="comment">### The default token:</span></span><br><span class="line"><span class="attr">nacos.core.auth.plugin.nacos.token.secret.key</span>=<span class="string">$&#123;NACOS_AUTH_TOKEN:&#125;</span></span><br><span class="line"><span class="comment">### Turn on/off caching of auth information. By turning on this switch, the update of auth information would have a 15 seconds delay.</span></span><br><span class="line"><span class="attr">nacos.core.auth.caching.enabled</span>=<span class="string">$&#123;NACOS_AUTH_CACHE_ENABLE:false&#125;</span></span><br><span class="line"><span class="attr">nacos.core.auth.enable.userAgentAuthWhite</span>=<span class="string">$&#123;NACOS_AUTH_USER_AGENT_AUTH_WHITE_ENABLE:false&#125;</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.key</span>=<span class="string">$&#123;NACOS_AUTH_IDENTITY_KEY:&#125;</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.value</span>=<span class="string">$&#123;NACOS_AUTH_IDENTITY_VALUE:&#125;</span></span><br><span class="line"><span class="comment">## spring security config</span></span><br><span class="line"><span class="comment">### turn off security</span></span><br><span class="line"><span class="attr">nacos.security.ignore.urls</span>=<span class="string">$&#123;NACOS_SECURITY_IGNORE_URLS:/,/error,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.ico,/console-fe/public/**,/v1/auth/**,/v1/console/health/**,/actuator/**,/v1/console/server/**&#125;</span></span><br><span class="line"><span class="comment"># metrics for elastic search</span></span><br><span class="line"><span class="attr">management.metrics.export.elastic.enabled</span>=<span class="string">false</span></span><br><span class="line"><span class="attr">management.metrics.export.influx.enabled</span>=<span class="string">false</span></span><br><span class="line"><span class="attr">nacos.naming.distro.taskDispatchThreadCount</span>=<span class="string">10</span></span><br><span class="line"><span class="attr">nacos.naming.distro.taskDispatchPeriod</span>=<span class="string">200</span></span><br><span class="line"><span class="attr">nacos.naming.distro.batchSyncKeyCount</span>=<span class="string">1000</span></span><br><span class="line"><span class="attr">nacos.naming.distro.initDataRatio</span>=<span class="string">0.9</span></span><br><span class="line"><span class="attr">nacos.naming.distro.syncRetryDelay</span>=<span class="string">5000</span></span><br><span class="line"><span class="attr">nacos.naming.data.warmup</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.key</span>=<span class="string">serverIdentity</span></span><br><span class="line"><span class="attr">nacos.core.auth.server.identity.value</span>=<span class="string">security</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>启动容器</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name dev-nacos -e MODE=standalone -e  JVM_XMS=2g -e JVM_XMX=2g -e JVM_XMN=1g -e NACOS_AUTH_ENABLE=<span class="literal">true</span> -e NACOS_AUTH_TOKEN_EXPIRE_SECONDS=18000 -e NACOS_AUTH_TOKEN=SecretKeyZmRhZmRzYWZkc2ZhYWZhZmRzZnNhZnFydHl1aGdmc2FzYm5ienZjY3h2Z2V3cmV0eWdmYXNxZXRnZDI= -e NACOS_AUTH_CACHE_ENABLE=<span class="literal">false</span> -p 0.0.0.0:9984:9984 -p 8848:8848 -d -v /mydata/nacos/docker_nacos/application.properties:/home/nacos/conf/appplication.properties  nacos/nacos-server:v2.2.3</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h2><h3 id="docker-compose部署"><a href="#docker-compose部署" class="headerlink" title="docker-compose部署"></a>docker-compose部署</h3><ul>
+<li>Clone项目</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/nacos-group/nacos-docker.git</span><br><span class="line"><span class="built_in">cd</span> nacos-docker</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>修改docker-compose.yml</li>
+</ul>
+<blockquote>
+<p><code>vim example/standalone-mysql-5.7.yaml</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&quot;3.7&quot;</span></span><br><span class="line">services:</span><br><span class="line">  nacos:</span><br><span class="line">    image: nacos/nacos-server:v2.2.0</span><br><span class="line">    container_name: nacos-standalone-mysql</span><br><span class="line">    env_file:</span><br><span class="line">      - ../env/nacos-standlone-mysql.env</span><br><span class="line">    volumes:</span><br><span class="line">      - ./standalone-logs/:/home/nacos/logs</span><br><span class="line">      - ./init.d/application.properties:/home/nacos/conf/application.properties</span><br><span class="line">    ports:</span><br><span class="line">      - <span class="string">&quot;8848:8848&quot;</span></span><br><span class="line">      - <span class="string">&quot;9848:9848&quot;</span></span><br><span class="line">      - <span class="string">&quot;9555:9555&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>修改application.properties文件</li>
+</ul>
+<blockquote>
+<p><code>vim example/init.d/application.properties</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">db.url.0=jdbc:mysql://127.0.0.1:3307/nacos_config?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=<span class="literal">true</span>&amp;useUnicode=<span class="literal">true</span>&amp;useSSL=<span class="literal">false</span>&amp;serverTimezone=UTC</span><br><span class="line">db.user=root</span><br><span class="line">db.password=root</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>启动容器</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -f example/standalone-mysql-5.7.yaml up</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="修改容器状态"><a href="#修改容器状态" class="headerlink" title="修改容器状态"></a>修改容器状态</h2><ul>
+<li>设置容器开机自启</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&quot;3.8&quot;</span></span><br><span class="line">services:</span><br><span class="line">  nacos:</span><br><span class="line">    image: nacos/nacos-server:<span class="variable">$&#123;NACOS_VERSION&#125;</span></span><br><span class="line">    container_name: nacos-standalone-mysql</span><br><span class="line">    env_file:</span><br><span class="line">      - ../env/custom-application-config.env</span><br><span class="line">    volumes:</span><br><span class="line">      - ./standalone-logs/:/home/nacos/logs</span><br><span class="line">      - ./init.d/application.properties:/home/nacos/conf/application.properties</span><br><span class="line">    ports:</span><br><span class="line">      - <span class="string">&quot;8848:8848&quot;</span></span><br><span class="line">      - <span class="string">&quot;9848:9848&quot;</span></span><br><span class="line">    depends_on:</span><br><span class="line">      mysql:</span><br><span class="line">        condition: service_healthy</span><br><span class="line">    restart: always  <span class="comment"># 将这一行添加到配置中</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>通过在配置中添加<code>restart: always</code>,容器将会在启动失败或退出时自动重启,并且会在系统开机时自动启动</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose down</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>关于<code>restart</code>取值</strong></p>
+<blockquote>
+<p>在<code>Docker-compose</code>中,<code>restart</code>配置项可以接受多种取值方式;定义了容器在退出时的重启行为</p>
+</blockquote>
+<ul>
+<li><code>no</code>: 默认值,表示容器退出时不会自动重启</li>
+<li><code>always</code>: 表示容器退出时总是自动重启</li>
+<li><code>unless-stopped</code>: 表示容器首次启动后,只要不手动停止,就会自动重启</li>
+<li><code>no-failure</code>: 表示容器在非零退出代码的情况下自动重启.可以通过可选的<code>:max-retries</code>参数来指定最大的重试次数. 例如<code>no-failure:5</code>表示最多重试5次</li>
+</ul>
+<blockquote>
+<p><code>always</code>,<code>unless-stopped</code>,<code>no-failure</code>后跟具体的重启次数,例如<code>always:5</code>表示无论什么原因,容器总是尝试重启,最多重启5次</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&quot;3.8&quot;</span></span><br><span class="line">services:</span><br><span class="line">  my_service:</span><br><span class="line">    image: my_image</span><br><span class="line">    restart: always</span><br><span class="line">    <span class="comment"># 或者</span></span><br><span class="line">    <span class="comment"># restart: unless-stopped</span></span><br><span class="line">    <span class="comment"># 或者</span></span><br><span class="line">    <span class="comment"># restart: on-failure:5</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/Docker/">#Docker</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/Nacos/">#Nacos</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/GSSBlog/2024/01/30/Linux%E4%B8%8B%E5%AE%89%E8%A3%85git/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">CentOS7安装Git</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2024/01/18/1.K8s%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">kubernetes集群搭建</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">Docker部署Nacos</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker%E9%83%A8%E7%BD%B2Nacos"><span class="nav-text">Docker部署Nacos</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-text">准备数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80"><span class="nav-text">方式一</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker%E9%83%A8%E7%BD%B2"><span class="nav-text">docker部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C"><span class="nav-text">方式二</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-compose%E9%83%A8%E7%BD%B2"><span class="nav-text">docker-compose部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%AE%B9%E5%99%A8%E7%8A%B6%E6%80%81"><span class="nav-text">修改容器状态</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>

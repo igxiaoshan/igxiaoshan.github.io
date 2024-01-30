@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2023/10/30/docker问题集/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="问题一 [root@CentOs7_001 ~]# docker start d040a1737203Error response from daemon: driver failed programming external connectivity on endpoint mysql (565cca25921160ed2a13a2f2b1605138114e313ce2a684b309faf3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker使用中遇到的各种问题以及解决方案">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2023/10/30/Docker%E9%97%AE%E9%A2%98%E9%9B%86/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="问题一 [root@CentOs7_001 ~]# docker start d040a1737203Error response from daemon: driver failed programming external connectivity on endpoint mysql (565cca25921160ed2a13a2f2b1605138114e313ce2a684b309faf3">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-30T01:10:29.804Z">
+<meta property="article:modified_time" content="2023-10-30T01:10:29.804Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Docker使用中遇到的各种问题以及解决方案 -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">Docker使用中遇到的各种问题以及解决方案</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-10-30 09:10:29</span>
+        <span class="mobile">2023-10-30 09:10:29</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-10-30 09:10:29</span>
+            <span class="mobile">2023-10-30 09:10:29</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>530 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>2 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><blockquote>
+<p>[root@CentOs7_001 ~]# docker start d040a1737203<br>Error response from daemon: driver failed programming external connectivity on endpoint mysql (565cca25921160ed2a13a2f2b1605138114e313ce2a684b309faf3ea830de202):  (iptables failed: iptables –wait -t nat -A DOCKER -p tcp -d 0&#x2F;0 –dport 3306 -j DNAT –to-destination 172.17.0.2:3306 ! -i docker0: iptables: No chain&#x2F;target&#x2F;match by that name.<br> (exit status 1))<br>Error: failed to start containers: d040a1737203</p>
+</blockquote>
+<ul>
+<li>问题复现复述</li>
+</ul>
+<blockquote>
+<p>docker运行一个镜像;然后把这个容器停掉</p>
+<p>修改宿主机的原始防火墙状态(关闭)为打开状态</p>
+<p>重启容器报错</p>
+</blockquote>
+<ul>
+<li>解决方案</li>
+</ul>
+<blockquote>
+<p>重启docker服务</p>
+<p>重启docker服务及可重新生成自定义链DOCKER</p>
+</blockquote>
+<ul>
+<li>原因</li>
+</ul>
+<blockquote>
+<p>docker服务启动时定义的自定义链DOCKER，当 centos7 firewall 被清掉时，</p>
+<p>firewall的底层是使用iptables进行数据过滤，建立在iptables之上，这可能会与 Docker 产生冲突。</p>
+<p>当 firewalld 启动或者重启的时候，将会从 iptables 中移除 DOCKER 的规则，从而影响了 Docker 的正常工作。</p>
+</blockquote>
+<h2 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h2><blockquote>
+<p>[root@CentOs7_001 ~]# netstat -tanlp<br>-bash: netstat: command not found</p>
+</blockquote>
+<ul>
+<li>问题复现复述</li>
+</ul>
+<blockquote>
+<p>使用 netstat -tanlp 查看进程使用报错</p>
+</blockquote>
+<ul>
+<li>解决方案</li>
+</ul>
+<blockquote>
+<p>更新yum工具包下的配置</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y net-tolls</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="问题三"><a href="#问题三" class="headerlink" title="问题三"></a>问题三</h2><blockquote>
+<p>[root@CentOs7_001 log]# docker logs -f 7d3edae397c1<br>2023-05-29 15:26:52+00:00 [Note][Entrypoint]: Entrypoint script for MySQL Server 5.7.36-1debian10 started.<br>2023-05-29 15:26:52+00:00 [ERROR][Entrypoint]: mysqld failed while attempting to check config<br>​        command was: mysqld –verbose –help –log-bin-index&#x3D;&#x2F;tmp&#x2F;tmp.S3R6HCPiAQ<br>​        2023-05-29T15:26:52.338540Z 0 [ERROR] COLLATION ‘utf8_general_ci’ is not valid for CHARACTER SET ‘latin1’<br>2023-05-29T15:26:52.341808Z 0 [ERROR] Aborting</p>
+</blockquote>
+<ul>
+<li>问题复现复述</li>
+</ul>
+<blockquote>
+<p>启动mysql容器,启动配置如下 </p>
+<p>docker run -d -p 3306:3306 –privileged&#x3D;true <br>-v &#x2F;mydata&#x2F;mysql&#x2F;log:&#x2F;var&#x2F;log&#x2F;mysql <br>-v &#x2F;mydata&#x2F;mysql&#x2F;data:&#x2F;var&#x2F;lib&#x2F;mysql <br>-v &#x2F;mydata&#x2F;mysql&#x2F;conf:&#x2F;etc&#x2F;mysql&#x2F;conf.d <br>-e MYSQL_ROOT_PASSWORD&#x3D;root <br>–name mysql mysql:5.7</p>
+<p>挂载外部的配置</p>
+<p>[root@CentOs7_001 conf]# cat my.cnf</p>
+<p>[client]<br>default_character_set&#x3D;utf8</p>
+<p>[mysqld]</p>
+<p>Collation_server &#x3D; utf8_general_ci</p>
+<p>character_set_server &#x3D; utf8</p>
+</blockquote>
+<ul>
+<li>解决方案</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 查看my.cnf的配置,修改配置</span></span><br><span class="line">[client]</span><br><span class="line">default_character_set=utf8</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line">character_set_server = utf8</span><br><span class="line">collation_server = utf8_general_ci</span><br><span class="line"></span><br><span class="line"><span class="comment">## 重启服务即可</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>原因</li>
+</ul>
+<blockquote>
+<p>疑似:</p>
+<p>上文配置中</p>
+<p>[mysqld]</p>
+<p>Collation_server &#x3D; utf8_general_ci</p>
+<p>character_set_server &#x3D; utf8</p>
+<p>字母大小写或者配置顺序的问题;后续可以多方面测试…得出最终结论</p>
+</blockquote>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/Docker/">#Docker</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/GSSBlog/2023/10/30/Docker%E4%BB%8B%E7%BB%8D/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Docker简介</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">Docker使用中遇到的各种问题以及解决方案</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80"><span class="nav-text">问题一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%BA%8C"><span class="nav-text">问题二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%89"><span class="nav-text">问题三</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>
