@@ -26,7 +26,7 @@
 <meta property="og:description" content="概述 |码头工人文档 (docker.com)    Compose是Docker公司推出的一个工具软件，可以管理多个docker容器组成一个应用。需要定义一个YAML格式的配置文件docker-compose.yml，写好多个容器之间的调用关系。然后，只需要一个命令，就能同时启动&#x2F;关闭这些容器。 是Docker官方的开源项目，负责实现对Docker容器集群的快速编排   主要作用">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-10-30T01:10:29.808Z">
-<meta property="article:modified_time" content="2023-10-30T01:10:29.808Z">
+<meta property="article:modified_time" content="2024-01-30T09:13:32.300Z">
 <meta property="article:author" content="igxiaoshan">
 <meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary">
@@ -340,8 +340,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2023-10-30 09:10:29</span>
-            <span class="mobile">2023-10-30 09:10:29</span>
+            <span class="desktop">2024-01-30 17:13:32</span>
+            <span class="mobile">2024-01-30 17:13:32</span>
             <span class="hover-info">更新</span>
         </span>
     
@@ -379,12 +379,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2k 字</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.3k 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>9 分钟</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>10 分钟</span>
         </span>
     
     
@@ -481,6 +481,34 @@
 <div class="highlight-container" data-rel="Dockerfile"><figure class="iseeu highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 原始Dockerfile文件</span></span><br><span class="line"><span class="keyword">FROM</span> anapsix/alpine-java:<span class="number">8</span>_server-jre_unlimited</span><br><span class="line"></span><br><span class="line"><span class="keyword">MAINTAINER</span> igsshan@<span class="number">163</span>.com</span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mkdir</span> -p /app/lib</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ADD</span><span class="language-bash"> ./admin.jar ./app.jar</span></span><br><span class="line"><span class="keyword">ADD</span><span class="language-bash"> ./lib/*.jar ./lib/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> TZ=Asia/Shanghai JAVA_OPTS=<span class="string">&quot;-Xms128m -Xmx512m&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> java <span class="variable">$&#123;JAVA_OPTS&#125;</span> -Djava.security.egd=file:/dev/./urandom -jar app.jar</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <div class="highlight-container" data-rel="Dockerfile"><figure class="iseeu highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 修改环境变量后的Dockerfile</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> admin:<span class="number">0.0</span>.<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> TZ=Asia/Shanghai JAVA_OPTS=<span class="string">&quot;-Xms256m -Xmx1024m&quot;</span> <span class="comment">## 测试修改环境启动参数,也可以在实际应用中修改其他的环境变量参数;包括不限于数据库连接池,数据库连接地址,数据库账密、redis连接...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> java <span class="variable">$&#123;JAVA_OPTS&#125;</span> -Djava.security.egd=file:/dev/./urandom -jar app.jar</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+<ul>
+<li><strong>设置容器开机自启</strong></li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&quot;3.8&quot;</span></span><br><span class="line">services:</span><br><span class="line">  nacos:</span><br><span class="line">    image: nacos/nacos-server:<span class="variable">$&#123;NACOS_VERSION&#125;</span></span><br><span class="line">    container_name: nacos-standalone-mysql</span><br><span class="line">    env_file:</span><br><span class="line">      - ../env/custom-application-config.env</span><br><span class="line">    volumes:</span><br><span class="line">      - ./standalone-logs/:/home/nacos/logs</span><br><span class="line">      - ./init.d/application.properties:/home/nacos/conf/application.properties</span><br><span class="line">    ports:</span><br><span class="line">      - <span class="string">&quot;8848:8848&quot;</span></span><br><span class="line">      - <span class="string">&quot;9848:9848&quot;</span></span><br><span class="line">    depends_on:</span><br><span class="line">      mysql:</span><br><span class="line">        condition: service_healthy</span><br><span class="line">    restart: always  <span class="comment"># 将这一行添加到配置中</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>通过在配置中添加<code>restart: always</code>,容器将会在启动失败或退出时自动重启,并且会在系统开机时自动启动</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose down</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>关于<code>restart</code>取值</strong></p>
+<blockquote>
+<p>在<code>Docker-compose</code>中,<code>restart</code>配置项可以接受多种取值方式;定义了容器在退出时的重启行为</p>
+</blockquote>
+<ul>
+<li><code>no</code>: 默认值,表示容器退出时不会自动重启</li>
+<li><code>always</code>: 表示容器退出时总是自动重启</li>
+<li><code>unless-stopped</code>: 表示容器首次启动后,只要不手动停止,就会自动重启</li>
+<li><code>no-failure</code>: 表示容器在非零退出代码的情况下自动重启.可以通过可选的<code>:max-retries</code>参数来指定最大的重试次数. 例如<code>no-failure:5</code>表示最多重试5次</li>
+</ul>
+<blockquote>
+<p><code>always</code>,<code>unless-stopped</code>,<code>no-failure</code>后跟具体的重启次数,例如<code>always:5</code>表示无论什么原因,容器总是尝试重启,最多重启5次</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&quot;3.8&quot;</span></span><br><span class="line">services:</span><br><span class="line">  my_service:</span><br><span class="line">    image: my_image</span><br><span class="line">    restart: always</span><br><span class="line">    <span class="comment"># 或者</span></span><br><span class="line">    <span class="comment"># restart: unless-stopped</span></span><br><span class="line">    <span class="comment"># 或者</span></span><br><span class="line">    <span class="comment"># restart: on-failure:5</span></span><br></pre></td></tr></table></figure></div>
+
 
 
 
