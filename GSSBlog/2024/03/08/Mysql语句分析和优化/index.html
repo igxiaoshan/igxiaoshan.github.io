@@ -13,19 +13,22 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/categories/mysql/"/>
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2024/03/08/mysql语句分析和优化/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="凌晨四点半，海棠花未眠">
-<meta property="og:type" content="website">
-<meta property="og:title" content="igxiaoshan&#39;s Blog">
-<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/categories/MySQL/index.html">
+        <meta name="description" content="分析和优化  定期使用**ANALYZE TABLE**: 这个命令帮助更新表的统计信息,让优化器做出更好的决策。 慢查询日志: 使用MySQL的慢查询日志来识别和优化慢运行的查询   慢查询日志 慢查询日志是优化MySQL性能的重要工具之一。通过定期检查和分析慢查询日志，你可以识别并解决数据库性能瓶颈，提高应用程序的响应速度和效率。  启用慢查询日志编辑MySQL配置文件 这一步取决于你的操作系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL查询语句分析和优化(使用&#39;ANALYZE TABLE&#39;和慢查询日志)">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2024/03/08/Mysql%E8%AF%AD%E5%8F%A5%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="igxiaoshan&#39;s Blog">
-<meta property="og:description" content="凌晨四点半，海棠花未眠">
+<meta property="og:description" content="分析和优化  定期使用**ANALYZE TABLE**: 这个命令帮助更新表的统计信息,让优化器做出更好的决策。 慢查询日志: 使用MySQL的慢查询日志来识别和优化慢运行的查询   慢查询日志 慢查询日志是优化MySQL性能的重要工具之一。通过定期检查和分析慢查询日志，你可以识别并解决数据库性能瓶颈，提高应用程序的响应速度和效率。  启用慢查询日志编辑MySQL配置文件 这一步取决于你的操作系">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-08T06:48:24.720Z">
+<meta property="article:modified_time" content="2024-03-08T07:27:35.614Z">
 <meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
     
     
@@ -38,7 +41,7 @@
     
     <title>
         
-            分类: MySQL -
+            MySQL查询语句分析和优化(使用&#39;ANALYZE TABLE&#39;和慢查询日志) -
         
         igxiaoshan&#39;s Blog
     </title>
@@ -189,7 +192,7 @@
                         
                             <li class="navbar-item">
                                 <!-- Menu -->
-                                <a class="active" 
+                                <a class="" 
                                     href="/GSSBlog/categories"  >
                                     
                                         
@@ -272,7 +275,7 @@
             
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group active" 
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
                         href="/GSSBlog/categories"  >
                              
                                 
@@ -303,120 +306,229 @@
             <div class="main-content">
 
                 
-                    <div class="category-container">
-    <div class="category-name">
-        <i class="fa-solid fa-folder"></i>&nbsp;MySQL
-    </div>
-    <div class="category-post-list">
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">MySQL查询语句分析和优化(使用&#39;ANALYZE TABLE&#39;和慢查询日志)</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-03-08 14:48:24</span>
+        <span class="mobile">2024-03-08 14:48:24</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-03-08 15:27:35</span>
+            <span class="mobile">2024-03-08 15:27:35</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/">MySQL</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/Introduction/">Introduction</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/MySQL/">MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>901 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>3 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
         
 
-<div class="archive-list-container">
-    
-        <section class="archive-item">
-            <div class="archive-item-header">
-                <span class="archive-year">2024</span>
-                <span class="archive-year-post-count">[1]</span>
-            </div>
-            <ul class="article-list">
-              
+        
+
+
+        <div class="article-content markdown-body">
+            <h1 id="分析和优化"><a href="#分析和优化" class="headerlink" title="分析和优化"></a>分析和优化</h1><blockquote>
+<ul>
+<li>定期使用**<code>ANALYZE TABLE</code>**: 这个命令帮助更新表的统计信息,让优化器做出更好的决策。</li>
+<li>慢查询日志: 使用<code>MySQL</code>的慢查询日志来识别和优化慢运行的查询</li>
+</ul>
+</blockquote>
+<h2 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h2><blockquote>
+<p>慢查询日志是优化<code>MySQL</code>性能的重要工具之一。通过定期检查和分析慢查询日志，你可以识别并解决数据库性能瓶颈，提高应用程序的响应速度和效率。</p>
+</blockquote>
+<h3 id="启用慢查询日志"><a href="#启用慢查询日志" class="headerlink" title="启用慢查询日志"></a>启用慢查询日志</h3><h4 id="编辑MySQL配置文件"><a href="#编辑MySQL配置文件" class="headerlink" title="编辑MySQL配置文件"></a>编辑<code>MySQL</code>配置文件</h4><blockquote>
+<p>这一步取决于你的操作系统和MySQL安装的具体情况</p>
+<p>通常,配置文件位于<code>/etc/mysql/my.cnf</code>、<code>/etc/my.cnf</code>、或者<code>/use/local/mysql/etc/my.cnf</code></p>
+</blockquote>
+<h4 id="在配置文件中设备慢查询日志选项"><a href="#在配置文件中设备慢查询日志选项" class="headerlink" title="在配置文件中设备慢查询日志选项"></a>在配置文件中设备慢查询日志选项</h4><ul>
+<li><code>slow_query_log</code>: 设置为<code>1</code>以启用慢查询日志</li>
+<li><code>slow_query_log_file</code>:指定慢查询日志的文件路径。例如<code>/var/log/mysql/mysql-slow.log</code></li>
+<li><code>long_query_time</code>:设置慢查询的阈值(秒)。任何执行时间超过这个阈值的查询都会被记录.通常设置为1秒或者更短。</li>
+<li><code>log_queries_not_using_indexes</code>:设置为<code>1</code>,即使查询不慢也记录不使用索引的查询,这有助于发现需要优化的查询。</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">slow_query_log=1</span><br><span class="line">slow_query_log_file=/var/log/mysql/mysql-slow.log</span><br><span class="line">long_query_time=2</span><br><span class="line">log_queries_not_using_indexes=1</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="重启MySQL服务"><a href="#重启MySQL服务" class="headerlink" title="重启MySQL服务"></a>重启<code>MySQL</code>服务</h4><blockquote>
+<p>更改配置后,需要重启MySQL服务以应用这些更改。</p>
+<p>可以使用<code>service mysql restart</code>或者<code>docker</code>命令来重启服务</p>
+</blockquote>
+<h3 id="查看和分析慢查询日志"><a href="#查看和分析慢查询日志" class="headerlink" title="查看和分析慢查询日志"></a>查看和分析慢查询日志</h3><ul>
+<li><code>查看日志文件</code>:直接查看慢查询日志文件可以获取慢查询的详细信息.使用文件编辑器或者命令行工具如<code>less</code>、<code>cat</code>等查询日志文件</li>
+<li>使用<code>mysqldumpslow</code>工具: MySQL提供了一个名为<code>mysqldumpslow</code>的工具,它可以解析慢查询日志文件并以更易于理解的方式输出查询的汇总信息。例如,使用命令<code>mysqldumpslow -t 10 /var/log/mysql/mysql-slow.log</code>可以显示出现次数最多的前10个慢查询。</li>
+</ul>
+<h3 id="基于慢查询日志的优化"><a href="#基于慢查询日志的优化" class="headerlink" title="基于慢查询日志的优化"></a>基于慢查询日志的优化</h3><ul>
+<li>分析慢查询: 识别为何这些查询慢的原因。可能是因为缺少索引,查询设计不佳或者数据量过大等原因</li>
+<li>优化查询: 根据分析结果,优化查询语句,增加必要的索引,调整数据库结构或者调整MySQL的配置参数</li>
+</ul>
+<h2 id="定期使用ANALYZE-TABLE命令"><a href="#定期使用ANALYZE-TABLE命令" class="headerlink" title="定期使用ANALYZE TABLE命令"></a>定期使用<code>ANALYZE TABLE</code>命令</h2><blockquote>
+<p><code>ANALYZE TABLE</code>命令用于分析和存储表的关键分布.这对于优化器选择最优的查询计划非常有帮助。</p>
+</blockquote>
+<h3 id="手动执行ANALYZE-TABLE"><a href="#手动执行ANALYZE-TABLE" class="headerlink" title="手动执行ANALYZE TABLE"></a>手动执行<code>ANALYZE TABLE</code></h3><blockquote>
+<p>对于你认为可能已经因为数据变动较大而导致统计信息过时的表,可以手动执行<code>ANALYZE TABLE</code>命令</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ANALYZE TABLE your_table_name;</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>这将分析<code>your_table_name</code>表,并更新其统计信息以帮助查询优化器做出更好的决策。</p>
+</blockquote>
+<h3 id="自动化和定期执行"><a href="#自动化和定期执行" class="headerlink" title="自动化和定期执行"></a>自动化和定期执行</h3><blockquote>
+<p>对于需要定期优化的大型数据库,你可以通过设置一个定时任务(如 cron job)来自动执行<code>ANALYZE TABLE</code>命令</p>
+<p>例如,创建一个脚本<code>analyze_table.sh</code>包含以下内容</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">mysql -u your_username -pyour_password -e <span class="string">&quot;ANALYZE TABLE your_table_name;&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>然后,通过cron定时制定这个脚本。编辑crontab:</p>
+</blockquote>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>添加一行来定期运行脚本,比如每天凌晨一点:</p>
+</blockquote>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 1 * * * /path/to/analyze_table.sh</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>使用慢查询日志和定期执行<code>ANALYZE TABLE</code>是维护和优化<code>MySQL</code>数据库性能的重要手段。通过这些措施,可以识别并解决数据库的性能瓶颈,确保应用程序的响应速度和稳定性</strong></p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
                 
-                    
-                    <li class="article-item" date-is='03-08'>
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/MySQL/">#MySQL</a>&nbsp;
+                    </li>
                 
-                
-                    <a href="/GSSBlog/2024/03/08/Mysql%E8%AF%AD%E5%8F%A5%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/">
-                        <span class="article-title">MySQL查询语句分析和优化(使用&#39;ANALYZE TABLE&#39;和慢查询日志)</span>
-                    </a>
-                
-              
             </ul>
-        </section>
-    
-        <section class="archive-item">
-            <div class="archive-item-header">
-                <span class="archive-year">2023</span>
-                <span class="archive-year-post-count">[9]</span>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2024/01/30/Linux%E4%B8%8B%E5%AE%89%E8%A3%85git/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">CentOS7安装Git</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
             </div>
-            <ul class="article-list">
-              
-                
-                    
-                    <li class="article-item" date-is='10-30'>
-                
-                
-                    <a href="/GSSBlog/2023/10/30/1.2.Linux%E4%B8%8B%E5%AE%89%E8%A3%85MySQL%E6%9C%8D%E5%8A%A1/">
-                        <span class="article-title">MySQL服务安装</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/1.1.Linux%E4%B8%8B%E5%8D%B8%E8%BD%BDMySQL%E6%9C%8D%E5%8A%A1/">
-                        <span class="article-title">MySQL服务卸载</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/0.01.%E4%B8%8B%E8%BD%BDMySQL%E5%AE%89%E8%A3%85%E5%8C%85/">
-                        <span class="article-title">MySQL服务安装包下载</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/0.0.CentOS%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/">
-                        <span class="article-title">MySQL服务安装配置</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/1.3.MySQL%E5%AD%97%E7%AC%A6%E9%9B%86%E6%93%8D%E4%BD%9C/">
-                        <span class="article-title">MySQL字符集配置</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/9.MySQL%E5%8F%98%E9%87%8F,%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6,%E6%B8%B8%E6%A0%87/">
-                        <span class="article-title">MySQL变量、流程控制、游标</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/8.MySQL%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/">
-                        <span class="article-title">MySQL存储过程(PROCEDURE)</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/7.MySQL%E8%A7%86%E5%9B%BE/">
-                        <span class="article-title">MySQL视图(VIEW)</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/6.MySQL%E7%BA%A6%E6%9D%9F/">
-                        <span class="article-title">MySQL约束</span>
-                    </a>
-                
-              
-            </ul>
-        </section>
+        
+
+
+        
+    </div>
+
     
-</div>
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">MySQL查询语句分析和优化(使用&#39;ANALYZE TABLE&#39;和慢查询日志)</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96"><span class="nav-text">分析和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97"><span class="nav-text">慢查询日志</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97"><span class="nav-text">启用慢查询日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%92%8C%E5%88%86%E6%9E%90%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97"><span class="nav-text">查看和分析慢查询日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-text">基于慢查询日志的优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E6%9C%9F%E4%BD%BF%E7%94%A8ANALYZE-TABLE%E5%91%BD%E4%BB%A4"><span class="nav-text">定期使用ANALYZE TABLE命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E6%89%A7%E8%A1%8CANALYZE-TABLE"><span class="nav-text">手动执行ANALYZE TABLE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%92%8C%E5%AE%9A%E6%9C%9F%E6%89%A7%E8%A1%8C"><span class="nav-text">自动化和定期执行</span></a></li></ol></li></ol></li></ol>
 
     </div>
 </div>
-<div class="category-paginator">
-    <div class="paginator">
-    <span class="page-number current">1</span><a class="page-number" href="/GSSBlog/categories/MySQL/page/2/">2</a><a class="extend next" rel="next" href="/GSSBlog/categories/MySQL/page/2/"><i class="fa-regular fa-angle-right"></i></a>
-</div>
-
+        </div>
+    
 </div>
 
 
@@ -472,6 +584,23 @@
         </div>
     </div>
 
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
     
 
     <div class="right-side-tools-container">

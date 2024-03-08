@@ -598,51 +598,6 @@
       </tags>
   </entry>
   <entry>
-    <title>VsCode首次安装code</title>
-    <url>/GSSBlog/2023/10/30/VsCode%E9%A6%96%E6%AC%A1%E5%AE%89%E8%A3%85code/</url>
-    <content><![CDATA[<blockquote>
-<h3 id="问题的前提"><a href="#问题的前提" class="headerlink" title="问题的前提"></a>问题的前提</h3></blockquote>
-<blockquote>
-<p>在首次安装<code>node(安装node之后需要重启电脑)</code>之后,使用<code>npm install</code>指令的时候遇到问题和处理方式</p>
-</blockquote>
-<ul>
-<li><h3 id="首先"><a href="#首先" class="headerlink" title="首先"></a>首先</h3></li>
-</ul>
-<blockquote>
-<p>首先需要配置<code>node</code>的镜像(默认使用官方镜像厂库,国内会超时)</p>
-</blockquote>
-<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">### 查看厂库配置</span></span><br><span class="line">npm config get registry</span><br><span class="line"></span><br><span class="line"><span class="comment">### 设置国内淘宝镜像</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npmjs.org/</span><br></pre></td></tr></table></figure></div>
-
-<ul>
-<li><h3 id="在node-install之前-更新或重新编译node-saas"><a href="#在node-install之前-更新或重新编译node-saas" class="headerlink" title="在node install之前,更新或重新编译node saas"></a>在<code>node install</code>之前,更新或重新编译<code>node saas</code></h3></li>
-</ul>
-<blockquote>
-<p>在install之前,先配置node saas ; 避免安装时报错</p>
-</blockquote>
-<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">### 升级 node-sass 版本：尝试将 node-sass 更新到较新版本。运行以下命令:</span></span><br><span class="line">npm install node-sass@latest</span><br><span class="line"><span class="comment">#### 这将安装 node-sass 的最新版本，可能解决与新 Node.js 版本的兼容性问题。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 手动构建 node-sass：如果上述方法不起作用，你可以尝试手动构建 node-sass。首先，确保你已经安装了 node-gyp：</span></span><br><span class="line">npm install -g node-gyp</span><br><span class="line"></span><br><span class="line"><span class="comment">### 尝试手动重新构建 node saas</span></span><br><span class="line">npm rebuild node-sass</span><br><span class="line"></span><br><span class="line"><span class="comment">### 升级 chromedriver：尝试升级 chromedriver 到最新版本：</span></span><br><span class="line">npm install chromedriver@latest</span><br><span class="line"><span class="comment">#### 注意: 可以能会依赖python环境;需要安装pyhton环境</span></span><br></pre></td></tr></table></figure></div>
-
-
-
-
-
-
-
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a><code>扩展</code></h3><blockquote>
-<h4 id="chromedriver-和node-saas"><a href="#chromedriver-和node-saas" class="headerlink" title="chromedriver 和node saas"></a>chromedriver 和node saas</h4></blockquote>
-<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">chromedriver 是一个用于控制和操作 Google Chrome 浏览器的工具。它通常用于自动化测试，Web 抓取和其他需要与浏览器交互的任务。在某些情况下，它也可以与 Node.js 一起使用，以便从 Node.js 代码中启动和控制 Chrome 浏览器。</span><br><span class="line"></span><br><span class="line">node-sass 是一个 Node.js 模块，用于将 Sass（一种 CSS 预处理器）文件编译成普通的 CSS 文件。它不直接与浏览器交互或控制浏览器。通常，node-sass 是用于构建 Web 应用程序的前端工程中，以将 Sass 文件转换为浏览器可以理解的 CSS。</span><br><span class="line"></span><br><span class="line">通常情况下，chromedriver 用于执行自动化测试或爬虫任务，而 node-sass 用于前端开发中的 CSS 预处理。要解决问题，你可能需要检查项目的依赖关系和配置，以确保它们不会发生冲突。</span><br></pre></td></tr></table></figure></div>
-
-<blockquote>
-<h4 id="node版本需要和node-saaa版本对应"><a href="#node版本需要和node-saaa版本对应" class="headerlink" title="node版本需要和node-saaa版本对应"></a><code>node</code>版本需要和<code>node-saaa</code>版本对应</h4></blockquote>
-]]></content>
-      <categories>
-        <category>Vscode</category>
-      </categories>
-      <tags>
-        <tag>Vscode</tag>
-        <tag>Node</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Node.js版本管理工具NVM</title>
     <url>/GSSBlog/2023/10/30/NodeJS%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/</url>
     <content><![CDATA[<blockquote>
@@ -9525,6 +9480,124 @@ public class MySeataConfig &#123;
       </categories>
       <tags>
         <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL查询语句分析和优化(使用&#39;ANALYZE TABLE&#39;和慢查询日志)</title>
+    <url>/GSSBlog/2024/03/08/Mysql%E8%AF%AD%E5%8F%A5%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/</url>
+    <content><![CDATA[<h1 id="分析和优化"><a href="#分析和优化" class="headerlink" title="分析和优化"></a>分析和优化</h1><blockquote>
+<ul>
+<li>定期使用**<code>ANALYZE TABLE</code>**: 这个命令帮助更新表的统计信息,让优化器做出更好的决策。</li>
+<li>慢查询日志: 使用<code>MySQL</code>的慢查询日志来识别和优化慢运行的查询</li>
+</ul>
+</blockquote>
+<h2 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h2><blockquote>
+<p>慢查询日志是优化<code>MySQL</code>性能的重要工具之一。通过定期检查和分析慢查询日志，你可以识别并解决数据库性能瓶颈，提高应用程序的响应速度和效率。</p>
+</blockquote>
+<h3 id="启用慢查询日志"><a href="#启用慢查询日志" class="headerlink" title="启用慢查询日志"></a>启用慢查询日志</h3><h4 id="编辑MySQL配置文件"><a href="#编辑MySQL配置文件" class="headerlink" title="编辑MySQL配置文件"></a>编辑<code>MySQL</code>配置文件</h4><blockquote>
+<p>这一步取决于你的操作系统和MySQL安装的具体情况</p>
+<p>通常,配置文件位于<code>/etc/mysql/my.cnf</code>、<code>/etc/my.cnf</code>、或者<code>/use/local/mysql/etc/my.cnf</code></p>
+</blockquote>
+<h4 id="在配置文件中设备慢查询日志选项"><a href="#在配置文件中设备慢查询日志选项" class="headerlink" title="在配置文件中设备慢查询日志选项"></a>在配置文件中设备慢查询日志选项</h4><ul>
+<li><code>slow_query_log</code>: 设置为<code>1</code>以启用慢查询日志</li>
+<li><code>slow_query_log_file</code>:指定慢查询日志的文件路径。例如<code>/var/log/mysql/mysql-slow.log</code></li>
+<li><code>long_query_time</code>:设置慢查询的阈值(秒)。任何执行时间超过这个阈值的查询都会被记录.通常设置为1秒或者更短。</li>
+<li><code>log_queries_not_using_indexes</code>:设置为<code>1</code>,即使查询不慢也记录不使用索引的查询,这有助于发现需要优化的查询。</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">slow_query_log=1</span><br><span class="line">slow_query_log_file=/var/log/mysql/mysql-slow.log</span><br><span class="line">long_query_time=2</span><br><span class="line">log_queries_not_using_indexes=1</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="重启MySQL服务"><a href="#重启MySQL服务" class="headerlink" title="重启MySQL服务"></a>重启<code>MySQL</code>服务</h4><blockquote>
+<p>更改配置后,需要重启MySQL服务以应用这些更改。</p>
+<p>可以使用<code>service mysql restart</code>或者<code>docker</code>命令来重启服务</p>
+</blockquote>
+<h3 id="查看和分析慢查询日志"><a href="#查看和分析慢查询日志" class="headerlink" title="查看和分析慢查询日志"></a>查看和分析慢查询日志</h3><ul>
+<li><code>查看日志文件</code>:直接查看慢查询日志文件可以获取慢查询的详细信息.使用文件编辑器或者命令行工具如<code>less</code>、<code>cat</code>等查询日志文件</li>
+<li>使用<code>mysqldumpslow</code>工具: MySQL提供了一个名为<code>mysqldumpslow</code>的工具,它可以解析慢查询日志文件并以更易于理解的方式输出查询的汇总信息。例如,使用命令<code>mysqldumpslow -t 10 /var/log/mysql/mysql-slow.log</code>可以显示出现次数最多的前10个慢查询。</li>
+</ul>
+<h3 id="基于慢查询日志的优化"><a href="#基于慢查询日志的优化" class="headerlink" title="基于慢查询日志的优化"></a>基于慢查询日志的优化</h3><ul>
+<li>分析慢查询: 识别为何这些查询慢的原因。可能是因为缺少索引,查询设计不佳或者数据量过大等原因</li>
+<li>优化查询: 根据分析结果,优化查询语句,增加必要的索引,调整数据库结构或者调整MySQL的配置参数</li>
+</ul>
+<h2 id="定期使用ANALYZE-TABLE命令"><a href="#定期使用ANALYZE-TABLE命令" class="headerlink" title="定期使用ANALYZE TABLE命令"></a>定期使用<code>ANALYZE TABLE</code>命令</h2><blockquote>
+<p><code>ANALYZE TABLE</code>命令用于分析和存储表的关键分布.这对于优化器选择最优的查询计划非常有帮助。</p>
+</blockquote>
+<h3 id="手动执行ANALYZE-TABLE"><a href="#手动执行ANALYZE-TABLE" class="headerlink" title="手动执行ANALYZE TABLE"></a>手动执行<code>ANALYZE TABLE</code></h3><blockquote>
+<p>对于你认为可能已经因为数据变动较大而导致统计信息过时的表,可以手动执行<code>ANALYZE TABLE</code>命令</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">ANALYZE TABLE your_table_name;</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>这将分析<code>your_table_name</code>表,并更新其统计信息以帮助查询优化器做出更好的决策。</p>
+</blockquote>
+<h3 id="自动化和定期执行"><a href="#自动化和定期执行" class="headerlink" title="自动化和定期执行"></a>自动化和定期执行</h3><blockquote>
+<p>对于需要定期优化的大型数据库,你可以通过设置一个定时任务(如 cron job)来自动执行<code>ANALYZE TABLE</code>命令</p>
+<p>例如,创建一个脚本<code>analyze_table.sh</code>包含以下内容</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">mysql -u your_username -pyour_password -e <span class="string">&quot;ANALYZE TABLE your_table_name;&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>然后,通过cron定时制定这个脚本。编辑crontab:</p>
+</blockquote>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>添加一行来定期运行脚本,比如每天凌晨一点:</p>
+</blockquote>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">0 1 * * * /path/to/analyze_table.sh</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>使用慢查询日志和定期执行<code>ANALYZE TABLE</code>是维护和优化<code>MySQL</code>数据库性能的重要手段。通过这些措施,可以识别并解决数据库的性能瓶颈,确保应用程序的响应速度和稳定性</strong></p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+        <category>Introduction</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>VsCode首次安装Node</title>
+    <url>/GSSBlog/2023/10/30/VsCode%E9%A6%96%E6%AC%A1%E5%AE%89%E8%A3%85Node/</url>
+    <content><![CDATA[<blockquote>
+<h3 id="问题的前提"><a href="#问题的前提" class="headerlink" title="问题的前提"></a>问题的前提</h3></blockquote>
+<blockquote>
+<p>在首次安装<code>node(安装node之后需要重启电脑)</code>之后,使用<code>npm install</code>指令的时候遇到问题和处理方式</p>
+</blockquote>
+<ul>
+<li><h3 id="首先"><a href="#首先" class="headerlink" title="首先"></a>首先</h3></li>
+</ul>
+<blockquote>
+<p>首先需要配置<code>node</code>的镜像(默认使用官方镜像厂库,国内会超时)</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">### 查看厂库配置</span></span><br><span class="line">npm config get registry</span><br><span class="line"></span><br><span class="line"><span class="comment">### 设置国内淘宝镜像</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npmjs.org/</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><h3 id="在node-install之前-更新或重新编译node-saas"><a href="#在node-install之前-更新或重新编译node-saas" class="headerlink" title="在node install之前,更新或重新编译node saas"></a>在<code>node install</code>之前,更新或重新编译<code>node saas</code></h3></li>
+</ul>
+<blockquote>
+<p>在install之前,先配置node saas ; 避免安装时报错</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">### 升级 node-sass 版本：尝试将 node-sass 更新到较新版本。运行以下命令:</span></span><br><span class="line">npm install node-sass@latest</span><br><span class="line"><span class="comment">#### 这将安装 node-sass 的最新版本，可能解决与新 Node.js 版本的兼容性问题。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 手动构建 node-sass：如果上述方法不起作用，你可以尝试手动构建 node-sass。首先，确保你已经安装了 node-gyp：</span></span><br><span class="line">npm install -g node-gyp</span><br><span class="line"></span><br><span class="line"><span class="comment">### 尝试手动重新构建 node saas</span></span><br><span class="line">npm rebuild node-sass</span><br><span class="line"></span><br><span class="line"><span class="comment">### 升级 chromedriver：尝试升级 chromedriver 到最新版本：</span></span><br><span class="line">npm install chromedriver@latest</span><br><span class="line"><span class="comment">#### 注意: 可以能会依赖python环境;需要安装pyhton环境</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a><code>扩展</code></h3><blockquote>
+<h4 id="chromedriver-和node-saas"><a href="#chromedriver-和node-saas" class="headerlink" title="chromedriver 和node saas"></a>chromedriver 和node saas</h4></blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">chromedriver 是一个用于控制和操作 Google Chrome 浏览器的工具。它通常用于自动化测试，Web 抓取和其他需要与浏览器交互的任务。在某些情况下，它也可以与 Node.js 一起使用，以便从 Node.js 代码中启动和控制 Chrome 浏览器。</span><br><span class="line"></span><br><span class="line">node-sass 是一个 Node.js 模块，用于将 Sass（一种 CSS 预处理器）文件编译成普通的 CSS 文件。它不直接与浏览器交互或控制浏览器。通常，node-sass 是用于构建 Web 应用程序的前端工程中，以将 Sass 文件转换为浏览器可以理解的 CSS。</span><br><span class="line"></span><br><span class="line">通常情况下，chromedriver 用于执行自动化测试或爬虫任务，而 node-sass 用于前端开发中的 CSS 预处理。要解决问题，你可能需要检查项目的依赖关系和配置，以确保它们不会发生冲突。</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<h4 id="node版本需要和node-saaa版本对应"><a href="#node版本需要和node-saaa版本对应" class="headerlink" title="node版本需要和node-saaa版本对应"></a><code>node</code>版本需要和<code>node-saaa</code>版本对应</h4></blockquote>
+]]></content>
+      <categories>
+        <category>Vscode</category>
+      </categories>
+      <tags>
+        <tag>Vscode</tag>
+        <tag>Node</tag>
       </tags>
   </entry>
 </search>
