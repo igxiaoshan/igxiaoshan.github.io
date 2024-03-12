@@ -13,19 +13,22 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/tags/mysql/page/2/"/>
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2024/03/12/mysql之插入记录/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="凌晨四点半，海棠花未眠">
-<meta property="og:type" content="website">
-<meta property="og:title" content="igxiaoshan&#39;s Blog">
-<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/tags/MySQL/page/2/index.html">
+        <meta name="description" content="MySQL之插入记录 INSERT INTO  INSERT IGNORE INTO REPLACE INTO INSERT ... ON DUPLICATE KEY UPDATE   针对于不同场景，可以使用不同的方法对数据进行插入  INSERT IGNORE INTO 和 INSERT INTO INSERT IGNORE INTO 和 INSERT INTO是 SQL 中用于插入记录到数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL之插入记录(不同场景下的使用)">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2024/03/12/MySQL%E4%B9%8B%E6%8F%92%E5%85%A5%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="igxiaoshan&#39;s Blog">
-<meta property="og:description" content="凌晨四点半，海棠花未眠">
+<meta property="og:description" content="MySQL之插入记录 INSERT INTO  INSERT IGNORE INTO REPLACE INTO INSERT ... ON DUPLICATE KEY UPDATE   针对于不同场景，可以使用不同的方法对数据进行插入  INSERT IGNORE INTO 和 INSERT INTO INSERT IGNORE INTO 和 INSERT INTO是 SQL 中用于插入记录到数据">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-12T01:29:24.434Z">
+<meta property="article:modified_time" content="2024-03-12T02:00:45.311Z">
 <meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
     
     
@@ -38,7 +41,7 @@
     
     <title>
         
-            标签: MySQL -
+            MySQL之插入记录(不同场景下的使用) -
         
         igxiaoshan&#39;s Blog
     </title>
@@ -173,7 +176,7 @@
                         
                             <li class="navbar-item">
                                 <!-- Menu -->
-                                <a class="active" 
+                                <a class="" 
                                     href="/GSSBlog/tags"  >
                                     
                                         
@@ -257,7 +260,7 @@
             
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group active" 
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
                         href="/GSSBlog/tags"  >
                              
                                 
@@ -303,109 +306,216 @@
             <div class="main-content">
 
                 
-                    <div class="tag-container">
-	<div class="tag-name">
-		<i class="fa-solid fa-tag"></i>&nbsp;MySQL
-	</div>
-	<div class="tag-post-list">
-		
+                    <div class="post-page-container">
+    <div class="article-content-container">
 
-<div class="archive-list-container">
-    
-        <section class="archive-item">
-            <div class="archive-item-header">
-                <span class="archive-year">2023</span>
-                <span class="archive-year-post-count">[10]</span>
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">MySQL之插入记录(不同场景下的使用)</h1>
+            
             </div>
-            <ul class="article-list">
-              
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-03-12 09:29:24</span>
+        <span class="mobile">2024-03-12 09:29:24</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-03-12 10:45</span>
+            <span class="mobile">2024-03-12 10:45</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
                 
                     
-                    <li class="article-item" date-is='10-30'>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/">MySQL</a>&nbsp;
+                        </li>
+                    
+                    
                 
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MySQL/Introduction/">Introduction</a>&nbsp;
+                        </li>
+                    
+                    
                 
-                    <a href="/GSSBlog/2023/10/30/6.MySQL%E7%BA%A6%E6%9D%9F/">
-                        <span class="article-title">MySQL约束</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/5.MySQL%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
-                        <span class="article-title">MySQL数据类型</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/4.%E5%88%9B%E5%BB%BA%E5%92%8C%E7%AE%A1%E7%90%86%E8%A1%A8/">
-                        <span class="article-title">MySQL创建和管理数据库</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/3.%E5%AD%90%E6%9F%A5%E8%AF%A2/">
-                        <span class="article-title">MySQL子查询</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/2.mysql%E5%87%BD%E6%95%B0/">
-                        <span class="article-title">MySQL函数</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/1.Mysql%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/">
-                        <span class="article-title">MySQL服务安装,卸载</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/0.MySQL%E6%9D%82%E8%AE%B0-%E5%91%BD%E4%BB%A4/">
-                        <span class="article-title">MySQL基础命令</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/0.1MySQL%E5%AF%86%E7%A0%81%E6%89%BE%E5%9B%9E/">
-                        <span class="article-title">MySQL用户登录失败</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/2.Mysql%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/">
-                        <span class="article-title">MySQL执行流程</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/GSSBlog/2023/10/30/1.SQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/">
-                        <span class="article-title">MySQL查询优化</span>
-                    </a>
-                
-              
             </ul>
-        </section>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/MySQL/">MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>941 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>3 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
     
 </div>
 
-	</div>
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h1 id="MySQL之插入记录"><a href="#MySQL之插入记录" class="headerlink" title="MySQL之插入记录"></a>MySQL之插入记录</h1><ul>
+<li><strong><code>INSERT INTO</code></strong> </li>
+<li><strong><code>INSERT IGNORE INTO</code></strong></li>
+<li><strong><code>REPLACE INTO</code></strong></li>
+<li><strong><code>INSERT ... ON DUPLICATE KEY UPDATE</code></strong></li>
+</ul>
+<blockquote>
+<p>针对于不同场景，可以使用不同的方法对数据进行插入</p>
+</blockquote>
+<h2 id="INSERT-IGNORE-INTO-和-INSERT-INTO"><a href="#INSERT-IGNORE-INTO-和-INSERT-INTO" class="headerlink" title="INSERT IGNORE INTO 和 INSERT INTO"></a><code>INSERT IGNORE INTO</code> 和 <code>INSERT INTO</code></h2><blockquote>
+<p><code>INSERT IGNORE INTO</code> 和 <code>INSERT INTO</code>是 SQL 中用于插入记录到数据库的两个不同命令,主要区别在于<code>如何处理数据违反约束(例如唯一约束)</code>的情况。</p>
+</blockquote>
+<h3 id="INSERT-INTO"><a href="#INSERT-INTO" class="headerlink" title="INSERT INTO"></a><strong>INSERT INTO</strong></h3><blockquote>
+<p><strong>INSERT INTO</strong>是最常见的插入命令，用于将记录添加到表中。如果插入的数据违反了表的约束（比如试图插入重复的唯一键值），则SQL操作会失败，并返回一个错误。</p>
+</blockquote>
+<h3 id="INSERT-IGNORE-INTO"><a href="#INSERT-IGNORE-INTO" class="headerlink" title="INSERT IGNORE INTO"></a><strong>INSERT IGNORE INTO</strong></h3><blockquote>
+<p><strong>INSERT IGNORE INTO</strong>这个命令与<code>INSERT INTO</code>类似，用于插入新的记录。但如果数据违反了约束，它<code>会忽略违反约束的那条记录</code>，操作不会插入该记录，但不会返回错误。相反，操作会继续执行，尝试插入其他记录。</p>
+<p><code>INSERT IGNORE INTO</code>有时用于避免由于重复键引起的插入错误，但它不会告诉你哪些记录被忽略了。</p>
+</blockquote>
+<h3 id="REPLACE-INTO"><a href="#REPLACE-INTO" class="headerlink" title="REPLACE INTO"></a><strong>REPLACE INTO</strong></h3><blockquote>
+<p><strong>REPLACE INTO</strong>这个命令首先检查表中是否存在与要插入的记录在<code>唯一索引</code>或<code>主键</code>上有相同值的记录。</p>
+<p>如果有，<code>旧纪录会被删除，然后插入新的记录</code></p>
+<p>如果没有，就直接插入新纪录。</p>
+<p><code>REPLACE INTO</code>实际上是一个删除旧纪录再插入新纪录的过程。</p>
+</blockquote>
+<p><strong>用法</strong></p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 先检查主键id为7的记录是否存在</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> id <span class="operator">=</span><span class="number">7</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 记录存在</span></span><br><span class="line">id	name			create_time</span><br><span class="line"><span class="number">7</span>	张三			   <span class="number">2024</span><span class="number">-03</span><span class="number">-12</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">11</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 使用 replace into 命令插入记录</span></span><br><span class="line">REPLACE <span class="keyword">INTO</span> student(id	, `name`, create_time)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">7</span>,<span class="string">&#x27;李四&#x27;</span>,NOW());</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 执行成功，再次查询主键id为7的记录</span></span><br><span class="line">id	name			create_time</span><br><span class="line"><span class="number">7</span>	李四			   <span class="number">2024</span><span class="number">-03</span><span class="number">-12</span> <span class="number">09</span>:<span class="number">22</span>:<span class="number">30</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>使用场景</strong></p>
+<ul>
+<li>当你需要删除旧纪录并替换成新纪录时，可以使用<code>REPLACE INTO</code>。它首先尝试插入数据，如果发现数据违反唯一性约束（如主键或唯一索引冲突），它将删除旧纪录，并插入新纪录。</li>
+<li>适合那些旧数据不重要，只需要保留最新状态的场景，如更新缓存信息，最新状态等</li>
+<li>但要注意，因为它实际上会删除再插入记录，所以会影响到具有自增主键的表，即主键的值会增加。</li>
+</ul>
+<h3 id="INSERT-…-ON-DUPLICATE-KEY-UPDATE"><a href="#INSERT-…-ON-DUPLICATE-KEY-UPDATE" class="headerlink" title="INSERT … ON DUPLICATE KEY UPDATE"></a><strong>INSERT … ON DUPLICATE KEY UPDATE</strong></h3><blockquote>
+<p><strong>INSERT … ON DUPLICATE KEY UPDATE</strong>这个命令用于在遇到违反唯一约束的情况时，更新旧纪录。如果插入的数据违反了唯一性约束（如主键或唯一索引），那么执行指定的更新操作而不是插入新的记录，这允许用户定义违反约束时如何更新现有记录</p>
+</blockquote>
+<p><strong>用法</strong></p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 先检查主键id为7的记录是否存在</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> id <span class="operator">=</span><span class="number">7</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 记录存在</span></span><br><span class="line">id	name			create_time</span><br><span class="line"><span class="number">7</span>	张三			   <span class="number">2024</span><span class="number">-03</span><span class="number">-12</span> <span class="number">09</span>:<span class="number">20</span>:<span class="number">11</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 使用INSERT ... ON DUPLICATE KEY UPDATE 命令</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (id	, `name`, create_time)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">7</span>,<span class="string">&#x27;张三&#x27;</span>,NOW())</span><br><span class="line"><span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> `name` <span class="operator">=</span> <span class="string">&#x27;吗喽&#x27;</span>, create_time <span class="operator">=</span> NOW();</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 执行成功，再次查询主键id为7的记录</span></span><br><span class="line">id	name			create_time</span><br><span class="line"><span class="number">7</span>	吗喽			   <span class="number">2024</span><span class="number">-03</span><span class="number">-12</span> <span class="number">09</span>:<span class="number">26</span>:<span class="number">33</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>使用场景</strong></p>
+<ul>
+<li>当你想要在记录已存在（即触发唯一约束违反）时更新特定字段，而保留其他字段和记录不变时，可以使用<code>INSERT ... ON DUPLICATE KEY UPDATE</code>。</li>
+<li>适合需要保留已有记录的一部分信息，而只更新部分字段的情况。例如，更新用户的最后登录时间，而保留其他用户信息不变。</li>
+<li>这种方法不会删除任何行，因此不会影响到自增字段的当前值。这对于保持数据的完整性和历史记录很有帮助。</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/MySQL/">#MySQL</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2024/03/08/Mysql%E8%AF%AD%E5%8F%A5%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">MySQL查询语句分析和优化(使用&#39;ANALYZE TABLE&#39;和慢查询日志)</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">MySQL之插入记录(不同场景下的使用)</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL%E4%B9%8B%E6%8F%92%E5%85%A5%E8%AE%B0%E5%BD%95"><span class="nav-text">MySQL之插入记录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#INSERT-IGNORE-INTO-%E5%92%8C-INSERT-INTO"><span class="nav-text">INSERT IGNORE INTO 和 INSERT INTO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#INSERT-INTO"><span class="nav-text">INSERT INTO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INSERT-IGNORE-INTO"><span class="nav-text">INSERT IGNORE INTO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#REPLACE-INTO"><span class="nav-text">REPLACE INTO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INSERT-%E2%80%A6-ON-DUPLICATE-KEY-UPDATE"><span class="nav-text">INSERT … ON DUPLICATE KEY UPDATE</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
 </div>
 
-<div class="tag-paginator">
-	<div class="paginator">
-    <a class="extend prev" rel="prev" href="/GSSBlog/tags/MySQL/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/GSSBlog/tags/MySQL/">1</a><span class="page-number current">2</span>
-</div>
-
-</div>
 
 
                 
@@ -459,6 +569,23 @@
         </div>
     </div>
 
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
     
 
     <div class="right-side-tools-container">
