@@ -9752,4 +9752,46 @@ public class MySeataConfig &#123;
         <tag>Linux</tag>
       </tags>
   </entry>
+  <entry>
+    <title>IDEA插件之JRebel热部署</title>
+    <url>/GSSBlog/2024/04/16/IDEA%E6%8F%92%E4%BB%B6%E4%B9%8BJRebel%E7%83%AD%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<h1 id="JRebel-and-XRebel插件"><a href="#JRebel-and-XRebel插件" class="headerlink" title="JRebel and XRebel插件"></a>JRebel and XRebel插件</h1><blockquote>
+<p><code>JRebel and XRebel</code>插件是目前最好用的热加载插件,它支持<code>IDEA ULtimate</code>旗舰版和<code>Community</code>社区版</p>
+</blockquote>
+<h2 id="安装方式"><a href="#安装方式" class="headerlink" title="安装方式"></a>安装方式</h2><blockquote>
+<h4 id="插件地址"><a href="#插件地址" class="headerlink" title="插件地址"></a><strong><a class="link"   href="https://plugins.jetbrains.com/plugin/4441-jrebel-and-xrebel/versions" >插件地址 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></strong></h4></blockquote>
+<h3 id="在线安装"><a href="#在线安装" class="headerlink" title="在线安装"></a><strong>在线安装</strong></h3><blockquote>
+<p>可以直接在<code>idea</code>中插件市场搜索<code>JRebel and XRebel</code>直接安装</p>
+</blockquote>
+<h3 id="离线安装"><a href="#离线安装" class="headerlink" title="离线安装"></a><strong>离线安装</strong></h3><blockquote>
+<p>离线安装访问**<a href="#%E6%8F%92%E4%BB%B6%E5%9C%B0%E5%9D%80">插件在线地址</a>**选择合适版本下载到本地,再导入到<code>idea</code>中完成安装</p>
+</blockquote>
+<h2 id="插件激活"><a href="#插件激活" class="headerlink" title="插件激活"></a>插件激活</h2><blockquote>
+<p>由于<code>JRebel</code>类的插件都是需要单独激活的,不能使用全家桶激活方式</p>
+</blockquote>
+<blockquote>
+<p><strong><a class="link"   href="https://jrebel.speedcow.top/" >激活站点 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></strong></p>
+<p>通过请求**<a href="#%E6%BF%80%E6%B4%BB%E7%AB%99%E7%82%B9">上方的激活站点</a>**获取到激活的<code>address</code>;填入到插件的激活区即可完成激活;邮箱不限制可以随便填.</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">站点相应</span><br><span class="line">Activation address: https://jrebel.speedcow.top/c423b708-9951-9fb2-20f5-8c7e37a4996c</span><br></pre></td></tr></table></figure></div>
+
+<p>激活之后,重启插件即可使用</p>
+</blockquote>
+<p><strong>附上激活成功图</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/GSSBlog/images/idea/JRebel%E6%BF%80%E6%B4%BB%E6%8F%92%E4%BB%B61.png"
+                     
+                ></p>
+<h2 id="插件使用"><a href="#插件使用" class="headerlink" title="插件使用"></a>插件使用</h2><blockquote>
+<p>激活成功后,面板中有很多<code>jrebel</code>的小图标,可以自行探索</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>IDEA</category>
+      </categories>
+      <tags>
+        <tag>IDEA</tag>
+      </tags>
+  </entry>
 </search>
