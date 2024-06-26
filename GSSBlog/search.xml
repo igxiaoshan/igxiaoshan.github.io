@@ -9916,4 +9916,86 @@ public class MySeataConfig &#123;
         <tag>Linux</tag>
       </tags>
   </entry>
+  <entry>
+    <title>RabbitMQ部署</title>
+    <url>/GSSBlog/2024/06/26/RabbitMQ%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<h1 id="RabbitMQ部署"><a href="#RabbitMQ部署" class="headerlink" title="RabbitMQ部署"></a>RabbitMQ部署</h1><h2 id="启动-RabbitMQ-容器"><a href="#启动-RabbitMQ-容器" class="headerlink" title="启动 RabbitMQ 容器"></a>启动 RabbitMQ 容器</h2><h3 id="部署脚本"><a href="#部署脚本" class="headerlink" title="部署脚本"></a>部署脚本</h3><h4 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a><strong>脚本</strong></h4><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  -e RABBITMQ_DEFAULT_USER=admin \</span><br><span class="line">  -e RABBITMQ_DEFAULT_PASS=admin321 \</span><br><span class="line">  --name rabbitmq \</span><br><span class="line">  --hostname mq1 \</span><br><span class="line">  -p 5672:5672 \</span><br><span class="line">  -p 15672:15672 \</span><br><span class="line">  -v rabbitmq-data:/var/lib/rabbitmq \</span><br><span class="line">  rabbitmq:3-management</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>解析</strong></p>
+<ul>
+<li><code>-d</code>: 后台运行容器。</li>
+<li><code>-e RABBITMQ_DEFAULT_USER=admin</code>：创建初始化用户为<code>admin</code></li>
+<li><code>-e RABBITMQ_DEFAULT_PASS=admin321</code>：创建初始化用户密码为<code>admin321</code></li>
+<li><code>--name rabbitmq</code>: 给容器命名为 <code>rabbitmq</code></li>
+<li><code>--hostname mq1</code>: 设置容器的主机名为 <code>mq1</code></li>
+<li><code>-p 5672:5672</code>: 将主机的 5672 端口映射到容器的 5672 端口（AMQP 协议端口）。</li>
+<li><code>-p 15672:15672</code>: 将主机的 15672 端口映射到容器的 15672 端口（管理界面端口）。</li>
+<li><code>-v rabbitmq-data:/var/lib/rabbitmq</code>: 使用 Docker 卷 <code>rabbitmq-data</code> 持久化存储 RabbitMQ 数据。</li>
+</ul>
+<p><strong>总结</strong></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="code"><pre><span class="line">如果脚本中不指定初始化用户和密码;会使用默认的用户和密码;</span><br><span class="line">- 默认用户：guest</span><br><span class="line">- 默认密码：guest</span><br><span class="line">管理页面:</span><br><span class="line">http://localhost:15672</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="创建用户和虚拟主机"><a href="#创建用户和虚拟主机" class="headerlink" title="创建用户和虚拟主机"></a>创建用户和虚拟主机</h2><blockquote>
+<p>创建用户并赋予其管理界面访问权限，这样新用户就可以登录 RabbitMQ 管理界面</p>
+</blockquote>
+<h3 id="创建新用户"><a href="#创建新用户" class="headerlink" title="创建新用户"></a>创建新用户</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it rabbitmq rabbitmqctl add_user myuser mypassword</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>rabbitmqctl add_user myuser mypassword</code>: 创建新用户 <code>myuser</code>，密码 <code>mypassword</code>。</li>
+</ul>
+<h3 id="创建虚拟主机"><a href="#创建虚拟主机" class="headerlink" title="创建虚拟主机"></a>创建虚拟主机</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it rabbitmq rabbitmqctl add_vhost myvhost</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>rabbitmqctl add_vhost myvhost</code>: 创建虚拟主机 <code>myvhost</code>。</li>
+</ul>
+<h3 id="设置用户权限"><a href="#设置用户权限" class="headerlink" title="设置用户权限"></a>设置用户权限</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it rabbitmq rabbitmqctl set_permissions -p / myuser <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>rabbitmqctl set_permissions -p myvhost myuser &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</code>: 为用户 <code>myuser</code> 在虚拟主机 <code>myvhost</code> 上设置权限。</li>
+</ul>
+<h3 id="赋予用户管理员角色"><a href="#赋予用户管理员角色" class="headerlink" title="赋予用户管理员角色"></a>赋予用户管理员角色</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it rabbitmq rabbitmqctl set_user_tags myuser administrator</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>docker exec -it rabbitmq rabbitmqctl set_user_tags myuser administrator</code>：为用户<code>myuser</code>赋予管理员权限，使用户拥有登录管理页面的权限</li>
+</ul>
+<h2 id="Docker-卷（Volume）"><a href="#Docker-卷（Volume）" class="headerlink" title="Docker 卷（Volume）"></a>Docker 卷（Volume）</h2><blockquote>
+<p>[Docker 卷](#使用 Docker 卷 <code>rabbitmq-data</code> 持久化存储 RabbitMQ 数据)是一种用于持久化存储数据的方法。卷的数据存储在 Docker 管理的一个位置，而不是在容器的文件系统中。这意味着即使容器被删除，数据仍然会保留。</p>
+</blockquote>
+<h3 id="挂载点"><a href="#挂载点" class="headerlink" title="挂载点"></a>挂载点</h3><ul>
+<li><strong>主机路径</strong>：在这种情况下，<code>rabbitmq-data</code> 是一个 Docker 卷，而不是主机上的一个具体路径。Docker 卷通常存储在 Docker 引擎管理的一个目录中，该目录的位置取决于你的操作系统和 Docker 配置。例如，在 Linux 上，默认情况下，卷的数据存储在 <code>/var/lib/docker/volumes/</code> 下。</li>
+</ul>
+<h3 id="查看-Docker-卷的实际存储位置"><a href="#查看-Docker-卷的实际存储位置" class="headerlink" title="查看 Docker 卷的实际存储位置"></a>查看 Docker 卷的实际存储位置</h3><blockquote>
+<p>你可以使用以下命令查看 Docker 卷的详细信息，包括其存储位置：</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">docker volume inspect rabbitmq-data</span><br></pre></td></tr></table></figure></div>
+
+<p>输入如下:</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;CreatedAt&quot;</span>: <span class="string">&quot;2023-06-26T12:34:56Z&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Driver&quot;</span>: <span class="string">&quot;local&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Labels&quot;</span>: null,</span><br><span class="line">        <span class="string">&quot;Mountpoint&quot;</span>: <span class="string">&quot;/var/lib/docker/volumes/rabbitmq-data/_data&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;rabbitmq-data&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Options&quot;</span>: null,</span><br><span class="line">        <span class="string">&quot;Scope&quot;</span>: <span class="string">&quot;local&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure></div>
+
+<p>在这个输出中，<code>Mountpoint</code> 字段显示了卷在主机上的实际存储位置。</p>
+<h2 id="使用Demo"><a href="#使用Demo" class="headerlink" title="使用Demo"></a>使用Demo</h2><blockquote>
+<p>可以使用 <code>pika</code> 库与 RabbitMQ 进行交互。</p>
+</blockquote>
+<h3 id="安装-pika-库："><a href="#安装-pika-库：" class="headerlink" title="安装 pika 库："></a>安装 <code>pika</code> 库：</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">pip install pika</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="生产者（producer）"><a href="#生产者（producer）" class="headerlink" title="生产者（producer）"></a>生产者（<strong>producer</strong>）</h3><div class="highlight-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pika</span><br><span class="line"></span><br><span class="line">credentials = pika.PlainCredentials(<span class="string">&#x27;myuser&#x27;</span>, <span class="string">&#x27;mypassword&#x27;</span>)</span><br><span class="line">connection = pika.BlockingConnection(pika.ConnectionParameters(<span class="string">&#x27;localhost&#x27;</span>, <span class="number">5672</span>, <span class="string">&#x27;myvhost&#x27;</span>, credentials))</span><br><span class="line">channel = connection.channel()</span><br><span class="line"></span><br><span class="line">channel.queue_declare(queue=<span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line"></span><br><span class="line">channel.basic_publish(exchange=<span class="string">&#x27;&#x27;</span>, routing_key=<span class="string">&#x27;hello&#x27;</span>, body=<span class="string">&#x27;Hello World!&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot; [x] Sent &#x27;Hello World!&#x27;&quot;</span>)</span><br><span class="line">connection.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="消费者（Consumer）"><a href="#消费者（Consumer）" class="headerlink" title="消费者（Consumer）"></a>消费者（<strong>Consumer</strong>）</h3><div class="highlight-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pika</span><br><span class="line"></span><br><span class="line">credentials = pika.PlainCredentials(<span class="string">&#x27;myuser&#x27;</span>, <span class="string">&#x27;mypassword&#x27;</span>)</span><br><span class="line">connection = pika.BlockingConnection(pika.ConnectionParameters(<span class="string">&#x27;localhost&#x27;</span>, <span class="number">5672</span>, <span class="string">&#x27;myvhost&#x27;</span>, credentials))</span><br><span class="line">channel = connection.channel()</span><br><span class="line"></span><br><span class="line">channel.queue_declare(queue=<span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">callback</span>(<span class="params">ch, method, properties, body</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot; [x] Received <span class="subst">&#123;body&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">channel.basic_consume(queue=<span class="string">&#x27;hello&#x27;</span>, on_message_callback=callback, auto_ack=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27; [*] Waiting for messages. To exit press CTRL+C&#x27;</span>)</span><br><span class="line">channel.start_consuming()</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>生产者和消费者示例</strong>：</p>
+<ul>
+<li>编写生产者代码，发送消息。</li>
+<li>编写消费者代码，接收消息。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Docker</category>
+        <category>RabbitMQ</category>
+      </categories>
+      <tags>
+        <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
 </search>

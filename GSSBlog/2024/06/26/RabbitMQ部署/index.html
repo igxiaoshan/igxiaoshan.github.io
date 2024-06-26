@@ -13,22 +13,22 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2024/04/22/linux中vivim的使用/"/>
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2024/06/26/rabbitmq部署/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="vi&#x2F;vim的使用vi&#x2F;vim的三种模式 命令模式(Commad mode)  插入模式(Insert mode)  尾行模式(Last Line mode)    当使用vi hello.txt命令时候,如果hello.txt不存在则会创建一个新的hello.txt文件,并进入文件中;此时使用的就是命令模式   输入i,a,o,I,A,O,都可以切换到插入模式 不同的是  i">
+        <meta name="description" content="RabbitMQ部署启动 RabbitMQ 容器部署脚本脚本123456789docker run -d \  -e RABBITMQ_DEFAULT_USER&#x3D;admin \  -e RABBITMQ_DEFAULT_PASS&#x3D;admin321 \  --name rabbitmq \  --hostname mq1 \  -p 5672:5672 \  -p 15672:15672 \  -v">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux中vi&#x2F;vim详细使用">
-<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2024/04/22/Linux%E4%B8%ADvivim%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:title" content="RabbitMQ部署">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2024/06/26/RabbitMQ%E9%83%A8%E7%BD%B2/index.html">
 <meta property="og:site_name" content="igxiaoshan&#39;s Blog">
-<meta property="og:description" content="vi&#x2F;vim的使用vi&#x2F;vim的三种模式 命令模式(Commad mode)  插入模式(Insert mode)  尾行模式(Last Line mode)    当使用vi hello.txt命令时候,如果hello.txt不存在则会创建一个新的hello.txt文件,并进入文件中;此时使用的就是命令模式   输入i,a,o,I,A,O,都可以切换到插入模式 不同的是  i">
+<meta property="og:description" content="RabbitMQ部署启动 RabbitMQ 容器部署脚本脚本123456789docker run -d \  -e RABBITMQ_DEFAULT_USER&#x3D;admin \  -e RABBITMQ_DEFAULT_PASS&#x3D;admin321 \  --name rabbitmq \  --hostname mq1 \  -p 5672:5672 \  -p 15672:15672 \  -v">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-04-22T01:50:58.845Z">
-<meta property="article:modified_time" content="2024-04-22T01:53:08.283Z">
+<meta property="article:published_time" content="2024-06-26T08:59:42.614Z">
+<meta property="article:modified_time" content="2024-06-26T09:29:44.484Z">
 <meta property="article:author" content="igxiaoshan">
-<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="RabbitMQ">
 <meta name="twitter:card" content="summary">
     
     
@@ -41,7 +41,7 @@
     
     <title>
         
-            Linux中vi/vim详细使用 -
+            RabbitMQ部署 -
         
         igxiaoshan&#39;s Blog
     </title>
@@ -311,7 +311,7 @@
 
         <div class="article-title">
             
-                <h1 class="article-title-regular">Linux中vi/vim详细使用</h1>
+                <h1 class="article-title-regular">RabbitMQ部署</h1>
             
             </div>
             
@@ -333,15 +333,15 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2024-04-22 09:50:58</span>
-        <span class="mobile">2024-04-22 09:50:58</span>
+        <span class="desktop">2024-06-26 16:59:42</span>
+        <span class="mobile">2024-06-26 16:59:42</span>
         <span class="hover-info">创建</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2024-04-22 09:53:08</span>
-            <span class="mobile">2024-04-22 09:53:08</span>
+            <span class="desktop">2024-06-26 17:29:44</span>
+            <span class="mobile">2024-06-26 17:29:44</span>
             <span class="hover-info">更新</span>
         </span>
     
@@ -355,7 +355,14 @@
                     
                         
                         <li>
-                            <a href="/GSSBlog/categories/Linux/">Linux</a>&nbsp;
+                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        <li>
+                            | <a href="/GSSBlog/categories/RabbitMQ/">RabbitMQ</a>&nbsp;
                         </li>
                     
                     
@@ -369,7 +376,7 @@
             <ul>
                 
                     <li>
-                        <a href="/GSSBlog/tags/Linux/">Linux</a>&nbsp;
+                        <a href="/GSSBlog/tags/RabbitMQ/">RabbitMQ</a>&nbsp;
                     </li>
                 
             </ul>
@@ -379,7 +386,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>818 字</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>879 字</span>
         </span>
     
     
@@ -403,117 +410,76 @@
 
 
         <div class="article-content markdown-body">
-            <h1 id="vi-vim的使用"><a href="#vi-vim的使用" class="headerlink" title="vi&#x2F;vim的使用"></a>vi&#x2F;vim的使用</h1><h2 id="vi-vim的三种模式"><a href="#vi-vim的三种模式" class="headerlink" title="vi&#x2F;vim的三种模式"></a>vi&#x2F;vim的三种模式</h2><ul>
-<li><p><strong>命令模式(Commad mode)</strong></p>
-</li>
-<li><p><strong>插入模式(Insert mode)</strong></p>
-</li>
-<li><p><strong>尾行模式(Last Line mode)</strong></p>
-</li>
-</ul>
-<blockquote>
-<p>当使用<code>vi hello.txt</code>命令时候,如果<code>hello.txt</code>不存在则会创建一个新的<code>hello.txt</code>文件,并进入文件中;此时使用的就是<strong>命令模式</strong></p>
-</blockquote>
-<blockquote>
-<p>输入<code>i</code>,<code>a</code>,<code>o</code>,<code>I</code>,<code>A</code>,<code>O</code>,都可以切换到<strong>插入模式</strong></p>
-<p>不同的是</p>
+            <h1 id="RabbitMQ部署"><a href="#RabbitMQ部署" class="headerlink" title="RabbitMQ部署"></a>RabbitMQ部署</h1><h2 id="启动-RabbitMQ-容器"><a href="#启动-RabbitMQ-容器" class="headerlink" title="启动 RabbitMQ 容器"></a>启动 RabbitMQ 容器</h2><h3 id="部署脚本"><a href="#部署脚本" class="headerlink" title="部署脚本"></a>部署脚本</h3><h4 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a><strong>脚本</strong></h4><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  -e RABBITMQ_DEFAULT_USER=admin \</span><br><span class="line">  -e RABBITMQ_DEFAULT_PASS=admin321 \</span><br><span class="line">  --name rabbitmq \</span><br><span class="line">  --hostname mq1 \</span><br><span class="line">  -p 5672:5672 \</span><br><span class="line">  -p 15672:15672 \</span><br><span class="line">  -v rabbitmq-data:/var/lib/rabbitmq \</span><br><span class="line">  rabbitmq:3-management</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>解析</strong></p>
 <ul>
-<li><code>i</code>: 是在光标的前进行插入</li>
-<li><code>a</code>:是在光标后进行插入</li>
-<li><code>o</code>:自动切换下一行进行插入</li>
-<li><code>O</code>:自动切换上一行进行插入</li>
-<li><code>I</code>:是在当前行的行首进行插入</li>
-<li><code>A</code>:是在当前行的行末进行插入</li>
+<li><code>-d</code>: 后台运行容器。</li>
+<li><code>-e RABBITMQ_DEFAULT_USER=admin</code>：创建初始化用户为<code>admin</code></li>
+<li><code>-e RABBITMQ_DEFAULT_PASS=admin321</code>：创建初始化用户密码为<code>admin321</code></li>
+<li><code>--name rabbitmq</code>: 给容器命名为 <code>rabbitmq</code></li>
+<li><code>--hostname mq1</code>: 设置容器的主机名为 <code>mq1</code></li>
+<li><code>-p 5672:5672</code>: 将主机的 5672 端口映射到容器的 5672 端口（AMQP 协议端口）。</li>
+<li><code>-p 15672:15672</code>: 将主机的 15672 端口映射到容器的 15672 端口（管理界面端口）。</li>
+<li><code>-v rabbitmq-data:/var/lib/rabbitmq</code>: 使用 Docker 卷 <code>rabbitmq-data</code> 持久化存储 RabbitMQ 数据。</li>
 </ul>
+<p><strong>总结</strong></p>
+<div class="highlight-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">如果脚本中不指定初始化用户和密码;会使用默认的用户和密码;</span><br><span class="line">- 默认用户：guest</span><br><span class="line">- 默认密码：guest</span><br><span class="line">管理页面:</span><br><span class="line">http://localhost:15672</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="创建用户和虚拟主机"><a href="#创建用户和虚拟主机" class="headerlink" title="创建用户和虚拟主机"></a>创建用户和虚拟主机</h2><blockquote>
+<p>创建用户并赋予其管理界面访问权限，这样新用户就可以登录 RabbitMQ 管理界面</p>
 </blockquote>
-<blockquote>
-<p>输入<code>:</code>可以切换到<strong>行尾模式</strong></p>
-</blockquote>
-<blockquote>
-<p>使用<code>ESC</code>都可以退出<strong>插入模式</strong>和<strong>行尾模式</strong>到<strong>命令模式</strong></p>
-</blockquote>
-<h2 id="H-J-K-L控制上下左右"><a href="#H-J-K-L控制上下左右" class="headerlink" title="H&#x2F;J&#x2F;K&#x2F;L控制上下左右"></a>H&#x2F;J&#x2F;K&#x2F;L控制上下左右</h2><blockquote>
+<h3 id="创建新用户"><a href="#创建新用户" class="headerlink" title="创建新用户"></a>创建新用户</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it rabbitmq rabbitmqctl add_user myuser mypassword</span><br></pre></td></tr></table></figure></div>
+
 <ul>
-<li><code>H</code> 向左</li>
-<li><code>J</code> 向下</li>
-<li><code>K</code> 向上</li>
-<li><code>L</code> 向右</li>
-<li>也可以使用方向键 <code>上/下/左/右</code>控制光标移动</li>
+<li><code>rabbitmqctl add_user myuser mypassword</code>: 创建新用户 <code>myuser</code>，密码 <code>mypassword</code>。</li>
 </ul>
-</blockquote>
-<h2 id="复制-粘贴-删除"><a href="#复制-粘贴-删除" class="headerlink" title="复制&#x2F;粘贴&#x2F;删除"></a>复制&#x2F;粘贴&#x2F;删除</h2><blockquote>
+<h3 id="创建虚拟主机"><a href="#创建虚拟主机" class="headerlink" title="创建虚拟主机"></a>创建虚拟主机</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it rabbitmq rabbitmqctl add_vhost myvhost</span><br></pre></td></tr></table></figure></div>
+
 <ul>
-<li>yy 复制内容</li>
-<li>p 粘贴内容</li>
-<li>dd 删除内容</li>
+<li><code>rabbitmqctl add_vhost myvhost</code>: 创建虚拟主机 <code>myvhost</code>。</li>
 </ul>
-<p>也可以使用数字表示复制的行数,粘贴的行数和删除的行数</p>
-<p>比如: 2yy就是复制光标起始的两行数据</p>
-<p>5p 就是复制的数据粘贴两行</p>
-<p>2dd 就是删除光标所在的起始行和下一行</p>
-</blockquote>
-<h2 id="查看行号"><a href="#查看行号" class="headerlink" title="查看行号"></a>查看行号</h2><blockquote>
-<p>使用<code>:set number</code>&#x2F;<code>set nu</code>开启行号展示</p>
-<p>使用<code>:set nonumer</code>&#x2F;<code>set nonu</code>取消行号展示</p>
-</blockquote>
-<h2 id="切换行首和行尾"><a href="#切换行首和行尾" class="headerlink" title="切换行首和行尾"></a>切换行首和行尾</h2><blockquote>
+<h3 id="设置用户权限"><a href="#设置用户权限" class="headerlink" title="设置用户权限"></a>设置用户权限</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it rabbitmq rabbitmqctl set_permissions -p / myuser <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br></pre></td></tr></table></figure></div>
+
 <ul>
-<li><code>^</code> 切换到行首</li>
-<li><code>$</code> 切换到行尾</li>
+<li><code>rabbitmqctl set_permissions -p myvhost myuser &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</code>: 为用户 <code>myuser</code> 在虚拟主机 <code>myvhost</code> 上设置权限。</li>
 </ul>
-</blockquote>
-<h2 id="向前翻页和向后翻页"><a href="#向前翻页和向后翻页" class="headerlink" title="向前翻页和向后翻页"></a>向前翻页和向后翻页</h2><blockquote>
+<h3 id="赋予用户管理员角色"><a href="#赋予用户管理员角色" class="headerlink" title="赋予用户管理员角色"></a>赋予用户管理员角色</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it rabbitmq rabbitmqctl set_user_tags myuser administrator</span><br></pre></td></tr></table></figure></div>
+
 <ul>
-<li><code>Ctrl+f</code>(forward) 向前翻页</li>
-<li><code>Ctrl+b</code>(backward) 向后翻页</li>
+<li><code>docker exec -it rabbitmq rabbitmqctl set_user_tags myuser administrator</code>：为用户<code>myuser</code>赋予管理员权限，使用户拥有登录管理页面的权限</li>
 </ul>
+<h2 id="Docker-卷（Volume）"><a href="#Docker-卷（Volume）" class="headerlink" title="Docker 卷（Volume）"></a>Docker 卷（Volume）</h2><blockquote>
+<p>[Docker 卷](#使用 Docker 卷 <code>rabbitmq-data</code> 持久化存储 RabbitMQ 数据)是一种用于持久化存储数据的方法。卷的数据存储在 Docker 管理的一个位置，而不是在容器的文件系统中。这意味着即使容器被删除，数据仍然会保留。</p>
 </blockquote>
-<h2 id="向上翻半页-向下翻半页"><a href="#向上翻半页-向下翻半页" class="headerlink" title="向上翻半页&#x2F;向下翻半页"></a>向上翻半页&#x2F;向下翻半页</h2><blockquote>
+<h3 id="挂载点"><a href="#挂载点" class="headerlink" title="挂载点"></a>挂载点</h3><ul>
+<li><strong>主机路径</strong>：在这种情况下，<code>rabbitmq-data</code> 是一个 Docker 卷，而不是主机上的一个具体路径。Docker 卷通常存储在 Docker 引擎管理的一个目录中，该目录的位置取决于你的操作系统和 Docker 配置。例如，在 Linux 上，默认情况下，卷的数据存储在 <code>/var/lib/docker/volumes/</code> 下。</li>
+</ul>
+<h3 id="查看-Docker-卷的实际存储位置"><a href="#查看-Docker-卷的实际存储位置" class="headerlink" title="查看 Docker 卷的实际存储位置"></a>查看 Docker 卷的实际存储位置</h3><blockquote>
+<p>你可以使用以下命令查看 Docker 卷的详细信息，包括其存储位置：</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker volume inspect rabbitmq-data</span><br></pre></td></tr></table></figure></div>
+
+<p>输入如下:</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;CreatedAt&quot;</span>: <span class="string">&quot;2023-06-26T12:34:56Z&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Driver&quot;</span>: <span class="string">&quot;local&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Labels&quot;</span>: null,</span><br><span class="line">        <span class="string">&quot;Mountpoint&quot;</span>: <span class="string">&quot;/var/lib/docker/volumes/rabbitmq-data/_data&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;rabbitmq-data&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Options&quot;</span>: null,</span><br><span class="line">        <span class="string">&quot;Scope&quot;</span>: <span class="string">&quot;local&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure></div>
+
+<p>在这个输出中，<code>Mountpoint</code> 字段显示了卷在主机上的实际存储位置。</p>
+<h2 id="使用Demo"><a href="#使用Demo" class="headerlink" title="使用Demo"></a>使用Demo</h2><blockquote>
+<p>可以使用 <code>pika</code> 库与 RabbitMQ 进行交互。</p>
+</blockquote>
+<h3 id="安装-pika-库："><a href="#安装-pika-库：" class="headerlink" title="安装 pika 库："></a>安装 <code>pika</code> 库：</h3><div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pika</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="生产者（producer）"><a href="#生产者（producer）" class="headerlink" title="生产者（producer）"></a>生产者（<strong>producer</strong>）</h3><div class="highlight-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pika</span><br><span class="line"></span><br><span class="line">credentials = pika.PlainCredentials(<span class="string">&#x27;myuser&#x27;</span>, <span class="string">&#x27;mypassword&#x27;</span>)</span><br><span class="line">connection = pika.BlockingConnection(pika.ConnectionParameters(<span class="string">&#x27;localhost&#x27;</span>, <span class="number">5672</span>, <span class="string">&#x27;myvhost&#x27;</span>, credentials))</span><br><span class="line">channel = connection.channel()</span><br><span class="line"></span><br><span class="line">channel.queue_declare(queue=<span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line"></span><br><span class="line">channel.basic_publish(exchange=<span class="string">&#x27;&#x27;</span>, routing_key=<span class="string">&#x27;hello&#x27;</span>, body=<span class="string">&#x27;Hello World!&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot; [x] Sent &#x27;Hello World!&#x27;&quot;</span>)</span><br><span class="line">connection.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="消费者（Consumer）"><a href="#消费者（Consumer）" class="headerlink" title="消费者（Consumer）"></a>消费者（<strong>Consumer</strong>）</h3><div class="highlight-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pika</span><br><span class="line"></span><br><span class="line">credentials = pika.PlainCredentials(<span class="string">&#x27;myuser&#x27;</span>, <span class="string">&#x27;mypassword&#x27;</span>)</span><br><span class="line">connection = pika.BlockingConnection(pika.ConnectionParameters(<span class="string">&#x27;localhost&#x27;</span>, <span class="number">5672</span>, <span class="string">&#x27;myvhost&#x27;</span>, credentials))</span><br><span class="line">channel = connection.channel()</span><br><span class="line"></span><br><span class="line">channel.queue_declare(queue=<span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">callback</span>(<span class="params">ch, method, properties, body</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot; [x] Received <span class="subst">&#123;body&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">channel.basic_consume(queue=<span class="string">&#x27;hello&#x27;</span>, on_message_callback=callback, auto_ack=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27; [*] Waiting for messages. To exit press CTRL+C&#x27;</span>)</span><br><span class="line">channel.start_consuming()</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>生产者和消费者示例</strong>：</p>
 <ul>
-<li><code>Ctrl+u</code>(up) 向上翻半页</li>
-<li><code>Ctrl+d</code>(down) 向下翻半页</li>
+<li>编写生产者代码，发送消息。</li>
+<li>编写消费者代码，接收消息。</li>
 </ul>
-</blockquote>
-<h2 id="G-gg"><a href="#G-gg" class="headerlink" title="G&#x2F;gg"></a>G&#x2F;gg</h2><blockquote>
-<p><code>G</code>表示跳到文件的最后一行</p>
-<p><code>gg</code>表示跳到文件的第一行</p>
-<p><code>[number]gg</code>表示跳到第[number]行</p>
-<p>也可以使用尾行模式,跳到指定的行数;比如<code>:50</code>跳到50行</p>
-</blockquote>
-<h2 id="查找-替换"><a href="#查找-替换" class="headerlink" title="查找&#x2F;替换"></a>查找&#x2F;替换</h2><h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><blockquote>
-<p>使用<code>/</code>或者<code>?</code>来进行查找</p>
-<p>比如:</p>
-<p>在[命令模式]下使用<code>/[operate]</code>表示从<code>光标往下查找</code></p>
-<p>在[命令模式]下使用<code>?[operate]</code>表示从<code>光标往上查找</code></p>
-</blockquote>
-<blockquote>
-<p>使用<code>n</code>&#x2F;<code>N</code>(next)对查找的内容进行查看</p>
-<p><code>n</code>表示向下查找;<code>N</code>表示向上查找</p>
-</blockquote>
-<blockquote>
-<p>使用<code>/</code>或者<code>?</code>进行查找的时候,默认是<code>区分大小写的</code>;如果想忽略大小写,使用<code>\c</code></p>
-<p>也可以在<code>[尾行模式]</code>使用<code>:set ic</code>(ignore case)设置全局忽略大小写</p>
-</blockquote>
-<h3 id="替换"><a href="#替换" class="headerlink" title="替换"></a>替换</h3><blockquote>
-<p><code>:n1,n2s/old/new/g</code></p>
-<p><code>:</code>表示 尾行模式</p>
-<p><code>n1</code>:表示 开始行数</p>
-<p><code>n2</code>表示 结束行数</p>
-<p><code>s</code>表示 替换的意思</p>
-<p><code>old</code>表示 要替换的数据</p>
-<p><code>new</code>表示 替换的数据</p>
-<p><code>g</code>表示 全局的意思</p>
-<p>如果表示当前行可以省略<code>n1</code>和<code>n2</code>直接使用 <code>s/old/new</code></p>
-<p>如果想从某一行开始一直到结尾可以使用<code>n1,$s/old/new/g</code>其中<code>$</code>表示行末</p>
-</blockquote>
-<h2 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h2><blockquote>
-<p><code>u</code>(undo)表示撤销;</p>
-<p>相当于windows中的<code> ctrl + z</code></p>
-</blockquote>
-<h2 id="vi-vim的配置文件"><a href="#vi-vim的配置文件" class="headerlink" title="vi&#x2F;vim的配置文件"></a>vi&#x2F;vim的配置文件</h2><blockquote>
-<p><code>.vimrc</code>文件就是vi&#x2F;vim的配置文件</p>
-<p>可以将<code>字体颜色</code>,<code>是否显示行号</code>,<code>是否忽略大小写</code>的配置写入其中,这样在使用中也会更加便捷和高效.</p>
-</blockquote>
 
         </div>
 
@@ -523,7 +489,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/GSSBlog/tags/Linux/">#Linux</a>&nbsp;
+                        <a href="/GSSBlog/tags/RabbitMQ/">#RabbitMQ</a>&nbsp;
                     </li>
                 
             </ul>
@@ -534,29 +500,14 @@
         
             <div class="article-nav">
                 
-                    <div class="article-prev">
-                        <a class="prev"
-                        rel="prev"
-                        href="/GSSBlog/2024/06/26/RabbitMQ%E9%83%A8%E7%BD%B2/"
-                        >
-                            <span class="left arrow-icon flex justify-center items-center">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">RabbitMQ部署</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next">
                         <a class="next"
                         rel="next"
-                        href="/GSSBlog/2024/04/16/IDEA%E6%8F%92%E4%BB%B6%E4%B9%8BJRebel%E7%83%AD%E9%83%A8%E7%BD%B2/"
+                        href="/GSSBlog/2024/04/22/Linux%E4%B8%ADvivim%E7%9A%84%E4%BD%BF%E7%94%A8/"
                         >
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">IDEA插件之JRebel热部署</span>
+                                <span class="post-nav-title-item">Linux中vi/vim详细使用</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex justify-center items-center">
@@ -577,8 +528,8 @@
             <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">此页目录</div>
-        <div class="page-title">Linux中vi/vim详细使用</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vi-vim%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">vi&#x2F;vim的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vi-vim%E7%9A%84%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%BC%8F"><span class="nav-text">vi&#x2F;vim的三种模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#H-J-K-L%E6%8E%A7%E5%88%B6%E4%B8%8A%E4%B8%8B%E5%B7%A6%E5%8F%B3"><span class="nav-text">H&#x2F;J&#x2F;K&#x2F;L控制上下左右</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6-%E7%B2%98%E8%B4%B4-%E5%88%A0%E9%99%A4"><span class="nav-text">复制&#x2F;粘贴&#x2F;删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%A1%8C%E5%8F%B7"><span class="nav-text">查看行号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%87%E6%8D%A2%E8%A1%8C%E9%A6%96%E5%92%8C%E8%A1%8C%E5%B0%BE"><span class="nav-text">切换行首和行尾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%91%E5%89%8D%E7%BF%BB%E9%A1%B5%E5%92%8C%E5%90%91%E5%90%8E%E7%BF%BB%E9%A1%B5"><span class="nav-text">向前翻页和向后翻页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%91%E4%B8%8A%E7%BF%BB%E5%8D%8A%E9%A1%B5-%E5%90%91%E4%B8%8B%E7%BF%BB%E5%8D%8A%E9%A1%B5"><span class="nav-text">向上翻半页&#x2F;向下翻半页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#G-gg"><span class="nav-text">G&#x2F;gg</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE-%E6%9B%BF%E6%8D%A2"><span class="nav-text">查找&#x2F;替换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE"><span class="nav-text">查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2"><span class="nav-text">替换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%92%A4%E9%94%80"><span class="nav-text">撤销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vi-vim%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">vi&#x2F;vim的配置文件</span></a></li></ol></li></ol>
+        <div class="page-title">RabbitMQ部署</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RabbitMQ%E9%83%A8%E7%BD%B2"><span class="nav-text">RabbitMQ部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8-RabbitMQ-%E5%AE%B9%E5%99%A8"><span class="nav-text">启动 RabbitMQ 容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E8%84%9A%E6%9C%AC"><span class="nav-text">部署脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E5%92%8C%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA"><span class="nav-text">创建用户和虚拟主机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%94%A8%E6%88%B7"><span class="nav-text">创建新用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA"><span class="nav-text">创建虚拟主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90"><span class="nav-text">设置用户权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B5%8B%E4%BA%88%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E5%91%98%E8%A7%92%E8%89%B2"><span class="nav-text">赋予用户管理员角色</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-%E5%8D%B7%EF%BC%88Volume%EF%BC%89"><span class="nav-text">Docker 卷（Volume）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E7%82%B9"><span class="nav-text">挂载点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-Docker-%E5%8D%B7%E7%9A%84%E5%AE%9E%E9%99%85%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE"><span class="nav-text">查看 Docker 卷的实际存储位置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Demo"><span class="nav-text">使用Demo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-pika-%E5%BA%93%EF%BC%9A"><span class="nav-text">安装 pika 库：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%EF%BC%88producer%EF%BC%89"><span class="nav-text">生产者（producer）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%EF%BC%88Consumer%EF%BC%89"><span class="nav-text">消费者（Consumer）</span></a></li></ol></li></ol></li></ol>
 
     </div>
 </div>
