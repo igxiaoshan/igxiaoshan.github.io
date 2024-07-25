@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2024/07/19/javamail整合gmail邮箱服务器使用/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="JavaMail整合Gmail邮箱服务器 在Spring Boot项目中整合JavaMail服务  集成JavaMail1.添加依赖 在pom.xml中添加Spring Boot Starter Mail依赖  12345&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;    &lt;arti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaMail整合Gmail邮箱服务器">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2024/07/19/JavaMail%E6%95%B4%E5%90%88Gmail%E9%82%AE%E7%AE%B1%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="JavaMail整合Gmail邮箱服务器 在Spring Boot项目中整合JavaMail服务  集成JavaMail1.添加依赖 在pom.xml中添加Spring Boot Starter Mail依赖  12345&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;    &lt;arti">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-07-19T02:57:47.378Z">
+<meta property="article:modified_time" content="2024-07-19T06:25:00.039Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="Mail">
+<meta property="article:tag" content="Gmail">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            JavaMail整合Gmail邮箱服务器 -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">JavaMail整合Gmail邮箱服务器</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-07-19 10:57:47</span>
+        <span class="mobile">2024-07-19 10:57:47</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-07-19 14:25</span>
+            <span class="mobile">2024-07-19 14:25</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/JavaEmail/">JavaEmail</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/Mail/">Mail</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/GSSBlog/tags/Gmail/">Gmail</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>6 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h1 id="JavaMail整合Gmail邮箱服务器"><a href="#JavaMail整合Gmail邮箱服务器" class="headerlink" title="JavaMail整合Gmail邮箱服务器"></a>JavaMail整合Gmail邮箱服务器</h1><blockquote>
+<p>在Spring Boot项目中整合JavaMail服务</p>
+</blockquote>
+<h2 id="集成JavaMail"><a href="#集成JavaMail" class="headerlink" title="集成JavaMail"></a>集成<code>JavaMail</code></h2><h3 id="1-添加依赖"><a href="#1-添加依赖" class="headerlink" title="1.添加依赖"></a>1.添加依赖</h3><blockquote>
+<p>在<code>pom.xml</code>中添加<code>Spring Boot Starter Mail</code>依赖</p>
+</blockquote>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-mail<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="2-配置邮件服务"><a href="#2-配置邮件服务" class="headerlink" title="2.配置邮件服务"></a>2.配置邮件服务</h3><blockquote>
+<p>在<code>application.properties</code>或<code>application.yml</code>文件中添加邮件服务器配置</p>
+</blockquote>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">mail:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">smtp.example.com</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">587</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">your_email@example.com</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">your_password</span></span><br><span class="line">    <span class="attr">properties:</span></span><br><span class="line">      <span class="attr">mail:</span></span><br><span class="line">        <span class="attr">smtp:</span></span><br><span class="line">          <span class="attr">auth:</span> <span class="literal">true</span></span><br><span class="line">          <span class="attr">starttls:</span></span><br><span class="line">            <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="3-创建邮件服务类"><a href="#3-创建邮件服务类" class="headerlink" title="3.创建邮件服务类"></a>3.创建邮件服务类</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.mail.SimpleMailMessage;</span><br><span class="line"><span class="keyword">import</span> org.springframework.mail.javamail.JavaMailSender;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EmailService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JavaMailSender mailSender;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendSimpleEmail</span><span class="params">(String to, String subject, String text)</span> &#123;</span><br><span class="line">        <span class="type">SimpleMailMessage</span> <span class="variable">message</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleMailMessage</span>();</span><br><span class="line">        message.setTo(to);</span><br><span class="line">        message.setSubject(subject);</span><br><span class="line">        message.setText(text);</span><br><span class="line">        mailSender.send(message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="4-使用邮件服务"><a href="#4-使用邮件服务" class="headerlink" title="4.使用邮件服务"></a>4.使用邮件服务</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EmailController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> EmailService emailService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/send-email&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sendEmail</span><span class="params">(<span class="meta">@RequestParam</span> String to, <span class="meta">@RequestParam</span> String subject, <span class="meta">@RequestParam</span> String text)</span> &#123;</span><br><span class="line">        emailService.sendSimpleEmail(to, subject, text);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Email sent successfully&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="5-测试类"><a href="#5-测试类" class="headerlink" title="5.测试类"></a>5.测试类</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//localhost:8080/send-email?to=recipient@example.com&amp;subject=Test&amp;text=Hello</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="6-扩展html发送邮件或者发送附件"><a href="#6-扩展html发送邮件或者发送附件" class="headerlink" title="6.扩展html发送邮件或者发送附件"></a>6.扩展<code>html</code>发送邮件或者发送附件</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.mail.MessagingException;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.MimeMessage;</span><br><span class="line"><span class="keyword">import</span> org.springframework.mail.javamail.MimeMessageHelper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendHtmlEmail</span><span class="params">(String to, String subject, String htmlContent)</span> <span class="keyword">throws</span> MessagingException &#123;</span><br><span class="line">    <span class="type">MimeMessage</span> <span class="variable">mimeMessage</span> <span class="operator">=</span> mailSender.createMimeMessage();</span><br><span class="line">    <span class="type">MimeMessageHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MimeMessageHelper</span>(mimeMessage, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">    helper.setText(htmlContent, <span class="literal">true</span>);</span><br><span class="line">    helper.setTo(to);</span><br><span class="line">    helper.setSubject(subject);</span><br><span class="line">    mailSender.send(mimeMessage);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendEmailWithAttachment</span><span class="params">(String to, String subject, String text, String pathToAttachment)</span> <span class="keyword">throws</span> MessagingException &#123;</span><br><span class="line">    <span class="type">MimeMessage</span> <span class="variable">mimeMessage</span> <span class="operator">=</span> mailSender.createMimeMessage();</span><br><span class="line">    <span class="type">MimeMessageHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MimeMessageHelper</span>(mimeMessage, <span class="literal">true</span>);</span><br><span class="line">    helper.setTo(to);</span><br><span class="line">    helper.setSubject(subject);</span><br><span class="line">    helper.setText(text);</span><br><span class="line">    <span class="type">FileSystemResource</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileSystemResource</span>(<span class="keyword">new</span> <span class="title class_">File</span>(pathToAttachment));</span><br><span class="line">    helper.addAttachment(<span class="string">&quot;Invoice&quot;</span>, file);</span><br><span class="line">    mailSender.send(mimeMessage);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="使用JavaMail整合Gmail"><a href="#使用JavaMail整合Gmail" class="headerlink" title="使用JavaMail整合Gmail"></a>使用<code>JavaMail</code>整合<code>Gmail</code></h2><blockquote>
+<p>使用<code>IMAP</code>服务</p>
+</blockquote>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">receiver:</span></span><br><span class="line">    <span class="attr">mail:</span></span><br><span class="line">      <span class="attr">host:</span> <span class="string">imap.gmail.com</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">993</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">your_email@gmail.com</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">app_secret</span> <span class="comment"># 需要单独开通</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">imap</span></span><br><span class="line">      <span class="attr">ssl:</span></span><br><span class="line">        <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">properties:</span></span><br><span class="line">        <span class="attr">mail:</span></span><br><span class="line">          <span class="attr">imap:</span></span><br><span class="line">            <span class="attr">ssl:</span></span><br><span class="line">              <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">              <span class="attr">trust:</span> <span class="string">imap.gmail.com</span></span><br><span class="line">            <span class="attr">connectiontimeout:</span> <span class="number">300000</span> <span class="comment"># 连接超时五分钟</span></span><br><span class="line">            <span class="attr">timeout:</span> <span class="number">300000</span> <span class="comment"># 读超时五分钟</span></span><br><span class="line">            <span class="attr">writetimeout:</span> <span class="number">300000</span> <span class="comment"># 写超时五分钟</span></span><br><span class="line">          <span class="attr">store:</span></span><br><span class="line">            <span class="attr">protocol:</span> <span class="string">imap</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="监听Gmail邮箱邮件通知"><a href="#监听Gmail邮箱邮件通知" class="headerlink" title="监听Gmail邮箱邮件通知"></a>监听<code>Gmail</code>邮箱邮件通知</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cmiot.onepark.email;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.Scheduled;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.mail.*;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.MimeMessage;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.MimeMultipart;</span><br><span class="line"><span class="keyword">import</span> javax.mail.search.FlagTerm;</span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.net.HttpURLConnection;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Receiver</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> GmailProperties gmailProperties;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Scheduled(fixedRate = 60000)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">receiveEmails</span><span class="params">()</span> <span class="keyword">throws</span> NoSuchProviderException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(<span class="string">&quot;https://api.ipify.org?format=json&quot;</span>);</span><br><span class="line">            <span class="type">HttpURLConnection</span> <span class="variable">connection</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">            connection.setRequestMethod(<span class="string">&quot;GET&quot;</span>);</span><br><span class="line">            <span class="comment">// 打印响应</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">responseCode</span> <span class="operator">=</span> connection.getResponseCode();</span><br><span class="line">            System.out.println(<span class="string">&quot;Response Code: &quot;</span> + responseCode);</span><br><span class="line">            <span class="keyword">try</span> (<span class="type">BufferedReader</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(connection.getInputStream()))) &#123;</span><br><span class="line">                String inputLine;</span><br><span class="line">                <span class="type">StringBuilder</span> <span class="variable">content</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">                <span class="keyword">while</span> ((inputLine = in.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">                    content.append(inputLine);</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">&quot;Response: &quot;</span> + content.toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;-------------运行监听任务---------------------------------------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">props</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.ssl.enable&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.host&quot;</span>, gmailProperties.getHost());</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.port&quot;</span>, gmailProperties.getPort());</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.connectiontimeout&quot;</span>, <span class="string">&quot;300000&quot;</span>); <span class="comment">// 连接超时五分钟</span></span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.timeout&quot;</span>, <span class="string">&quot;300000&quot;</span>); <span class="comment">// 读超时五分钟</span></span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.writetimeout&quot;</span>, <span class="string">&quot;300000&quot;</span>); <span class="comment">// 写超时五分钟</span></span><br><span class="line"></span><br><span class="line">        props.put(<span class="string">&quot;mail.smtp.auth&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">user</span> <span class="operator">=</span> gmailProperties.getUsername().split(<span class="string">&quot;@&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.user&quot;</span>, user);</span><br><span class="line">        <span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> Session.getInstance(props, <span class="keyword">new</span> <span class="title class_">Authenticator</span>() &#123;</span><br><span class="line">            <span class="keyword">protected</span> PasswordAuthentication <span class="title function_">getPasswordAuthentication</span><span class="params">()</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;PasswordAuthentication user: &quot;</span> + gmailProperties.getUsername());</span><br><span class="line">                System.out.println(<span class="string">&quot;PasswordAuthentication password: &quot;</span> + gmailProperties.getPassword());</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PasswordAuthentication</span>(gmailProperties.getUsername(), gmailProperties.getPassword());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        session.setDebug(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">Store</span> <span class="variable">store</span> <span class="operator">=</span> session.getStore(<span class="string">&quot;imap&quot;</span>)) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;Full URL: &quot;</span> + store.getURLName().toString());</span><br><span class="line">            System.out.println(<span class="string">&quot;Host: &quot;</span> + store.getURLName().getHost());</span><br><span class="line">            System.out.println(<span class="string">&quot;Username: &quot;</span> + store.getURLName().getUsername());</span><br><span class="line"></span><br><span class="line">            store.connect(<span class="string">&quot;imap.gmail.com&quot;</span>, gmailProperties.getUsername(), gmailProperties.getPassword());</span><br><span class="line">            <span class="type">Folder</span> <span class="variable">inbox</span> <span class="operator">=</span> store.getFolder(<span class="string">&quot;INBOX&quot;</span>);</span><br><span class="line">            inbox.open(Folder.READ_ONLY);</span><br><span class="line">            inbox.open(Folder.READ_WRITE); <span class="comment">// 需要读写权限才能标记邮件为已读</span></span><br><span class="line">            <span class="comment">// 搜索未读邮件</span></span><br><span class="line">            <span class="type">FlagTerm</span> <span class="variable">unseenFlagTerm</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FlagTerm</span>(<span class="keyword">new</span> <span class="title class_">Flags</span>(Flags.Flag.SEEN), <span class="literal">false</span>);</span><br><span class="line">            Message[] messages = inbox.search(unseenFlagTerm);</span><br><span class="line">            System.out.println(<span class="string">&quot;收件箱的邮件数：&quot;</span> + messages.length);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (Message message : messages) &#123;</span><br><span class="line">                <span class="keyword">if</span> (message <span class="keyword">instanceof</span> MimeMessage) &#123;</span><br><span class="line">                    <span class="type">MimeMessage</span> <span class="variable">mimeMessage</span> <span class="operator">=</span> (MimeMessage) message;</span><br><span class="line">                    System.out.println(<span class="string">&quot;----------------------------------------------------------&quot;</span>);</span><br><span class="line">                    System.out.println(<span class="string">&quot;Subject: &quot;</span> + mimeMessage.getSubject());</span><br><span class="line">                    System.out.println(<span class="string">&quot;From ToString: &quot;</span> + mimeMessage.getFrom()[<span class="number">0</span>].toString());</span><br><span class="line">                    System.out.println(<span class="string">&quot;From: &quot;</span> + mimeMessage.getFrom()[<span class="number">0</span>]);</span><br><span class="line">                    System.out.println(<span class="string">&quot;Content: &quot;</span> + getTextFromMessage(mimeMessage));</span><br><span class="line">                    System.out.println(<span class="string">&quot;----------------------------------------------------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 标记邮件为已读</span></span><br><span class="line">                    message.setFlag(Flags.Flag.SEEN, <span class="literal">true</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (MessagingException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">getTextFromMessage</span><span class="params">(Message message)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">if</span> (message.isMimeType(<span class="string">&quot;text/plain&quot;</span>)) &#123;</span><br><span class="line">            result = message.getContent().toString();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.isMimeType(<span class="string">&quot;multipart/*&quot;</span>)) &#123;</span><br><span class="line">            <span class="type">MimeMultipart</span> <span class="variable">mimeMultipart</span> <span class="operator">=</span> (MimeMultipart) message.getContent();</span><br><span class="line">            result = getTextFromMimeMultipart(mimeMultipart);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">getTextFromMimeMultipart</span><span class="params">(MimeMultipart mimeMultipart)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> mimeMultipart.getCount();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">            <span class="type">BodyPart</span> <span class="variable">bodyPart</span> <span class="operator">=</span> mimeMultipart.getBodyPart(i);</span><br><span class="line">            <span class="keyword">if</span> (bodyPart.isMimeType(<span class="string">&quot;text/plain&quot;</span>)) &#123;</span><br><span class="line">                result.append(bodyPart.getContent());</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (bodyPart.isMimeType(<span class="string">&quot;text/html&quot;</span>)) &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">html</span> <span class="operator">=</span> (String) bodyPart.getContent();</span><br><span class="line">                result.append(org.jsoup.Jsoup.parse(html).text());</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (bodyPart.getContent() <span class="keyword">instanceof</span> MimeMultipart) &#123;</span><br><span class="line">                result.append(getTextFromMimeMultipart((MimeMultipart) bodyPart.getContent()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="Gmail账号配置"><a href="#Gmail账号配置" class="headerlink" title="Gmail账号配置"></a><code>Gmail</code>账号配置</h2><h3 id="开通两步验证"><a href="#开通两步验证" class="headerlink" title="开通两步验证"></a>开通两步验证</h3><blockquote>
+<p>GMail谷歌邮箱《两步验证》是谷歌邮箱的安全机制，会让你的邮箱安全性更高。</p>
+</blockquote>
+<h3 id="GMail邮箱添加《应用专用密码》"><a href="#GMail邮箱添加《应用专用密码》" class="headerlink" title="GMail邮箱添加《应用专用密码》"></a>GMail邮箱添加《应用专用密码》</h3><blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://security.google.com/settings/security/apppasswords?pli=1" >https://security.google.com/settings/security/apppasswords?pli=1 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>应用专用密码请求链接生成，共16个字母，4个一组，在这里要记下这个专用密码（使用的时候要注意，要去掉中间的空格，密码只显示一次）</p>
+</blockquote>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/Mail/">#Mail</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/Gmail/">#Gmail</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/GSSBlog/2024/07/23/RocketMQ%E9%83%A8%E7%BD%B2/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">RocketMQ部署</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2024/07/09/%E8%87%AA%E9%AA%8C%E8%AF%81%E6%9C%8D%E5%8A%A1%E5%99%A8CA%E8%AF%81%E4%B9%A6/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">自验证服务器CA证书</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">JavaMail整合Gmail邮箱服务器</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JavaMail%E6%95%B4%E5%90%88Gmail%E9%82%AE%E7%AE%B1%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">JavaMail整合Gmail邮箱服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E6%88%90JavaMail"><span class="nav-text">集成JavaMail</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="nav-text">1.添加依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%85%8D%E7%BD%AE%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1"><span class="nav-text">2.配置邮件服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%9B%E5%BB%BA%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1%E7%B1%BB"><span class="nav-text">3.创建邮件服务类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BD%BF%E7%94%A8%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1"><span class="nav-text">4.使用邮件服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%B5%8B%E8%AF%95%E7%B1%BB"><span class="nav-text">5.测试类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%89%A9%E5%B1%95html%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6%E6%88%96%E8%80%85%E5%8F%91%E9%80%81%E9%99%84%E4%BB%B6"><span class="nav-text">6.扩展html发送邮件或者发送附件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8JavaMail%E6%95%B4%E5%90%88Gmail"><span class="nav-text">使用JavaMail整合Gmail</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E5%90%ACGmail%E9%82%AE%E7%AE%B1%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5"><span class="nav-text">监听Gmail邮箱邮件通知</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gmail%E8%B4%A6%E5%8F%B7%E9%85%8D%E7%BD%AE"><span class="nav-text">Gmail账号配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E9%80%9A%E4%B8%A4%E6%AD%A5%E9%AA%8C%E8%AF%81"><span class="nav-text">开通两步验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GMail%E9%82%AE%E7%AE%B1%E6%B7%BB%E5%8A%A0%E3%80%8A%E5%BA%94%E7%94%A8%E4%B8%93%E7%94%A8%E5%AF%86%E7%A0%81%E3%80%8B"><span class="nav-text">GMail邮箱添加《应用专用密码》</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>

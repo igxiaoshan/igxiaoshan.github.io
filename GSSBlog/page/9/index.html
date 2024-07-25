@@ -387,15 +387,15 @@
                 </div>
                 <div class="statistics">
                     <a class="item" href="/GSSBlog/tags">
-                        <div class="number">24</div>
+                        <div class="number">27</div>
                         <div class="label">标签</div>
                     </a>
                     <a class="item" href="/GSSBlog/categories">
-                        <div class="number">31</div>
+                        <div class="number">35</div>
                         <div class="label">分类</div>
                     </a>
                     <a class="item" href="/GSSBlog/archives">
-                        <div class="number">85</div>
+                        <div class="number">88</div>
                         <div class="label">文章</div>
                     </a>
                 </div>
@@ -412,6 +412,208 @@
                 
                     <div class="home-content-container">
     <ul class="home-article-list">
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/GSSBlog/2023/10/30/Docker%E5%AE%B9%E5%99%A8%E6%95%B0%E6%8D%AE%E5%8D%B7/">
+                        Docker容器数据卷
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        docker容器数据卷是什么
+123卷,就是目录或者文件,存在于一个或多个容器中,由docker挂载到容器,但不属于联合文件系统,因此能够绕过Union File System提供一些用于持续或共享数据的特性卷的设计目的就是数据的持久化,完全独立于容...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
+                
+                    2023-10-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/GSSBlog/2023/10/30/Docker%E5%AE%B9%E5%99%A8%E6%95%B0%E6%8D%AE%E5%8D%B7/">阅读全文<span class="seo-reader-text">Docker容器数据卷</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/GSSBlog/2023/10/30/Docker%E5%AE%B9%E5%99%A8%E6%B2%A1%E6%9C%89%E7%9B%B8%E5%BA%94%E5%91%BD%E4%BB%A4/">
+                        解决容器启动，内部无法使用`ip addr`和`ping`命令
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1234567891011[root@CentOS7_001 ~]# [root@CentOS7_001 ~]# docker psCONTAINER ID   IMAGE          COMMAND                   CRE...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
+                
+                    2023-10-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/GSSBlog/2023/10/30/Docker%E5%AE%B9%E5%99%A8%E6%B2%A1%E6%9C%89%E7%9B%B8%E5%BA%94%E5%91%BD%E4%BB%A4/">阅读全文<span class="seo-reader-text">解决容器启动，内部无法使用`ip addr`和`ping`命令</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/GSSBlog/2023/10/30/Docker%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7%E4%B9%8BCAdvisor+InfluxDB+Granfana/">
+                        Docker重量级容器监控
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        CAdvisor+InfluxDB+Granfana原生命令
+docker stats
+
+12345docker stats 可以很方便的查看当前宿主机上所有容器的CPU,内存以及网络流量等数据,但是有个弊端docker stats 统计结果只能是当...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Oct 30 2023 09:10:29 GMT+0800">
+                
+                    2023-10-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/GSSBlog/tags/Docker/">Docker</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/GSSBlog/2023/10/30/Docker%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7%E4%B9%8BCAdvisor+InfluxDB+Granfana/">阅读全文<span class="seo-reader-text">Docker重量级容器监控</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
         
             <li class="home-article-item">
 

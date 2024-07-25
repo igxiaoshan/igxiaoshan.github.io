@@ -9993,6 +9993,7 @@ public class MySeataConfig &#123;
       <categories>
         <category>Docker</category>
         <category>RabbitMQ</category>
+        <category>MQ</category>
       </categories>
       <tags>
         <tag>RabbitMQ</tag>
@@ -10136,6 +10137,334 @@ public class MySeataConfig &#123;
       <tags>
         <tag>Mail</tag>
         <tag>James</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JavaMail整合Gmail邮箱服务器</title>
+    <url>/GSSBlog/2024/07/19/JavaMail%E6%95%B4%E5%90%88Gmail%E9%82%AE%E7%AE%B1%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="JavaMail整合Gmail邮箱服务器"><a href="#JavaMail整合Gmail邮箱服务器" class="headerlink" title="JavaMail整合Gmail邮箱服务器"></a>JavaMail整合Gmail邮箱服务器</h1><blockquote>
+<p>在Spring Boot项目中整合JavaMail服务</p>
+</blockquote>
+<h2 id="集成JavaMail"><a href="#集成JavaMail" class="headerlink" title="集成JavaMail"></a>集成<code>JavaMail</code></h2><h3 id="1-添加依赖"><a href="#1-添加依赖" class="headerlink" title="1.添加依赖"></a>1.添加依赖</h3><blockquote>
+<p>在<code>pom.xml</code>中添加<code>Spring Boot Starter Mail</code>依赖</p>
+</blockquote>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-mail<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="2-配置邮件服务"><a href="#2-配置邮件服务" class="headerlink" title="2.配置邮件服务"></a>2.配置邮件服务</h3><blockquote>
+<p>在<code>application.properties</code>或<code>application.yml</code>文件中添加邮件服务器配置</p>
+</blockquote>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">mail:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">smtp.example.com</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">587</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">your_email@example.com</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">your_password</span></span><br><span class="line">    <span class="attr">properties:</span></span><br><span class="line">      <span class="attr">mail:</span></span><br><span class="line">        <span class="attr">smtp:</span></span><br><span class="line">          <span class="attr">auth:</span> <span class="literal">true</span></span><br><span class="line">          <span class="attr">starttls:</span></span><br><span class="line">            <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="3-创建邮件服务类"><a href="#3-创建邮件服务类" class="headerlink" title="3.创建邮件服务类"></a>3.创建邮件服务类</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.mail.SimpleMailMessage;</span><br><span class="line"><span class="keyword">import</span> org.springframework.mail.javamail.JavaMailSender;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EmailService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JavaMailSender mailSender;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendSimpleEmail</span><span class="params">(String to, String subject, String text)</span> &#123;</span><br><span class="line">        <span class="type">SimpleMailMessage</span> <span class="variable">message</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleMailMessage</span>();</span><br><span class="line">        message.setTo(to);</span><br><span class="line">        message.setSubject(subject);</span><br><span class="line">        message.setText(text);</span><br><span class="line">        mailSender.send(message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="4-使用邮件服务"><a href="#4-使用邮件服务" class="headerlink" title="4.使用邮件服务"></a>4.使用邮件服务</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EmailController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> EmailService emailService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/send-email&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sendEmail</span><span class="params">(<span class="meta">@RequestParam</span> String to, <span class="meta">@RequestParam</span> String subject, <span class="meta">@RequestParam</span> String text)</span> &#123;</span><br><span class="line">        emailService.sendSimpleEmail(to, subject, text);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Email sent successfully&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="5-测试类"><a href="#5-测试类" class="headerlink" title="5.测试类"></a>5.测试类</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line">http:<span class="comment">//localhost:8080/send-email?to=recipient@example.com&amp;subject=Test&amp;text=Hello</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="6-扩展html发送邮件或者发送附件"><a href="#6-扩展html发送邮件或者发送附件" class="headerlink" title="6.扩展html发送邮件或者发送附件"></a>6.扩展<code>html</code>发送邮件或者发送附件</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.mail.MessagingException;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.MimeMessage;</span><br><span class="line"><span class="keyword">import</span> org.springframework.mail.javamail.MimeMessageHelper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendHtmlEmail</span><span class="params">(String to, String subject, String htmlContent)</span> <span class="keyword">throws</span> MessagingException &#123;</span><br><span class="line">    <span class="type">MimeMessage</span> <span class="variable">mimeMessage</span> <span class="operator">=</span> mailSender.createMimeMessage();</span><br><span class="line">    <span class="type">MimeMessageHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MimeMessageHelper</span>(mimeMessage, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">    helper.setText(htmlContent, <span class="literal">true</span>);</span><br><span class="line">    helper.setTo(to);</span><br><span class="line">    helper.setSubject(subject);</span><br><span class="line">    mailSender.send(mimeMessage);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendEmailWithAttachment</span><span class="params">(String to, String subject, String text, String pathToAttachment)</span> <span class="keyword">throws</span> MessagingException &#123;</span><br><span class="line">    <span class="type">MimeMessage</span> <span class="variable">mimeMessage</span> <span class="operator">=</span> mailSender.createMimeMessage();</span><br><span class="line">    <span class="type">MimeMessageHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MimeMessageHelper</span>(mimeMessage, <span class="literal">true</span>);</span><br><span class="line">    helper.setTo(to);</span><br><span class="line">    helper.setSubject(subject);</span><br><span class="line">    helper.setText(text);</span><br><span class="line">    <span class="type">FileSystemResource</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileSystemResource</span>(<span class="keyword">new</span> <span class="title class_">File</span>(pathToAttachment));</span><br><span class="line">    helper.addAttachment(<span class="string">&quot;Invoice&quot;</span>, file);</span><br><span class="line">    mailSender.send(mimeMessage);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="使用JavaMail整合Gmail"><a href="#使用JavaMail整合Gmail" class="headerlink" title="使用JavaMail整合Gmail"></a>使用<code>JavaMail</code>整合<code>Gmail</code></h2><blockquote>
+<p>使用<code>IMAP</code>服务</p>
+</blockquote>
+<div class="highlight-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">receiver:</span></span><br><span class="line">    <span class="attr">mail:</span></span><br><span class="line">      <span class="attr">host:</span> <span class="string">imap.gmail.com</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">993</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">your_email@gmail.com</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">app_secret</span> <span class="comment"># 需要单独开通</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">imap</span></span><br><span class="line">      <span class="attr">ssl:</span></span><br><span class="line">        <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">properties:</span></span><br><span class="line">        <span class="attr">mail:</span></span><br><span class="line">          <span class="attr">imap:</span></span><br><span class="line">            <span class="attr">ssl:</span></span><br><span class="line">              <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">              <span class="attr">trust:</span> <span class="string">imap.gmail.com</span></span><br><span class="line">            <span class="attr">connectiontimeout:</span> <span class="number">300000</span> <span class="comment"># 连接超时五分钟</span></span><br><span class="line">            <span class="attr">timeout:</span> <span class="number">300000</span> <span class="comment"># 读超时五分钟</span></span><br><span class="line">            <span class="attr">writetimeout:</span> <span class="number">300000</span> <span class="comment"># 写超时五分钟</span></span><br><span class="line">          <span class="attr">store:</span></span><br><span class="line">            <span class="attr">protocol:</span> <span class="string">imap</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="监听Gmail邮箱邮件通知"><a href="#监听Gmail邮箱邮件通知" class="headerlink" title="监听Gmail邮箱邮件通知"></a>监听<code>Gmail</code>邮箱邮件通知</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cmiot.onepark.email;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.Scheduled;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.mail.*;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.MimeMessage;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.MimeMultipart;</span><br><span class="line"><span class="keyword">import</span> javax.mail.search.FlagTerm;</span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.net.HttpURLConnection;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Receiver</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> GmailProperties gmailProperties;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Scheduled(fixedRate = 60000)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">receiveEmails</span><span class="params">()</span> <span class="keyword">throws</span> NoSuchProviderException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(<span class="string">&quot;https://api.ipify.org?format=json&quot;</span>);</span><br><span class="line">            <span class="type">HttpURLConnection</span> <span class="variable">connection</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">            connection.setRequestMethod(<span class="string">&quot;GET&quot;</span>);</span><br><span class="line">            <span class="comment">// 打印响应</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">responseCode</span> <span class="operator">=</span> connection.getResponseCode();</span><br><span class="line">            System.out.println(<span class="string">&quot;Response Code: &quot;</span> + responseCode);</span><br><span class="line">            <span class="keyword">try</span> (<span class="type">BufferedReader</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(connection.getInputStream()))) &#123;</span><br><span class="line">                String inputLine;</span><br><span class="line">                <span class="type">StringBuilder</span> <span class="variable">content</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">                <span class="keyword">while</span> ((inputLine = in.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">                    content.append(inputLine);</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">&quot;Response: &quot;</span> + content.toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;-------------运行监听任务---------------------------------------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">Properties</span> <span class="variable">props</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.ssl.enable&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.host&quot;</span>, gmailProperties.getHost());</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.port&quot;</span>, gmailProperties.getPort());</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.connectiontimeout&quot;</span>, <span class="string">&quot;300000&quot;</span>); <span class="comment">// 连接超时五分钟</span></span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.timeout&quot;</span>, <span class="string">&quot;300000&quot;</span>); <span class="comment">// 读超时五分钟</span></span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.writetimeout&quot;</span>, <span class="string">&quot;300000&quot;</span>); <span class="comment">// 写超时五分钟</span></span><br><span class="line"></span><br><span class="line">        props.put(<span class="string">&quot;mail.smtp.auth&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">user</span> <span class="operator">=</span> gmailProperties.getUsername().split(<span class="string">&quot;@&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">        props.put(<span class="string">&quot;mail.imap.user&quot;</span>, user);</span><br><span class="line">        <span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> Session.getInstance(props, <span class="keyword">new</span> <span class="title class_">Authenticator</span>() &#123;</span><br><span class="line">            <span class="keyword">protected</span> PasswordAuthentication <span class="title function_">getPasswordAuthentication</span><span class="params">()</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;PasswordAuthentication user: &quot;</span> + gmailProperties.getUsername());</span><br><span class="line">                System.out.println(<span class="string">&quot;PasswordAuthentication password: &quot;</span> + gmailProperties.getPassword());</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PasswordAuthentication</span>(gmailProperties.getUsername(), gmailProperties.getPassword());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        session.setDebug(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">Store</span> <span class="variable">store</span> <span class="operator">=</span> session.getStore(<span class="string">&quot;imap&quot;</span>)) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;Full URL: &quot;</span> + store.getURLName().toString());</span><br><span class="line">            System.out.println(<span class="string">&quot;Host: &quot;</span> + store.getURLName().getHost());</span><br><span class="line">            System.out.println(<span class="string">&quot;Username: &quot;</span> + store.getURLName().getUsername());</span><br><span class="line"></span><br><span class="line">            store.connect(<span class="string">&quot;imap.gmail.com&quot;</span>, gmailProperties.getUsername(), gmailProperties.getPassword());</span><br><span class="line">            <span class="type">Folder</span> <span class="variable">inbox</span> <span class="operator">=</span> store.getFolder(<span class="string">&quot;INBOX&quot;</span>);</span><br><span class="line">            inbox.open(Folder.READ_ONLY);</span><br><span class="line">            inbox.open(Folder.READ_WRITE); <span class="comment">// 需要读写权限才能标记邮件为已读</span></span><br><span class="line">            <span class="comment">// 搜索未读邮件</span></span><br><span class="line">            <span class="type">FlagTerm</span> <span class="variable">unseenFlagTerm</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FlagTerm</span>(<span class="keyword">new</span> <span class="title class_">Flags</span>(Flags.Flag.SEEN), <span class="literal">false</span>);</span><br><span class="line">            Message[] messages = inbox.search(unseenFlagTerm);</span><br><span class="line">            System.out.println(<span class="string">&quot;收件箱的邮件数：&quot;</span> + messages.length);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (Message message : messages) &#123;</span><br><span class="line">                <span class="keyword">if</span> (message <span class="keyword">instanceof</span> MimeMessage) &#123;</span><br><span class="line">                    <span class="type">MimeMessage</span> <span class="variable">mimeMessage</span> <span class="operator">=</span> (MimeMessage) message;</span><br><span class="line">                    System.out.println(<span class="string">&quot;----------------------------------------------------------&quot;</span>);</span><br><span class="line">                    System.out.println(<span class="string">&quot;Subject: &quot;</span> + mimeMessage.getSubject());</span><br><span class="line">                    System.out.println(<span class="string">&quot;From ToString: &quot;</span> + mimeMessage.getFrom()[<span class="number">0</span>].toString());</span><br><span class="line">                    System.out.println(<span class="string">&quot;From: &quot;</span> + mimeMessage.getFrom()[<span class="number">0</span>]);</span><br><span class="line">                    System.out.println(<span class="string">&quot;Content: &quot;</span> + getTextFromMessage(mimeMessage));</span><br><span class="line">                    System.out.println(<span class="string">&quot;----------------------------------------------------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 标记邮件为已读</span></span><br><span class="line">                    message.setFlag(Flags.Flag.SEEN, <span class="literal">true</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (MessagingException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">getTextFromMessage</span><span class="params">(Message message)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">if</span> (message.isMimeType(<span class="string">&quot;text/plain&quot;</span>)) &#123;</span><br><span class="line">            result = message.getContent().toString();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.isMimeType(<span class="string">&quot;multipart/*&quot;</span>)) &#123;</span><br><span class="line">            <span class="type">MimeMultipart</span> <span class="variable">mimeMultipart</span> <span class="operator">=</span> (MimeMultipart) message.getContent();</span><br><span class="line">            result = getTextFromMimeMultipart(mimeMultipart);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">getTextFromMimeMultipart</span><span class="params">(MimeMultipart mimeMultipart)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> mimeMultipart.getCount();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">            <span class="type">BodyPart</span> <span class="variable">bodyPart</span> <span class="operator">=</span> mimeMultipart.getBodyPart(i);</span><br><span class="line">            <span class="keyword">if</span> (bodyPart.isMimeType(<span class="string">&quot;text/plain&quot;</span>)) &#123;</span><br><span class="line">                result.append(bodyPart.getContent());</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (bodyPart.isMimeType(<span class="string">&quot;text/html&quot;</span>)) &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">html</span> <span class="operator">=</span> (String) bodyPart.getContent();</span><br><span class="line">                result.append(org.jsoup.Jsoup.parse(html).text());</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (bodyPart.getContent() <span class="keyword">instanceof</span> MimeMultipart) &#123;</span><br><span class="line">                result.append(getTextFromMimeMultipart((MimeMultipart) bodyPart.getContent()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="Gmail账号配置"><a href="#Gmail账号配置" class="headerlink" title="Gmail账号配置"></a><code>Gmail</code>账号配置</h2><h3 id="开通两步验证"><a href="#开通两步验证" class="headerlink" title="开通两步验证"></a>开通两步验证</h3><blockquote>
+<p>GMail谷歌邮箱《两步验证》是谷歌邮箱的安全机制，会让你的邮箱安全性更高。</p>
+</blockquote>
+<h3 id="GMail邮箱添加《应用专用密码》"><a href="#GMail邮箱添加《应用专用密码》" class="headerlink" title="GMail邮箱添加《应用专用密码》"></a>GMail邮箱添加《应用专用密码》</h3><blockquote>
+<p><a class="link"   href="https://security.google.com/settings/security/apppasswords?pli=1" >https://security.google.com/settings/security/apppasswords?pli=1 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>应用专用密码请求链接生成，共16个字母，4个一组，在这里要记下这个专用密码（使用的时候要注意，要去掉中间的空格，密码只显示一次）</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>JavaEmail</category>
+      </categories>
+      <tags>
+        <tag>Mail</tag>
+        <tag>Gmail</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RocketMQ部署</title>
+    <url>/GSSBlog/2024/07/23/RocketMQ%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<h1 id="RocketMQ部署"><a href="#RocketMQ部署" class="headerlink" title="RocketMQ部署"></a>RocketMQ部署</h1><blockquote>
+<p><code>RabbitMQ</code>和<code>RocketMQ</code>是属于不同的消息队列系统，虽然都是<code>MQ</code>，但是它们的配置和部署方式不同</p>
+<p><a href="/GSSBlog/2024/06/26/RabbitMQ%E9%83%A8%E7%BD%B2/index.html">RabbitMQ部署回顾</a></p>
+</blockquote>
+<h2 id="RabbitMQ和RocketMQ对比"><a href="#RabbitMQ和RocketMQ对比" class="headerlink" title="RabbitMQ和RocketMQ对比"></a><code>RabbitMQ</code>和<code>RocketMQ</code>对比</h2><h3 id="类型不同"><a href="#类型不同" class="headerlink" title="类型不同"></a><strong>类型不同</strong></h3><ul>
+<li><code>RabbitMQ</code>是一个广泛使用的<a href="#%E4%BB%80%E4%B9%88%E6%98%AF%60AMQP%60%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97">AMQP</a>协议的消息队列系统.</li>
+<li><code>RocketMQ</code>是由阿里巴巴开源的,支持高吞吐量,低延迟的分布式消息中间件.</li>
+</ul>
+<h3 id="组件不同"><a href="#组件不同" class="headerlink" title="组件不同"></a><strong>组件不同</strong></h3><ul>
+<li><code>RabbitMQ</code>是一个单一的服务,通常只需要一个容器即可运行.</li>
+<li><code>RocketMQ</code>需要多个组件(<strong>NameServer</strong>,<strong>Broker</strong>,<strong>Console</strong>)协同工作,通常需要多个容器.</li>
+</ul>
+<h3 id="端口配置"><a href="#端口配置" class="headerlink" title="端口配置"></a><strong>端口配置</strong></h3><ul>
+<li><code>RabbitMQ</code>通常使用<strong>5672</strong>(<code>AMQP协议</code>)和<strong>15672</strong>(<code>管理控制台</code>).</li>
+<li><code>RocketMQ</code>的<strong>NameServer</strong>使用<strong>9876</strong>端口，<strong>Borker</strong>使用<strong>10909</strong>，<strong>10911</strong>，<strong>10912</strong>等端口，<strong>Console</strong>使用<strong>8080</strong>端口.</li>
+</ul>
+<h3 id="镜像和数据卷"><a href="#镜像和数据卷" class="headerlink" title="镜像和数据卷"></a><strong>镜像和数据卷</strong></h3><ul>
+<li><code>RabbitMQ</code>的镜像包含管理插件,并使用一个数据卷来持久化数据.</li>
+<li><code>RocketMQ</code>使用多个镜像和数据卷来分离不同组件的功能.</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><blockquote>
+<p>尽管两者都是消息队列服务,但它们的架构和部署方式有很大的不同</p>
+<p><code>RabbitMQ</code>更适合<strong>单机</strong>或者简单集群部署,</p>
+<p>而<code>RocketMQ</code>更适合<strong>分布式</strong>,<strong>高并发</strong>的场景,因此需要更多的容器和配置满足其功能需求.</p>
+</blockquote>
+<h2 id="RocketMQ部署-1"><a href="#RocketMQ部署-1" class="headerlink" title="RocketMQ部署"></a>RocketMQ部署</h2><h3 id="部署RocketMQ-NameServer"><a href="#部署RocketMQ-NameServer" class="headerlink" title="部署RocketMQ NameServer"></a>部署RocketMQ NameServer</h3><blockquote>
+<p><strong>NameServer</strong>是<code>RocketMQ</code>的一个核心组件,主要负责路由信息的管理</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name rmqnamesrv \</span><br><span class="line">  -p 9876:9876 \</span><br><span class="line">  -v /path/to/namesrv/logs:/opt/logs \</span><br><span class="line">  -v /path/to/namesrv/store:/opt/store \</span><br><span class="line">  rocketmqinc/rocketmq:4.9.4 \</span><br><span class="line">  sh mqnamesrv</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>--name rmqnamesrv</code>：容器名</li>
+<li><code>-p 9876:9876</code>: 映射NameServer的默认端口</li>
+<li><code>-v /path/to/namesrv/logs:/opt/logs</code>: 挂载日志目录</li>
+<li><code>-v /path/to/namesrv/store:/opt/store</code>: 挂载存储目录</li>
+<li><code>rocketmqinc/rocketmq:4.9.4</code>: 使用的RocketMQ镜像版本</li>
+<li><code>sh mqnamesrv</code>: 启动NamerServer服务</li>
+</ul>
+<h3 id="部署RocketMQ-Broker"><a href="#部署RocketMQ-Broker" class="headerlink" title="部署RocketMQ Broker"></a>部署RocketMQ Broker</h3><blockquote>
+<p><strong>Borker</strong>是<code>RocketMQ</code>的核心服务,负责消息的存储和传递</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name rmqbroker \</span><br><span class="line">  -p 10911:10911 \</span><br><span class="line">  -p 10912:10912 \</span><br><span class="line">  -p 10909:10909 \</span><br><span class="line">  -v /path/to/broker/logs:/opt/logs \</span><br><span class="line">  -v /path/to/broker/store:/opt/store \</span><br><span class="line">  --<span class="built_in">link</span> rmqnamesrv:namesrv \</span><br><span class="line">  -e <span class="string">&quot;NAMESRV_ADDR=namesrv:9876&quot;</span> \</span><br><span class="line">  rocketmqinc/rocketmq:4.9.4 \</span><br><span class="line">  sh mqbroker -c /opt/rocketmq-4.9.4/conf/broker.conf</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>--name rmqbroker</code>: 容器名</li>
+<li><code>-p 10911:10911</code>: 映射Broker的通信端口</li>
+<li><code>-p 10912:10912</code>: 映射Broker的HA端口</li>
+<li><code>-p 10909:10909</code>: 映射Broker的服务端口</li>
+<li><code>-v /path/to/broker/logs:/opt/logs</code>:  挂载日志目录</li>
+<li><code>-v /path/to/broker/store:/opt/store</code>: 挂载存储目录</li>
+<li><code>-- link rmqnamesrv:namesrv</code>: 将NameServer连接到Broker容器中</li>
+<li><code>-e &quot;NAMESRV_ADDR=namesrv:9876&quot;</code>: 设置NameServer的地址</li>
+<li><code>rocketmqinc/rocketmq:4.9.4</code>: 使用的RocketMQ镜像版本</li>
+<li><code>sh mqbroker -c /opt/rocketmq-4.9.4/conf/broker.conf</code>: 启动Broker服务并指定配置文件</li>
+</ul>
+<h3 id="部署RocketMQ-Console"><a href="#部署RocketMQ-Console" class="headerlink" title="部署RocketMQ Console"></a>部署RocketMQ Console</h3><blockquote>
+<p><strong>Console</strong>是<code>RocketMQ</code>的管理界面,方便我们监控和管理<strong>RocketMQ</strong>集群</p>
+</blockquote>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name rmqconsole \</span><br><span class="line">  -p 8080:8080 \</span><br><span class="line">  -e <span class="string">&quot;JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false&quot;</span> \</span><br><span class="line">  styletang/rocketmq-console-ng</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>--name rmqconsole</code>: 容器名</li>
+<li><code>-p 8080:8080</code>: 映射Console的Web管理界面端口</li>
+<li><code>-e &quot;JAVA_OPTS=-Dockermq.namesrv.addr=namesrv:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false&quot;</code>: 设置NameServer地址和禁用VIP通道</li>
+<li><code>styletang/rocketmq-console-ng</code>: 使用的RocketMQ Console镜像</li>
+</ul>
+<h2 id="使用Demo"><a href="#使用Demo" class="headerlink" title="使用Demo"></a>使用Demo</h2><blockquote>
+<p>下面是一个<code>Spring Boot</code>项目整合<code>RocketMQ</code>的简单示例</p>
+</blockquote>
+<h3 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h3><blockquote>
+<p>在<code>pom.xml</code>文件中添加<code>RocketMQ</code>的依赖</p>
+</blockquote>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.rocketmq<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>rocketmq-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><blockquote>
+<p>在<code>application.properties</code>中添加<code>RocketMQ</code>的相关配置</p>
+</blockquote>
+<div class="highlight-container" data-rel="Properties"><figure class="iseeu highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">rocketmq.name-server</span>=<span class="string">localhost:9876</span></span><br><span class="line"><span class="attr">rocketmq.producer.group</span>=<span class="string">springboot-consumer-group</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="生产者代码"><a href="#生产者代码" class="headerlink" title="生产者代码"></a>生产者代码</h3><blockquote>
+<p>创建一个消息生产者</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.rocketmq.spring.core.RocketMQTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProducerController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RocketMQTemplate rocketMQTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/send&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">send</span><span class="params">()</span> &#123;</span><br><span class="line">        rocketMQTemplate.convertAndSend(<span class="string">&quot;test-topic&quot;</span>, <span class="string">&quot;Hello, RocketMQ!&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Message sent!&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="消费者代码"><a href="#消费者代码" class="headerlink" title="消费者代码"></a>消费者代码</h3><div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.rocketmq.spring.annotation.RocketMQMessageListener;</span><br><span class="line"><span class="keyword">import</span> org.apache.rocketmq.spring.core.RocketMQListener;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="meta">@RocketMQMessageListener(topic = &quot;test-topic&quot;, consumerGroup = &quot;springboot-consumer-group&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConsumerService</span> <span class="keyword">implements</span> <span class="title class_">RocketMQListener</span>&lt;String&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onMessage</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Received message: &quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="启动应用"><a href="#启动应用" class="headerlink" title="启动应用"></a>启动应用</h3><blockquote>
+<p> 运行Spring Boot应用，访问<code>http://localhost:8080/send</code>发送消息，并在控制台查看消费者接收到的消息。</p>
+</blockquote>
+<h3 id="访问RocketMQ-Console"><a href="#访问RocketMQ-Console" class="headerlink" title="访问RocketMQ Console"></a>访问RocketMQ Console</h3><blockquote>
+<p> 可以通过浏览器访问<code>http://localhost:8080</code>，进入RocketMQ Console的Web管理界面。</p>
+</blockquote>
+<p>在RocketMQ Console中，你可以进行以下操作：</p>
+<ul>
+<li>查看集群状态</li>
+<li>查看Topic信息</li>
+<li>查看消费组信息</li>
+<li>查看消息轨迹</li>
+<li>发送和消费测试消息</li>
+<li>管理Broker</li>
+</ul>
+<p>通过RocketMQ Console，管理员可以方便地监控和管理RocketMQ集群，提高运维效率和故障排查能力。</p>
+<p><strong>什么是<code>AMQP</code>消息队列</strong></p>
+<blockquote>
+<p><code>AMQP</code>(Advanced Message Queuing Protocol) 是一种开放的应用层协议标准,用于消息导向的中间件.<code>AMQP</code>消息队列系统使用该协议来确保消息在<strong>发送方</strong>和<strong>接受方</strong>之间<strong>可靠</strong>,<strong>安全</strong>地传递.它的主要目标是促进不同系统之间的消息传递,实现互操作性和灵活性.</p>
+</blockquote>
+<p><strong><code>AMQP</code>消息队列系统的关键特性</strong></p>
+<ol>
+<li>消息的可靠性</li>
+</ol>
+<ul>
+<li>确保消息从生产者到消费者的传递是可靠,支持消息的确认机制和持久化</li>
+</ul>
+<ol start="2">
+<li>灵活的路由机制</li>
+</ol>
+<ul>
+<li>支持多种消息路由方式,如点对点,发布&#x2F;订阅等,可以根据业务需求配置消息的传递路径</li>
+</ul>
+<ol start="3">
+<li>安全性</li>
+</ol>
+<ul>
+<li>提供基于SSL&#x2F;TLS的传输加密和用户身份验证机制,保证消息传递的安全性</li>
+</ul>
+<ol start="4">
+<li>事务支持</li>
+</ol>
+<ul>
+<li>支持事务操作,可以确保一组消息要么全部成功处理,要么全部失败回滚</li>
+</ul>
+<p><strong><code>AMQP</code>消息队列系统的核心组件</strong></p>
+<ol>
+<li><code>Exchange</code>(交换机)<ul>
+<li>负责接受生产者发送的消息,并根据一定的路由规则将消息投递到一个或多个队列中</li>
+<li>常见的交换机类型包括<ul>
+<li><code>Direct</code>: 根据消息的路由键精确匹配队列</li>
+<li><code>Topic</code>: 根据模式匹配的路由键将消息路由到一个或多个队列</li>
+<li><code>Fanout</code>: 将消息广播到所有绑定到交换机的队列</li>
+<li><code>Headers</code>: 根据消息头属性进行匹配</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>Queue</code>(队列)<ul>
+<li>存储消息的容器,消费者从队列中获取并处理消息</li>
+<li>队列可以配置为持久化,临时或者自动删除等特性</li>
+</ul>
+</li>
+<li><code>Binding</code>(绑定)<ul>
+<li>将交换机和队列关联起来,根据绑定规则决定消息的路由方式</li>
+</ul>
+</li>
+<li><code>Message</code>(消息)<ul>
+<li>传递的数据单元,包括消息头和消息体,消息头包含路由键等元数据,消息体包括实际的业务数据</li>
+</ul>
+</li>
+</ol>
+<p><strong>常见的<code>AMQP</code>实现</strong></p>
+<ol>
+<li><code>RabbitMQ</code><ul>
+<li>最流行的<code>AMQP</code>消息队列实现之一,支持多种协议,提供丰富的功能特性和插件扩展</li>
+<li>高度可配置,易于集成和扩展</li>
+</ul>
+</li>
+<li><code>Apache Qpid</code><ul>
+<li>Apache基金会的开源项目,提供<code>AMQP</code>消息中间件实现</li>
+</ul>
+</li>
+<li><code>OpenAMQ</code><ul>
+<li>开源的AMQP消息队列实现,专注于高性能和低延迟</li>
+</ul>
+</li>
+</ol>
+<p><strong><code>AMQP</code>消息队列的典型应用场景</strong></p>
+<ol>
+<li>分布式系统的消息传递<ul>
+<li>在微服务架构中,不同服务之间需要传递消息,AMQP消息队列提供了可靠的消息传递机制</li>
+</ul>
+</li>
+<li>异步处理<ul>
+<li>将耗时的操作放入队列,有后台服务异步处理,提升系统的响应速度和用户体验</li>
+</ul>
+</li>
+<li>事件驱动架构<ul>
+<li>系统内部或系统之间的事件通知和处理,通过消息队列实现事件驱动架构</li>
+</ul>
+</li>
+<li>日志和监控<ul>
+<li>收集和传递日志,监控数据,通过消息队列实现集中处理和分析</li>
+</ul>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Docker</category>
+        <category>RocketMQ</category>
+        <category>MQ</category>
+      </categories>
+      <tags>
+        <tag>RocketMQ</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>自验证服务器CA证书</title>
+    <url>/GSSBlog/2024/07/09/%E8%87%AA%E9%AA%8C%E8%AF%81%E6%9C%8D%E5%8A%A1%E5%99%A8CA%E8%AF%81%E4%B9%A6/</url>
+    <content><![CDATA[<p>在测试过程中,服务器需要验证<code>SSL</code>;但是握手失败了,就需要解决这一问题.以下有几种可能得解决方案:</p>
+<ul>
+<li>使用自签名证书<ul>
+<li>可以使用自签名证书,需要将该证书添加到Java的信任库中</li>
+</ul>
+</li>
+<li>禁用<code>SSL</code>证书验证<ul>
+<li>这仅用于开发和测试环境,不推荐生产环境,因为它会降低安全性</li>
+</ul>
+</li>
+<li>配置信任库<ul>
+<li>配置证书导入到Java的信任库中,以便Java应用程序可以信任该证书</li>
+</ul>
+</li>
+</ul>
+<h2 id="使用自签名证书"><a href="#使用自签名证书" class="headerlink" title="使用自签名证书"></a>使用自签名证书</h2><ul>
+<li>获取自签名证书（通常是<code>.crt</code>或者<code>.pem</code>文件）</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">openssl s_client -connect 192.168.116.130:993 -showcerts &lt;/dev/null 2&gt;/dev/null | openssl x509 -outform PEM &gt; mailserver_cert1.pem</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">find / -name <span class="string">&quot;mailserver_cert1.pem&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>将证书导入到<code>Java</code>的信任库中</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">path/to/keytool -import -<span class="built_in">alias</span> mailserver1 -keystore path/to/security/cacerts -file path/to/mailserver_cert1.pem</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>默认情况下，Java的 <code>cacerts</code> keystore 的密码是固定的，通常是 <code>changeit</code>。如果没有更改过密码，可以使用 <code>changeit</code> 作为密码。如果需要或已经更改过密码，则应使用新的密码。</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入keystore密码:</span><br><span class="line">所有者: ...</span><br><span class="line">发布者: ...</span><br><span class="line">序列号: ...</span><br><span class="line">有效期: ...</span><br><span class="line">证书指纹:</span><br><span class="line">  MD5:  ...</span><br><span class="line">  SHA1: ...</span><br><span class="line">  SHA256: ...</span><br><span class="line">  签名算法名称: ...</span><br><span class="line">  版本: ...</span><br><span class="line"></span><br><span class="line">是否信任此证书? [否]:  是</span><br><span class="line">证书已添加到keystore中</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>完成这些步骤后，证书应该成功导入到Java信任库中。</p>
+<h2 id="多证书导入步骤"><a href="#多证书导入步骤" class="headerlink" title="多证书导入步骤"></a>多证书导入步骤</h2><h3 id="准备证书文件"><a href="#准备证书文件" class="headerlink" title="准备证书文件"></a>准备证书文件</h3><ul>
+<li><p>将不同的<code>cert.pem</code>文件保存到本地;例如:</p>
+<ul>
+<li><code>mailserver_cert1.pem</code></li>
+<li><code>mailserver_cert2.pem</code></li>
+<li>…</li>
+</ul>
+</li>
+<li><p>使用<code>keytool</code>导入证书</p>
+<ul>
+<li>确保每个证书都有唯一的别名,例如<code>mailserver1</code>,<code>mailserver2</code>..等</li>
+<li>使用以下命令导入证书</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">path/to/keytool -import -<span class="built_in">alias</span> mailserver1 -keystore path/to/security/cacerts -file path/to/mailserver_cert1.pem</span><br><span class="line">path/to/keytool -import -<span class="built_in">alias</span> mailserver2 -keystore path/to/security/cacerts -file path/to/mailserver_cert2.pem</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>验证证书导入</p>
+<ul>
+<li>使用以下命令查看<code>keystore</code>中的证书列表,确保所有证书都已导入</li>
+</ul>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">path/to/keytool -list -keystore path/to/security/cacerts</span><br><span class="line"></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+]]></content>
+      <categories>
+        <category>CA</category>
+      </categories>
+      <tags>
+        <tag>CA</tag>
       </tags>
   </entry>
 </search>
