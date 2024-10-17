@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="igxiaoshan">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://igxiaoshan.github.io/GSSBlog/2024/09/30/mapstruct高级转换工具的使用/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="MapStruct高级拷贝工具的使用 在MapStruct中，可以通过多种方式实现复杂的自定义映射和嵌套对象的映射。MapStruct提供了强大的注释和配置功能来处理这些复杂场景。  如何使用 MapStruct1、引入依赖 在pom.xml中添加MapStruct依赖（maven版）  12345678910111213&lt;dependencies&gt;    &lt;dependency">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapStruct高级拷贝工具的使用">
+<meta property="og:url" content="https://igxiaoshan.github.io/GSSBlog/2024/09/30/MapStruct%E9%AB%98%E7%BA%A7%E8%BD%AC%E6%8D%A2%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="igxiaoshan&#39;s Blog">
+<meta property="og:description" content="MapStruct高级拷贝工具的使用 在MapStruct中，可以通过多种方式实现复杂的自定义映射和嵌套对象的映射。MapStruct提供了强大的注释和配置功能来处理这些复杂场景。  如何使用 MapStruct1、引入依赖 在pom.xml中添加MapStruct依赖（maven版）  12345678910111213&lt;dependencies&gt;    &lt;dependency">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-30T07:04:43.476Z">
+<meta property="article:modified_time" content="2024-10-17T07:46:29.096Z">
+<meta property="article:author" content="igxiaoshan">
+<meta property="article:tag" content="MapStruct">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/GSSBlog/images/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/GSSBlog/images/logo.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/GSSBlog/images/logo.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            MapStruct高级拷贝工具的使用 -
+        
+        igxiaoshan&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/GSSBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/GSSBlog/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"igxiaoshan.github.io","root":"/GSSBlog/","language":"zh-CN","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":false,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner.jpg","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"「凌晨四点半，海棠花未眠」","subtitle":{"text":["凌晨四点半，海棠花未眠。总觉得这时，你应该在我身边。"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://igxiaoshan.github.io/","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"凌晨四点半，海棠花未眠","links":{"档案":{"path":"/archives","icon":"fa-regular fa-archive"},"标签":{"path":"/tags","icon":"fa-regular fa-tags"},"分类":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"YYYY-MM-DD","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/GSSBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/GSSBlog/">
+                    <img src="/GSSBlog/images/logo.png">
+                </a>
+            
+            <a class="logo-title" href="/GSSBlog/">
+                
+                igxiaoshan&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        归档
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/GSSBlog/categories"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                归档
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/GSSBlog/categories"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">MapStruct高级拷贝工具的使用</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/GSSBlog/images/avatar.jpg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">igxiaoshan</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-09-30 15:04:43</span>
+        <span class="mobile">2024-09-30 15:04:43</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-10-17 15:46:29</span>
+            <span class="mobile">2024-10-17 15:46:29</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/GSSBlog/categories/MapStruct/">MapStruct</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/GSSBlog/tags/MapStruct/">MapStruct</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.7k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h1 id="MapStruct高级拷贝工具的使用"><a href="#MapStruct高级拷贝工具的使用" class="headerlink" title="MapStruct高级拷贝工具的使用"></a>MapStruct高级拷贝工具的使用</h1><blockquote>
+<p>在<strong>MapStruct</strong>中，可以通过多种方式实现复杂的自定义映射和嵌套对象的映射。<strong>MapStruct</strong>提供了强大的注释和配置功能来处理这些复杂场景。</p>
+</blockquote>
+<h2 id="如何使用-MapStruct"><a href="#如何使用-MapStruct" class="headerlink" title="如何使用 MapStruct"></a>如何使用 <strong>MapStruct</strong></h2><h3 id="1、引入依赖"><a href="#1、引入依赖" class="headerlink" title="1、引入依赖"></a>1、引入依赖</h3><blockquote>
+<p>在<code>pom.xml</code>中添加<code>MapStruct</code>依赖（maven版）</p>
+</blockquote>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mapstruct<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapstruct<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.5.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span> <span class="comment">&lt;!-- 请根据需要替换为最新版本 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mapstruct<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapstruct-processor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.5.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="2、定义Mapper接口"><a href="#2、定义Mapper接口" class="headerlink" title="2、定义Mapper接口"></a>2、定义Mapper接口</h3><blockquote>
+<p>需要定义一个<code>Mapper</code>接口，<code>MapStruct</code>会在编译时生成实现类。</p>
+<p>假设现在有两个类<code>Source</code>和<code>TargetDto</code>，可以创建如下<code>Mapper</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.mapstruct.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.mapstruct.factory.Mappers;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义Mapper接口</span></span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取Mapper实例</span></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定义映射方法</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="3、调用Mapper"><a href="#3、调用Mapper" class="headerlink" title="3、调用Mapper"></a>3、调用Mapper</h3><blockquote>
+<p>在代码中调用这个Mapper来完成对象转换</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.cglib.core.ReflectUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;S, T&gt; T <span class="title function_">convertObjectToDto</span><span class="params">(S source, Class&lt;T&gt; dtoClass)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (source == <span class="literal">null</span> || dtoClass == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;数据源对象或DTO类类型不能为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 使用缓存的构造函数来优化性能</span></span><br><span class="line">        Constructor&lt;T&gt; constructor = dtoClass.getDeclaredConstructor();</span><br><span class="line">        constructor.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">T</span> <span class="variable">dto</span> <span class="operator">=</span> constructor.newInstance();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 使用更高效的映射工具，例如 MapStruct 或 ModelMapper</span></span><br><span class="line">        BeanUtils.copyProperties(source, dto);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dto;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;无法将数据源对象转换为DTO对象&quot;</span>, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><ul>
+<li>高性能：<code>MapStruct</code>在编译时生成代码，避免了运行时反射操作的性能开销</li>
+<li>简化嵌套对象映射：通过<code>MapStruct</code>自动处理嵌套对象的映射，避免手动递归</li>
+<li>可维护性：使用<code>MapStruct</code>接口定义映射规则，代码更直观可读，维护性更高。</li>
+</ul>
+<h2 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h2><h3 id="自定义字段映射"><a href="#自定义字段映射" class="headerlink" title="自定义字段映射"></a>自定义字段映射</h3><blockquote>
+<p>如果源对象和目标对象的字段名称不同，或者需要对某些字段进行特定的转换，可以使用**<code>@Mappering</code>**注解来自定义映射</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设有两个类 <code>Source</code> 和 <code>TargetDTO</code>，其中 <code>Source</code> 的 <code>name</code> 字段需要映射到 <code>TargetDTO</code> 的 <code>fullName</code> 字段，<code>birthDate</code> 字段需要转换为 <code>age</code>。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Source</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> LocalDate birthDate;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TargetDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String fullName;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>通过 <code>@Mapping</code> 注解自定义字段映射，使用自定义方法进行 <code>birthDate</code> 到 <code>age</code> 的转换。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.mapstruct.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.mapstruct.Mapping;</span><br><span class="line"><span class="keyword">import</span> org.mapstruct.factory.Mappers;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.LocalDate;</span><br><span class="line"><span class="keyword">import</span> java.time.Period;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自定义映射规则</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;name&quot;, target = &quot;fullName&quot;)</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;birthDate&quot;, target = &quot;age&quot;, qualifiedByName = &quot;calculateAge&quot;)</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自定义转换方法</span></span><br><span class="line">    <span class="keyword">default</span> <span class="type">int</span> <span class="title function_">calculateAge</span><span class="params">(LocalDate birthDate)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Period.between(birthDate, LocalDate.now()).getYears();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="嵌套对象映射"><a href="#嵌套对象映射" class="headerlink" title="嵌套对象映射"></a>嵌套对象映射</h3><blockquote>
+<p>当源对象和目标对象中包含嵌套对象时，MapStruct可以自动处理这些嵌套对象的映射，或者可以显示指定如何处理嵌套的映射。</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设 <code>Source</code> 和 <code>TargetDTO</code> 都包含嵌套对象 <code>Address</code>，你希望将 <code>Source</code> 的嵌套对象也映射到 <code>TargetDTO</code> 中</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Source</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Address address;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Address</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String street;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TargetDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String fullName;</span><br><span class="line">    <span class="keyword">private</span> AddressDTO address;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AddressDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String street;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>MapStruct 会自动识别并映射嵌套对象。如果需要，可以单独定义一个映射方法来处理嵌套对象。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 映射 Source 到 TargetDTO，自动处理嵌套对象 Address</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;name&quot;, target = &quot;fullName&quot;)</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 映射 Address 到 AddressDTO</span></span><br><span class="line">    AddressDTO <span class="title function_">addressToAddressDTO</span><span class="params">(Address address)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>调用</p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">Address</span> <span class="variable">address</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Address</span>();</span><br><span class="line">address.setStreet(<span class="string">&quot;Main Street&quot;</span>);</span><br><span class="line">address.setCity(<span class="string">&quot;Springfield&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">Source</span> <span class="variable">source</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Source</span>();</span><br><span class="line">source.setName(<span class="string">&quot;Tom&quot;</span>);</span><br><span class="line">source.setAddress(address);</span><br><span class="line"></span><br><span class="line"><span class="type">TargetDTO</span> <span class="variable">dto</span> <span class="operator">=</span> SourceToDtoMapper.INSTANCE.convertToDto(source);</span><br><span class="line">System.out.println(dto.getAddress().getStreet()); <span class="comment">// 输出 &quot;Main Street&quot;</span></span><br><span class="line">System.out.println(dto.getAddress().getCity());   <span class="comment">// 输出 &quot;Springfield&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="集合映射"><a href="#集合映射" class="headerlink" title="集合映射"></a>集合映射</h3><blockquote>
+<p><code>MapStruct</code>还支持集合类型（如 <code>List</code>,<code>Set</code>）的映射。它会自动将源代码中的集合映射到目标对象中的集合</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设 <code>Source</code> 和 <code>TargetDTO</code> 包含一个 <code>List&lt;Address&gt;</code>，MapStruct 会自动映射这些集合中的每一个元素。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Source</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Address&gt; addresses;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TargetDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;AddressDTO&gt; addresses;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>无需额外配置，MapStruct 会自动处理 <code>List&lt;Address&gt;</code> 到 <code>List&lt;AddressDTO&gt;</code> 的映射。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自动处理 List&lt;Address&gt; 到 List&lt;AddressDTO&gt; 的映射</span></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;name&quot;, target = &quot;fullName&quot;)</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line"></span><br><span class="line">    AddressDTO <span class="title function_">addressToAddressDTO</span><span class="params">(Address address)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="嵌套字段的自定义映射"><a href="#嵌套字段的自定义映射" class="headerlink" title="嵌套字段的自定义映射"></a>嵌套字段的自定义映射</h3><blockquote>
+<p>可以通过 <code>@Mapping</code> 注解映射嵌套对象的特定字段。</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设 <code>Source</code> 中的 <code>Address</code> 对象的 <code>city</code> 字段需要映射到 <code>TargetDTO</code> 中的 <code>location</code> 字段。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TargetDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String fullName;</span><br><span class="line">    <span class="keyword">private</span> String location;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;name&quot;, target = &quot;fullName&quot;)</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;address.city&quot;, target = &quot;location&quot;)</span> <span class="comment">// 映射嵌套对象字段</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>调用</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Source</span> <span class="variable">source</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Source</span>();</span><br><span class="line">source.setName(<span class="string">&quot;Tom&quot;</span>);</span><br><span class="line"><span class="type">Address</span> <span class="variable">address</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Address</span>();</span><br><span class="line">address.setCity(<span class="string">&quot;Springfield&quot;</span>);</span><br><span class="line">source.setAddress(address);</span><br><span class="line"></span><br><span class="line"><span class="type">TargetDTO</span> <span class="variable">dto</span> <span class="operator">=</span> SourceToDtoMapper.INSTANCE.convertToDto(source);</span><br><span class="line">System.out.println(dto.getLocation()); <span class="comment">// 输出 &quot;Springfield&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="多个源对象映射到一个目标对象"><a href="#多个源对象映射到一个目标对象" class="headerlink" title="多个源对象映射到一个目标对象"></a>多个源对象映射到一个目标对象</h3><blockquote>
+<p>MapStruct 支持将多个源对象映射到一个目标对象，使用 <code>@Mapping</code> 注解可以指定来自不同源对象的字段。</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设你有两个源对象 <code>Person</code> 和 <code>Address</code>，你希望将它们的属性合并到 <code>PersonDTO</code> 中。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String firstName;</span><br><span class="line">    <span class="keyword">private</span> String lastName;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Address</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="keyword">private</span> String street;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PersonDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String fullName;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>Mapper中通过 <code>@Mapping</code> 注解指定字段的来源，并通过参数顺序来处理多个源对象：</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">PersonMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">PersonMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(PersonMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;person.firstName&quot;, target = &quot;fullName&quot;, qualifiedByName = &quot;concatNames&quot;)</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;address.city&quot;, target = &quot;city&quot;)</span></span><br><span class="line">    PersonDTO <span class="title function_">toPersonDto</span><span class="params">(Person person, Address address)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自定义方法来合并姓名</span></span><br><span class="line">    <span class="keyword">default</span> String <span class="title function_">concatNames</span><span class="params">(String firstName, String lastName)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> firstName + <span class="string">&quot; &quot;</span> + lastName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>调用</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Person</span> <span class="variable">person</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line">person.setFirstName(<span class="string">&quot;John&quot;</span>);</span><br><span class="line">person.setLastName(<span class="string">&quot;Doe&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">Address</span> <span class="variable">address</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Address</span>();</span><br><span class="line">address.setCity(<span class="string">&quot;New York&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">PersonDTO</span> <span class="variable">dto</span> <span class="operator">=</span> PersonMapper.INSTANCE.toPersonDto(person, address);</span><br><span class="line">System.out.println(dto.getFullName()); <span class="comment">// 输出 &quot;John Doe&quot;</span></span><br><span class="line">System.out.println(dto.getCity());     <span class="comment">// 输出 &quot;New York&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><ul>
+<li><strong>自定义映射</strong>：使用 <code>@Mapping</code> 注解可以轻松自定义字段映射，支持字段名不同、字段类型不同的场景。</li>
+<li><strong>嵌套对象映射</strong>：MapStruct 支持嵌套对象自动映射，也支持自定义映射规则。</li>
+<li><strong>集合映射</strong>：MapStruct 能自动处理集合的映射，确保每个元素被正确映射。</li>
+<li><strong>多个源对象映射</strong>：可以轻松将多个源对象合并到一个目标对象。</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/GSSBlog/tags/MapStruct/">#MapStruct</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/GSSBlog/2024/09/30/Java%E6%B3%9B%E5%9E%8B%E7%B1%BB%E7%9A%84%E4%BD%BF%E7%94%A8/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Java泛型类的使用</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">此页目录</div>
+        <div class="page-title">MapStruct高级拷贝工具的使用</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MapStruct%E9%AB%98%E7%BA%A7%E6%8B%B7%E8%B4%9D%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">MapStruct高级拷贝工具的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-MapStruct"><span class="nav-text">如何使用 MapStruct</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="nav-text">1、引入依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%AE%9A%E4%B9%89Mapper%E6%8E%A5%E5%8F%A3"><span class="nav-text">2、定义Mapper接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E8%B0%83%E7%94%A8Mapper"><span class="nav-text">3、调用Mapper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95"><span class="nav-text">高级用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E6%AE%B5%E6%98%A0%E5%B0%84"><span class="nav-text">自定义字段映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E5%AF%B9%E8%B1%A1%E6%98%A0%E5%B0%84"><span class="nav-text">嵌套对象映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E6%98%A0%E5%B0%84"><span class="nav-text">集合映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E5%AD%97%E6%AE%B5%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84"><span class="nav-text">嵌套字段的自定义映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E6%BA%90%E5%AF%B9%E8%B1%A1%E6%98%A0%E5%B0%84%E5%88%B0%E4%B8%80%E4%B8%AA%E7%9B%AE%E6%A0%87%E5%AF%B9%E8%B1%A1"><span class="nav-text">多个源对象映射到一个目标对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-text">总结：</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/GSSBlog/">igxiaoshan</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">访问人数</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">总访问量</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/GSSBlog/js/libs/Swup.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/GSSBlog/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/GSSBlog/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/GSSBlog/js/utils.js" type="module"></script>
+
+<script src="/GSSBlog/js/main.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/GSSBlog/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/GSSBlog/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/GSSBlog/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+
+
+  
+<script src="/GSSBlog/js/libs/Typed.min.js"></script>
+
+  
+<script src="/GSSBlog/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/GSSBlog/js/libs/anime.min.js"></script>
+
+        
+<script src="/GSSBlog/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/GSSBlog/js/layouts/toc.js" type="module"></script>
+
+<script src="/GSSBlog/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>

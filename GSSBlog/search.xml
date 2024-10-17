@@ -10467,4 +10467,247 @@ public class MySeataConfig &#123;
         <tag>CA</tag>
       </tags>
   </entry>
+  <entry>
+    <title>关于Convert实体转换</title>
+    <url>/GSSBlog/2024/09/30/Convert%E8%BD%AC%E5%8C%96%E5%AE%9E%E4%BD%93%E7%B1%BB/</url>
+    <content><![CDATA[<h1 id="关于Convert实体转换"><a href="#关于Convert实体转换" class="headerlink" title="关于Convert实体转换"></a>关于Convert实体转换</h1><blockquote>
+<p>关于在项目中，将一个数据源对象(source)转换成指定类型的<code>DTO</code>对象(dtoClass)；</p>
+</blockquote>
+<h2 id="技术点"><a href="#技术点" class="headerlink" title="技术点"></a>技术点</h2><ul>
+<li><strong>泛型（Generics）</strong>：使用泛型<code>&lt;S，T&gt;</code>，泛型<code>S</code>代表数据源对象的类型，泛型<code>T</code>代表目标DTO对象的类型。可以适用于不同类型的对象。</li>
+<li><strong>反射（Reflection）</strong>：通过反射机制，动态创建目标DTO类的新实例。可以在不知道目标DTO类的具体类型时动态创建对象</li>
+</ul>
+<p><strong>示例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.cglib.core.ReflectUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;S, T&gt; T <span class="title function_">convertObjectToDto</span><span class="params">(S source, Class&lt;T&gt; dtoClass)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (source == <span class="literal">null</span> || dtoClass == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;数据源对象或DTO类类型不能为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 使用缓存的构造函数来优化性能</span></span><br><span class="line">        Constructor&lt;T&gt; constructor = dtoClass.getDeclaredConstructor();</span><br><span class="line">        constructor.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">T</span> <span class="variable">dto</span> <span class="operator">=</span> constructor.newInstance();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 使用更高效的映射工具，例如 MapStruct 或 ModelMapper</span></span><br><span class="line">        BeanUtils.copyProperties(source, dto);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dto;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;无法将数据源对象转换为DTO对象&quot;</span>, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>优化建议</strong></p>
+<ul>
+<li><p><strong>性能优化：缓存反射示例</strong></p>
+<p>反射在Java中相对较慢，尤其是每次都要通过反射来创建对象。可以通过<code>对象池</code>或者<code>缓存构造函数</code>的方式提高性能。</p>
+<ul>
+<li>例如：使用<code>Constructor&lt;T&gt;</code>进行缓存，可以减少每次调用时的开销</li>
+</ul>
+</li>
+<li><p><strong>字段映射工具替代<code>Beanutils</code></strong></p>
+<blockquote>
+<p><code>BeanUtils.copyProperties</code> 方法，是Spring框架中提供的一个工具方法，用于复制对象的属性值。它将源对象复制到目标对象中，要求<code>源对象</code>和<code>目标对象</code><strong>具有相同的属性名和兼容的属性类型</strong>。</p>
+<p><code>BeanUtils.copyProperties</code>尽管使用比较简单，但性能上不一定是最优的，尤其是在需要处理复杂映射或者大量对象转换时，可以考虑使用更高效的映射工具；例如：</p>
+</blockquote>
+<ul>
+<li><code>MapStruct</code>：编译时生产映射代码，性能更高</li>
+<li><code>ModelMapper</code>：更加灵活，但需要根据具体需求进行配置</li>
+</ul>
+</li>
+<li><p><strong>校验类的实例化合法性</strong></p>
+<p>当前代码未处理<code>dtoClass</code>是否为抽象类或者接口，导致可能在实例化时抛出<code>InstantiationException</code></p>
+</li>
+<li><p><strong>支持深拷贝和嵌套对象</strong></p>
+<p><code>BeanUtils.copyProperties</code> 仅支持浅拷贝，如果<code>source</code>对象中包含嵌套对象或者复杂的结构，浅拷贝会导致错误。</p>
+</li>
+</ul>
+<p><strong>扩展:</strong></p>
+<ul>
+<li><p><a href="/GSSBlog/2024/09/30/Java%E6%B3%9B%E5%9E%8B%E7%B1%BB%E7%9A%84%E4%BD%BF%E7%94%A8/index.html"><strong>泛型使用</strong></a></p>
+</li>
+<li><p><a href="/GSSBlog/2024/09/30/MapStruct%E9%AB%98%E7%BA%A7%E8%BD%AC%E6%8D%A2%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/index.html"><strong>MapStruct使用</strong></a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>CONVERT</category>
+      </categories>
+      <tags>
+        <tag>CONVERT</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MapStruct高级拷贝工具的使用</title>
+    <url>/GSSBlog/2024/09/30/MapStruct%E9%AB%98%E7%BA%A7%E8%BD%AC%E6%8D%A2%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="MapStruct高级拷贝工具的使用"><a href="#MapStruct高级拷贝工具的使用" class="headerlink" title="MapStruct高级拷贝工具的使用"></a>MapStruct高级拷贝工具的使用</h1><blockquote>
+<p>在<strong>MapStruct</strong>中，可以通过多种方式实现复杂的自定义映射和嵌套对象的映射。<strong>MapStruct</strong>提供了强大的注释和配置功能来处理这些复杂场景。</p>
+</blockquote>
+<h2 id="如何使用-MapStruct"><a href="#如何使用-MapStruct" class="headerlink" title="如何使用 MapStruct"></a>如何使用 <strong>MapStruct</strong></h2><h3 id="1、引入依赖"><a href="#1、引入依赖" class="headerlink" title="1、引入依赖"></a>1、引入依赖</h3><blockquote>
+<p>在<code>pom.xml</code>中添加<code>MapStruct</code>依赖（maven版）</p>
+</blockquote>
+<div class="highlight-container" data-rel="Xml"><figure class="iseeu highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mapstruct<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapstruct<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.5.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span> <span class="comment">&lt;!-- 请根据需要替换为最新版本 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mapstruct<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapstruct-processor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.5.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="2、定义Mapper接口"><a href="#2、定义Mapper接口" class="headerlink" title="2、定义Mapper接口"></a>2、定义Mapper接口</h3><blockquote>
+<p>需要定义一个<code>Mapper</code>接口，<code>MapStruct</code>会在编译时生成实现类。</p>
+<p>假设现在有两个类<code>Source</code>和<code>TargetDto</code>，可以创建如下<code>Mapper</code></p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.mapstruct.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.mapstruct.factory.Mappers;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义Mapper接口</span></span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取Mapper实例</span></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定义映射方法</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="3、调用Mapper"><a href="#3、调用Mapper" class="headerlink" title="3、调用Mapper"></a>3、调用Mapper</h3><blockquote>
+<p>在代码中调用这个Mapper来完成对象转换</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.cglib.core.ReflectUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;S, T&gt; T <span class="title function_">convertObjectToDto</span><span class="params">(S source, Class&lt;T&gt; dtoClass)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (source == <span class="literal">null</span> || dtoClass == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;数据源对象或DTO类类型不能为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 使用缓存的构造函数来优化性能</span></span><br><span class="line">        Constructor&lt;T&gt; constructor = dtoClass.getDeclaredConstructor();</span><br><span class="line">        constructor.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">T</span> <span class="variable">dto</span> <span class="operator">=</span> constructor.newInstance();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 使用更高效的映射工具，例如 MapStruct 或 ModelMapper</span></span><br><span class="line">        BeanUtils.copyProperties(source, dto);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dto;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;无法将数据源对象转换为DTO对象&quot;</span>, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><ul>
+<li>高性能：<code>MapStruct</code>在编译时生成代码，避免了运行时反射操作的性能开销</li>
+<li>简化嵌套对象映射：通过<code>MapStruct</code>自动处理嵌套对象的映射，避免手动递归</li>
+<li>可维护性：使用<code>MapStruct</code>接口定义映射规则，代码更直观可读，维护性更高。</li>
+</ul>
+<h2 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h2><h3 id="自定义字段映射"><a href="#自定义字段映射" class="headerlink" title="自定义字段映射"></a>自定义字段映射</h3><blockquote>
+<p>如果源对象和目标对象的字段名称不同，或者需要对某些字段进行特定的转换，可以使用**<code>@Mappering</code>**注解来自定义映射</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设有两个类 <code>Source</code> 和 <code>TargetDTO</code>，其中 <code>Source</code> 的 <code>name</code> 字段需要映射到 <code>TargetDTO</code> 的 <code>fullName</code> 字段，<code>birthDate</code> 字段需要转换为 <code>age</code>。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Source</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> LocalDate birthDate;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TargetDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String fullName;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>通过 <code>@Mapping</code> 注解自定义字段映射，使用自定义方法进行 <code>birthDate</code> 到 <code>age</code> 的转换。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.mapstruct.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.mapstruct.Mapping;</span><br><span class="line"><span class="keyword">import</span> org.mapstruct.factory.Mappers;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.LocalDate;</span><br><span class="line"><span class="keyword">import</span> java.time.Period;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自定义映射规则</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;name&quot;, target = &quot;fullName&quot;)</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;birthDate&quot;, target = &quot;age&quot;, qualifiedByName = &quot;calculateAge&quot;)</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自定义转换方法</span></span><br><span class="line">    <span class="keyword">default</span> <span class="type">int</span> <span class="title function_">calculateAge</span><span class="params">(LocalDate birthDate)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Period.between(birthDate, LocalDate.now()).getYears();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="嵌套对象映射"><a href="#嵌套对象映射" class="headerlink" title="嵌套对象映射"></a>嵌套对象映射</h3><blockquote>
+<p>当源对象和目标对象中包含嵌套对象时，MapStruct可以自动处理这些嵌套对象的映射，或者可以显示指定如何处理嵌套的映射。</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设 <code>Source</code> 和 <code>TargetDTO</code> 都包含嵌套对象 <code>Address</code>，你希望将 <code>Source</code> 的嵌套对象也映射到 <code>TargetDTO</code> 中</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Source</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Address address;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Address</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String street;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TargetDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String fullName;</span><br><span class="line">    <span class="keyword">private</span> AddressDTO address;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AddressDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String street;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>MapStruct 会自动识别并映射嵌套对象。如果需要，可以单独定义一个映射方法来处理嵌套对象。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 映射 Source 到 TargetDTO，自动处理嵌套对象 Address</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;name&quot;, target = &quot;fullName&quot;)</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 映射 Address 到 AddressDTO</span></span><br><span class="line">    AddressDTO <span class="title function_">addressToAddressDTO</span><span class="params">(Address address)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>调用</p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">Address</span> <span class="variable">address</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Address</span>();</span><br><span class="line">address.setStreet(<span class="string">&quot;Main Street&quot;</span>);</span><br><span class="line">address.setCity(<span class="string">&quot;Springfield&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">Source</span> <span class="variable">source</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Source</span>();</span><br><span class="line">source.setName(<span class="string">&quot;Tom&quot;</span>);</span><br><span class="line">source.setAddress(address);</span><br><span class="line"></span><br><span class="line"><span class="type">TargetDTO</span> <span class="variable">dto</span> <span class="operator">=</span> SourceToDtoMapper.INSTANCE.convertToDto(source);</span><br><span class="line">System.out.println(dto.getAddress().getStreet()); <span class="comment">// 输出 &quot;Main Street&quot;</span></span><br><span class="line">System.out.println(dto.getAddress().getCity());   <span class="comment">// 输出 &quot;Springfield&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="集合映射"><a href="#集合映射" class="headerlink" title="集合映射"></a>集合映射</h3><blockquote>
+<p><code>MapStruct</code>还支持集合类型（如 <code>List</code>,<code>Set</code>）的映射。它会自动将源代码中的集合映射到目标对象中的集合</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设 <code>Source</code> 和 <code>TargetDTO</code> 包含一个 <code>List&lt;Address&gt;</code>，MapStruct 会自动映射这些集合中的每一个元素。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Source</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Address&gt; addresses;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TargetDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;AddressDTO&gt; addresses;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>无需额外配置，MapStruct 会自动处理 <code>List&lt;Address&gt;</code> 到 <code>List&lt;AddressDTO&gt;</code> 的映射。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自动处理 List&lt;Address&gt; 到 List&lt;AddressDTO&gt; 的映射</span></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;name&quot;, target = &quot;fullName&quot;)</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line"></span><br><span class="line">    AddressDTO <span class="title function_">addressToAddressDTO</span><span class="params">(Address address)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="嵌套字段的自定义映射"><a href="#嵌套字段的自定义映射" class="headerlink" title="嵌套字段的自定义映射"></a>嵌套字段的自定义映射</h3><blockquote>
+<p>可以通过 <code>@Mapping</code> 注解映射嵌套对象的特定字段。</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设 <code>Source</code> 中的 <code>Address</code> 对象的 <code>city</code> 字段需要映射到 <code>TargetDTO</code> 中的 <code>location</code> 字段。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TargetDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String fullName;</span><br><span class="line">    <span class="keyword">private</span> String location;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SourceToDtoMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">SourceToDtoMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(SourceToDtoMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;name&quot;, target = &quot;fullName&quot;)</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;address.city&quot;, target = &quot;location&quot;)</span> <span class="comment">// 映射嵌套对象字段</span></span><br><span class="line">    TargetDTO <span class="title function_">convertToDto</span><span class="params">(Source source)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>调用</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Source</span> <span class="variable">source</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Source</span>();</span><br><span class="line">source.setName(<span class="string">&quot;Tom&quot;</span>);</span><br><span class="line"><span class="type">Address</span> <span class="variable">address</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Address</span>();</span><br><span class="line">address.setCity(<span class="string">&quot;Springfield&quot;</span>);</span><br><span class="line">source.setAddress(address);</span><br><span class="line"></span><br><span class="line"><span class="type">TargetDTO</span> <span class="variable">dto</span> <span class="operator">=</span> SourceToDtoMapper.INSTANCE.convertToDto(source);</span><br><span class="line">System.out.println(dto.getLocation()); <span class="comment">// 输出 &quot;Springfield&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="多个源对象映射到一个目标对象"><a href="#多个源对象映射到一个目标对象" class="headerlink" title="多个源对象映射到一个目标对象"></a>多个源对象映射到一个目标对象</h3><blockquote>
+<p>MapStruct 支持将多个源对象映射到一个目标对象，使用 <code>@Mapping</code> 注解可以指定来自不同源对象的字段。</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>假设你有两个源对象 <code>Person</code> 和 <code>Address</code>，你希望将它们的属性合并到 <code>PersonDTO</code> 中。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String firstName;</span><br><span class="line">    <span class="keyword">private</span> String lastName;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Address</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="keyword">private</span> String street;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PersonDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String fullName;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="comment">// getters and setters</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>Mapper中通过 <code>@Mapping</code> 注解指定字段的来源，并通过参数顺序来处理多个源对象：</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">PersonMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">PersonMapper</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> Mappers.getMapper(PersonMapper.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;person.firstName&quot;, target = &quot;fullName&quot;, qualifiedByName = &quot;concatNames&quot;)</span></span><br><span class="line">    <span class="meta">@Mapping(source = &quot;address.city&quot;, target = &quot;city&quot;)</span></span><br><span class="line">    PersonDTO <span class="title function_">toPersonDto</span><span class="params">(Person person, Address address)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自定义方法来合并姓名</span></span><br><span class="line">    <span class="keyword">default</span> String <span class="title function_">concatNames</span><span class="params">(String firstName, String lastName)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> firstName + <span class="string">&quot; &quot;</span> + lastName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>调用</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Person</span> <span class="variable">person</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line">person.setFirstName(<span class="string">&quot;John&quot;</span>);</span><br><span class="line">person.setLastName(<span class="string">&quot;Doe&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">Address</span> <span class="variable">address</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Address</span>();</span><br><span class="line">address.setCity(<span class="string">&quot;New York&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">PersonDTO</span> <span class="variable">dto</span> <span class="operator">=</span> PersonMapper.INSTANCE.toPersonDto(person, address);</span><br><span class="line">System.out.println(dto.getFullName()); <span class="comment">// 输出 &quot;John Doe&quot;</span></span><br><span class="line">System.out.println(dto.getCity());     <span class="comment">// 输出 &quot;New York&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><ul>
+<li><strong>自定义映射</strong>：使用 <code>@Mapping</code> 注解可以轻松自定义字段映射，支持字段名不同、字段类型不同的场景。</li>
+<li><strong>嵌套对象映射</strong>：MapStruct 支持嵌套对象自动映射，也支持自定义映射规则。</li>
+<li><strong>集合映射</strong>：MapStruct 能自动处理集合的映射，确保每个元素被正确映射。</li>
+<li><strong>多个源对象映射</strong>：可以轻松将多个源对象合并到一个目标对象。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MapStruct</category>
+      </categories>
+      <tags>
+        <tag>MapStruct</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java泛型类的使用</title>
+    <url>/GSSBlog/2024/09/30/Java%E6%B3%9B%E5%9E%8B%E7%B1%BB%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="Java泛型的使用"><a href="#Java泛型的使用" class="headerlink" title="Java泛型的使用"></a>Java泛型的使用</h1><blockquote>
+<p>Java的泛型（Generics）是Java语言的一种特性，允许类、接口和方法可以操作指定类型的对象，而无需定义具体的类型。</p>
+<p>通过使用泛型，可以编写更通用、可重用的代码，同时在编译时提供类型安全检查</p>
+</blockquote>
+<h2 id="主要特性"><a href="#主要特性" class="headerlink" title="主要特性"></a><strong>主要特性</strong></h2><h3 id="1、类型参数化："><a href="#1、类型参数化：" class="headerlink" title="1、类型参数化："></a><strong>1、类型参数化</strong>：</h3><blockquote>
+<p>泛型允许你在类、接口和方法定义中使用一个或多个类型参数，这些类型参数在实例化时被具体划分为具体的类型。</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Box</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> T item;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(T item)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.item = item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> T <span class="title function_">get</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>使用</strong>: <code>T</code>是一个类型参数，它可以是任意类型。实例化时，可以指定<code>T</code>的具体类型。</p>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">Box&lt;String&gt; stringBox = <span class="keyword">new</span> <span class="title class_">Box</span>&lt;&gt;();</span><br><span class="line">stringBox.set(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"><span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> stringBox.get();</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="2、类型安全："><a href="#2、类型安全：" class="headerlink" title="2、类型安全："></a><strong>2、类型安全</strong>：</h3><blockquote>
+<p>使用泛型可以在编译时就检测到类型不匹配的错误，避免了运行时的<code>ClassCastException</code></p>
+<p>例如，如果你试图将一个<code>Integer</code>放入到<code>Box&lt;String&gt;</code>中，编译器会立即报错。</p>
+</blockquote>
+<h3 id="3、消除强制类型转换"><a href="#3、消除强制类型转换" class="headerlink" title="3、消除强制类型转换"></a><strong>3、消除强制类型转换</strong></h3><blockquote>
+<p>泛型减少了对类型转换的需求。因为在定义泛型时已经指定了类型，取出对象时不再需要手动进行类型转换</p>
+</blockquote>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 不使用泛型时：</span></span><br><span class="line"><span class="type">List</span> <span class="variable">list</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">list.add(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"><span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> (String) list.get(<span class="number">0</span>);  <span class="comment">// 需要强制类型转换</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用泛型时：</span></span><br><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"><span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> list.get(<span class="number">0</span>);  <span class="comment">// 不需要强制类型转换</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="4、通配符与边界"><a href="#4、通配符与边界" class="headerlink" title="4、通配符与边界"></a><strong>4、通配符与边界</strong></h3><blockquote>
+<p>Java泛型提供了通配符（<code>?</code>）来表示未知类型，并且可以使用<code>extends</code>和<code>spuer</code>关键字指定上界和下界</p>
+</blockquote>
+<ul>
+<li><code>? extends T</code>：表示可以接受 T 或者 T 的子类。</li>
+<li><code>? super T</code>：表示可以接受 T 或者 T 的父类。</li>
+</ul>
+<div class="highlight-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">process</span><span class="params">(List&lt;? extends Number&gt; list)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (Number number : list) &#123;</span><br><span class="line">        System.out.println(number);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="5、类型擦除"><a href="#5、类型擦除" class="headerlink" title="5、类型擦除"></a><strong>5、类型擦除</strong></h3><blockquote>
+<p>Java泛型在编译时会进行类型擦除（Type Erasure），即在编译过程中，泛型类型信息会被移除，泛型的类型参数会被替换成<code>Object</code>或者边界类型。</p>
+<p>这意味着在运行时，泛型类型的信息不可用</p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h2><ul>
+<li>当你希望类、接口或者方法可以操作多种类型的时候可以使用泛型</li>
+<li>当你希望在编译时进行类型检查以确保类型安全的时候可以使用泛型</li>
+</ul>
+<p>泛型使得代码更加灵活和安全，是Java中非常重要的特性之一。</p>
+]]></content>
+      <categories>
+        <category>JavaBasics</category>
+      </categories>
+      <tags>
+        <tag>JavaBasics</tag>
+      </tags>
+  </entry>
 </search>
